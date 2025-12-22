@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+
+    <changeSet id="account-default-06122025-J1" author="Joao">
+        <insert tableName="users">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"/>
+            <column name="email" value="test@test.com"/>
+            <column name="username" value="test"/>
+            <column name="password" value="$2a$10$iG30jSZbWLJmaQFkaoEg8.fW1Qkem9lRgCHBBabc7FLrZ83L8rfW."/>
+            <column name="first_name" value="Test"/>
+            <column name="last_name" value="User"/>
+            <column name="is_enabled" valueBoolean="true"/>
+            <column name="create_at" valueComputed="NOW()"/>
+            <column name="update_at" valueComputed="NOW()"/>
+            <column name="tenant_id" value="f47ac10b-58cc-4372-a567-0e02b2c3d479"/>
+        </insert>
+
+        <insert tableName="tenant">
+            <column name="id" value="f47ac10b-58cc-4372-a567-0e02b2c3d479"/>
+            <column name="name" value="Default Tenant"/>
+            <column name="owner_id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"/>
+            <column name="create_at" value="NOW()" />
+            <column name="update_at" value="NOW()" />
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
