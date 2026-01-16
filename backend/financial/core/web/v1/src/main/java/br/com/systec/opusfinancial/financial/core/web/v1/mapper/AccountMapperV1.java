@@ -1,0 +1,48 @@
+package br.com.systec.opusfinancial.financial.core.web.v1.mapper;
+
+import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
+import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountInfoResponseDTO;
+import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountInputDTO;
+import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountResponseSaveDTO;
+
+public class AccountMapperV1 {
+
+    private AccountMapperV1() {}
+
+    public static AccountMapperV1 of() {
+        return new AccountMapperV1();
+    }
+
+    public AccountVO toVO(AccountInputDTO inputDTO) {
+        AccountVO accountVO = new AccountVO();
+        accountVO.setAccountName(inputDTO.getAccountName());
+        accountVO.setAccountType(inputDTO.getAccountType());
+        accountVO.setBalance(inputDTO.getBalance());
+        accountVO.setBankId(inputDTO.getBankId());
+
+        return accountVO;
+    }
+
+    public AccountResponseSaveDTO toSaveResponse(AccountVO accountVO) {
+        AccountResponseSaveDTO accountResponseSaveDTO = new AccountResponseSaveDTO();
+        accountResponseSaveDTO.setId(accountVO.getId());
+        accountResponseSaveDTO.setAccountName(accountVO.getAccountName());
+
+        return accountResponseSaveDTO;
+    }
+
+    public AccountInfoResponseDTO toInfoDTO(AccountVO accountVO) {
+        AccountInfoResponseDTO accountInfoResponseDTO = new AccountInfoResponseDTO();
+        accountInfoResponseDTO.setId(accountVO.getId());
+        accountInfoResponseDTO.setAccountName(accountVO.getAccountName());
+        accountInfoResponseDTO.setAccountType(accountVO.getAccountType());
+        accountInfoResponseDTO.setBalance(accountVO.getBalance());
+
+        if (accountVO.getBank() != null) {
+            accountInfoResponseDTO.setBankId(accountVO.getBank().getId());
+            accountInfoResponseDTO.setBankName(accountVO.getBank().getName());
+        }
+
+        return accountInfoResponseDTO;
+    }
+}

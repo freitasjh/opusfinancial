@@ -4,6 +4,8 @@ import br.com.systec.opusfinancial.commons.exceptions.BaseException;
 import br.com.systec.opusfinancial.security.api.vo.LoginAuthenticateVO;
 import org.springframework.security.core.Authentication;
 
+import java.util.UUID;
+
 public interface SecurityTokenService {
 
     LoginAuthenticateVO generateTokenAndRefreshToken(Authentication authentication) throws SecurityException;
@@ -13,4 +15,6 @@ public interface SecurityTokenService {
     void validateTokenRevoke(String tokenJWT) throws BaseException;
 
     String getSubject(String tokenJWT) throws SecurityException;
+
+    UUID getTenantId(String token) throws SecurityException;
 }

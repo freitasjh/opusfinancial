@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+
+    <changeSet id="category-24122025J-1" author="Joao">
+        <createTable tableName="category">
+            <column name="id" type="uuid" defaultValueComputed="uuid_generate_v4()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tenant_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+            <column name="create_at" type="TIMESTAMP" />
+            <column name="update_at" type="TIMESTAMP" />
+            <column name="parent_id" type="uuid" />
+            <column name="category_name" type="VARCHAR(255)" />
+            <column name="color_hex" type="VARCHAR(255)" />
+            <column name="icon_code" type="VARCHAR(255)" />
+            <column name="category_type" type="VARCHAR(30)" >
+                <constraints nullable="false" />
+            </column>
+            <column name="spending_limit" type="double" />
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

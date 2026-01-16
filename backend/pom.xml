@@ -13,10 +13,8 @@
     <name>OpusFinancial</name>
     <packaging>pom</packaging>
 
-
     <modules>
         <module>dependencies</module>
-        <module>core</module>
         <module>application</module>
         <module>identity</module>
         <module>commons</module>
@@ -24,5 +22,7 @@
         <module>dbupdate</module>
         <module>integration-test</module>
         <module>i18n</module>
+        <module>financial</module>
+        <module>aws-sqs</module>
     </modules>
 </project>

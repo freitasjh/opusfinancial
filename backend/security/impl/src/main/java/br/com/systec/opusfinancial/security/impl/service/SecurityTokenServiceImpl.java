@@ -40,6 +40,7 @@ import java.util.UUID;
 @Service
 public class SecurityTokenServiceImpl implements SecurityTokenService {
     private static final Logger log = LoggerFactory.getLogger(SecurityTokenServiceImpl.class);
+    public static final String TENANT_CLAIM = "tenant-id";
 
     private static final String ISSUE = "opus.api";
     private static final String AUDIENCE = "opus.web";
@@ -129,6 +130,7 @@ public class SecurityTokenServiceImpl implements SecurityTokenService {
                 .withAudience(AUDIENCE)
                 .withIssuedAt(new Date(System.currentTimeMillis()))
                 .withExpiresAt(generateDateExpired())
+                .withClaim(TENANT_CLAIM, user.getTenantId().toString())
                 .withJWTId(jti)
                 .sign(getAlgorithm());
     }
@@ -215,6 +217,22 @@ public class SecurityTokenServiceImpl implements SecurityTokenService {
             log.error("Ocorreu um erro ao tentar gera o toke e o refresh token");
             throw new TokenGenerationFailedException(e);
         }
+    }
 
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public UUID getTenantId(String token) throws SecurityException {
+        try {
+            DecodedJWT decodedJWT = JWT.require(getAlgorithm())
+                    .withIssuer(ISSUE)
+                    .withAudience(AUDIENCE)
+                    .build()
+                    .verify(token);
+            String tenantId = decodedJWT.getClaim(TENANT_CLAIM).asString();
+
+            return UUID.fromString(tenantId);
+        } catch (Exception e) {
+            log.error("Ocoreu um erro ao tentar pagar o tenantId", e);
+            throw new SecurityException("Erro ao tentar pegar o tenantId", e);
+        }
     }
 }

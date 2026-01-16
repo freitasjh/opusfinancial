@@ -7,7 +7,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.5.8</version>
-        <relativePath>pom.xml</relativePath>
+        <relativePath />
     </parent>
 
     <groupId>br.com.systec.opusfinancial</groupId>
@@ -18,7 +18,7 @@
     <properties>
         <java.version>21</java.version>
         <testcontainers.version>1.21.3</testcontainers.version>
-        <openapi.springdoc.version>2.8.13</openapi.springdoc.version>
+        <openapi.springdoc.version>2.8.14</openapi.springdoc.version>
         <java-jwt.version>4.4.0</java-jwt.version>
         <fasterxml.version>2.14.2</fasterxml.version>
         <h2.database.version>2.2.220</h2.database.version>
@@ -28,6 +28,7 @@
         <logstash.version>7.4</logstash.version>
         <apache-compress.version>1.28.0</apache-compress.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <aws.sqs.version>3.1.1</aws.sqs.version>
     </properties>
 
     <dependencyManagement>
@@ -188,6 +189,62 @@
                 <groupId>br.com.systec.opusfinancial</groupId>
                 <artifactId>security-web-v1</artifactId>
                 <version>${project.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>br.com.systec.opusfinancial</groupId>
+                <artifactId>financial-catalog-api</artifactId>
+                <version>${project.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>br.com.systec.opusfinancial</groupId>
+                <artifactId>financial-catalog-impl</artifactId>
+                <version>${project.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>br.com.systec.opusfinancial</groupId>
+                <artifactId>financial-catalog-jms</artifactId>
+                <version>${project.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>br.com.systec.opusfinancial</groupId>
+                <artifactId>financial-catalog-web-v1</artifactId>
+                <version>${project.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>br.com.systec.opusfinancial</groupId>
+                <artifactId>financial-core-api</artifactId>
+                <version>${project.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>br.com.systec.opusfinancial</groupId>
+                <artifactId>financial-core-impl</artifactId>
+                <version>${project.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>br.com.systec.opusfinancial</groupId>
+                <artifactId>financial-core-web-v1</artifactId>
+                <version>${project.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>br.com.systec.opusfinancial</groupId>
+                <artifactId>aws-sqs</artifactId>
+                <version>${revision}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- aws -->
+            <dependency>
+                <groupId>io.awspring.cloud</groupId>
+                <artifactId>spring-cloud-aws-starter-sqs</artifactId>
+                <version>${aws.sqs.version}</version>
                 <scope>provided</scope>
             </dependency>
 

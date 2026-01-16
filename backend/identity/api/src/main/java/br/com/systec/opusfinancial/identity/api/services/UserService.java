@@ -15,4 +15,6 @@ public interface UserService {
     UserVO findById(UUID id) throws UserException;
 
     UserVO findByUsername(String username) throws BaseException;
+
+    void saveTenantId(UUID userId, UUID tenantId) throws UserException;
 }

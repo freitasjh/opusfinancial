@@ -1,6 +1,7 @@
 package br.com.systec.opusfinancial.security.impl.filter;
 
 import br.com.systec.opusfinancial.commons.exceptions.BaseException;
+import br.com.systec.opusfinancial.commons.security.TenantContext;
 import br.com.systec.opusfinancial.security.api.exceptions.SecurityException;
 import br.com.systec.opusfinancial.security.api.service.AuthenticationService;
 import br.com.systec.opusfinancial.security.api.service.SecurityTokenService;
@@ -40,7 +41,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                 var username = securityTokenService.getSubject(bearerToken);
                 var userDetails = authenticationService.loadUserByUsername(username);
                 var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
+                TenantContext.addTenant(securityTokenService.getTenantId(bearerToken));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
             filterChain.doFilter(request, response);
@@ -53,6 +54,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         } finally {
             log.warn("@@@ Finalizando o secuirty service");
             SecurityContextHolder.clearContext();
+            TenantContext.clear();
         }
     }
 
