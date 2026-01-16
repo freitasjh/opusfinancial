@@ -1,19 +1,18 @@
 package br.com.systec.opusfinancial.integration.test.fake;
 
-import br.com.systec.opusfinancial.web.v1.dto.AccountCreateDTO;
+import br.com.systec.opusfinancial.financial.api.vo.AccountType;
+import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountInputDTO;
+
+import java.math.BigDecimal;
 
 public class AccountFake {
 
-    public static AccountCreateDTO toCreateFake() {
-        var accountCreateDTO = new AccountCreateDTO();
-        accountCreateDTO.setUsername("teste");
-        accountCreateDTO.setPassword("admin");
-        accountCreateDTO.setName("Conta teste");
-        accountCreateDTO.setName("teste");
-        accountCreateDTO.setDocument("1111");
-        accountCreateDTO.setEmail("teste@teste.com.br");
+    public static AccountInputDTO toAccountFake() {
+        AccountInputDTO accountInputDTO = new AccountInputDTO();
+        accountInputDTO.setBalance(BigDecimal.valueOf(0.0));
+        accountInputDTO.setAccountName("Conta teste");
+        accountInputDTO.setAccountType(AccountType.WALLET);
 
-        return accountCreateDTO;
+        return accountInputDTO;
     }
-
 }

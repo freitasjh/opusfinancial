@@ -1,6 +1,6 @@
 package br.com.systec.opusfinancial.identity.impl.mapper;
 
-import br.com.systec.opusfinancial.identity.api.vo.AccountVO;
+import br.com.systec.opusfinancial.identity.api.vo.UserAccountVO;
 import br.com.systec.opusfinancial.identity.api.vo.TenantVO;
 import br.com.systec.opusfinancial.identity.impl.entities.Tenant;
 
@@ -30,7 +30,7 @@ public class TenantMapper {
         return tenant;
     }
 
-    public TenantVO accountToTenant(AccountVO accountVO) {
+    public TenantVO accountToTenant(UserAccountVO accountVO) {
         TenantVO tenantVO = new TenantVO();
         tenantVO.setName(accountVO.getAccountName());
 

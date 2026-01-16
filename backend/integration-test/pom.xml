@@ -57,7 +57,7 @@
 
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>rabbitmq</artifactId>
+            <artifactId>localstack</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

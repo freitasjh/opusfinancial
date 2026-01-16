@@ -13,7 +13,7 @@ import br.com.systec.opusfinancial.identity.impl.mapper.UserMapper;
 import br.com.systec.opusfinancial.identity.impl.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +25,11 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository repository) {
+    public UserServiceImpl(UserRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -37,7 +39,7 @@ public class UserServiceImpl implements UserService {
             User userToSave = UserMapper.of().toEntity(userVO);
 
             validateSaveNewUser(userToSave);
-            userToSave.setPassword(new BCryptPasswordEncoder().encode(userToSave.getPassword()));
+            userToSave.setPassword(passwordEncoder.encode(userToSave.getPassword()));
 
             User userAfterSave = repository.save(userToSave);
 
@@ -54,7 +56,44 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public UserVO update(UserVO userVO) throws UserException {
-        return null;
+        try {
+            User userSaved = repository.findById(userVO.getId()).orElseThrow(UserNotFoundException::new);
+
+            User userBeforeUpdate = UserMapper.of().toEntity(userVO);
+            userBeforeUpdate.setCreateAt(userSaved.getCreateAt());
+
+            if (userVO.getPassword() == null || userVO.getPassword().isEmpty()) {
+                userBeforeUpdate.setPassword(userSaved.getPassword());
+            } else {
+                userBeforeUpdate.setPassword(passwordEncoder.encode(userVO.getPassword()));
+            }
+
+            User userAfterUpdate = repository.update(userBeforeUpdate);
+
+            return UserMapper.of().toVO(userAfterUpdate);
+
+        } catch (BaseException e) {
+            log.error(e.getMessage(), e);
+            throw e;
+        } catch (Exception e) {
+            log.error("Erro ao tentar atualizar o usuario", e);
+            throw new UserException(e);
+        }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void saveTenantId(UUID userId, UUID tenantId) throws UserException {
+        try {
+            User userToSave = repository.findById(userId).orElseThrow(UserNotFoundException::new);
+            userToSave.setTenantId(tenantId);
+            repository.update(userToSave);
+        } catch (BaseException e) {
+            log.error(e.getMessage(), e);
+            throw e;
+        } catch (Exception e) {
+            log.error("Erro ao tentar salvar o tenant no usuario", e);
+            throw new UserException(e);
+        }
     }
 
     @Override

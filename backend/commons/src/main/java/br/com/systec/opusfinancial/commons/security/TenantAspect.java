@@ -20,10 +20,13 @@ public class TenantAspect {
         this.entityManager = entityManager;
     }
 
-    @Before("execution(* br.com.systec.opusfinancial..repository..*(..))")
+    @Before("execution(* br.com.systec.opusfinancial..repository..*(..)) || " +
+            "execution(* org.springframework.data.jpa.repository.JpaRepository+.*(..)) || " +
+            "execution(* org.springframework.data.jpa.repository.JpaSpecificationExecutor+.*(..))")
     public void enableTenantFilter() {
         UUID tenantId = TenantContext.getTenant();
         if (tenantId != null) {
+            log.warn("@@@ Setando o tenant no filtro {}", tenantId);
             Session session = entityManager.unwrap(Session.class);
             session.enableFilter("tenantFilter").setParameter("tenantId", tenantId);
         }

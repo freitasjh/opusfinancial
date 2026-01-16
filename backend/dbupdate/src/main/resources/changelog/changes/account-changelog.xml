@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+
+    <changeSet id="account-1401202-J1" author="">
+        <createTable tableName="account">
+            <column name="id" type="uuid" defaultValueComputed="uuid_generate_v4()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="create_at" type="TIMESTAMP"/>
+            <column name="update_at" type="TIMESTAMP"/>
+            <column name="tenant_id" type="UUID" />
+            <column name="account_name" type="VARCHAR(255)" />
+            <column name="account_type" type="VARCHAR(255)" />
+            <column name="balance" type="FLOAT8" />
+            <column name="bank_id" type="UUID" />
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

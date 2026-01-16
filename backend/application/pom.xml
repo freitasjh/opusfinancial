@@ -45,6 +45,11 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>io.awspring.cloud</groupId>
+            <artifactId>spring-cloud-aws-starter-sqs</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
             <scope>compile</scope>
@@ -64,6 +69,7 @@
             <artifactId>java-jwt</artifactId>
             <scope>compile</scope>
         </dependency>
+
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>
             <artifactId>opusfinancial-commons</artifactId>
@@ -72,6 +78,11 @@
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>
             <artifactId>dbupdate</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>aws-sqs</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -104,7 +115,45 @@
             <artifactId>identity-web</artifactId>
             <scope>compile</scope>
         </dependency>
-
-
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>financial-core-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>financial-core-impl</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>financial-core-web-v1</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>financial-catalog-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>financial-catalog-impl</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>financial-catalog-web-v1</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>financial-catalog-jms</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>i18n</artifactId>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>

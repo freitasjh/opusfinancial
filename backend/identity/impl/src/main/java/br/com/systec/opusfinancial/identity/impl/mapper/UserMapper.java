@@ -1,9 +1,8 @@
 package br.com.systec.opusfinancial.identity.impl.mapper;
 
-import br.com.systec.opusfinancial.identity.api.vo.AccountVO;
+import br.com.systec.opusfinancial.identity.api.vo.UserAccountVO;
 import br.com.systec.opusfinancial.identity.api.vo.UserVO;
 import br.com.systec.opusfinancial.identity.impl.entities.User;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 
 public class UserMapper {
 
@@ -46,7 +45,7 @@ public class UserMapper {
         return userVO;
     }
 
-    public UserVO accountToUserVO(AccountVO accountVO) {
+    public UserVO accountToUserVO(UserAccountVO accountVO) {
         UserVO userVO = new UserVO();
         userVO.setUsername(accountVO.getUsername());
         userVO.setPassword(accountVO.getPassword());
