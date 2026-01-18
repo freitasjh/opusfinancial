@@ -8,7 +8,7 @@ public class UserAccountFake {
         var accountCreateDTO = new UserAccountCreateDTO();
         accountCreateDTO.setUsername("user01");
         accountCreateDTO.setPassword("user01");
-        accountCreateDTO.setName("Account test");
+        accountCreateDTO.setAccountName("Account test");
         accountCreateDTO.setName("User test");
         accountCreateDTO.setDocument("1111");
         accountCreateDTO.setEmail("teste@teste.com.br");

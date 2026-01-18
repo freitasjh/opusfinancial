@@ -71,7 +71,6 @@ public class UserServiceImpl implements UserService {
             User userAfterUpdate = repository.update(userBeforeUpdate);
 
             return UserMapper.of().toVO(userAfterUpdate);
-
         } catch (BaseException e) {
             log.error(e.getMessage(), e);
             throw e;
@@ -129,17 +128,17 @@ public class UserServiceImpl implements UserService {
     }
 
     private void validateSaveNewUser(User user) {
-        if(user.getPassword() == null || user.getPassword().isBlank()) {
+        if (user.getPassword() == null || user.getPassword().isBlank()) {
             throw new UserPasswordNotProvideInformationException();
         }
 
-        if(user.getUsername() == null || user.getUsername().isBlank()) {
+        if (user.getUsername() == null || user.getUsername().isBlank()) {
             throw new UsernameNotProvideInformationException();
         }
 
-        Optional<User> userEmailOrUsername = repository.findByUsernameOrEmail(user.getUsername(), user.getEmail());
+        Optional<User> userExist = repository.findByUsernameOrEmail(user.getUsername(), user.getEmail());
 
-        if (userEmailOrUsername.isPresent()) {
+        if (userExist.isPresent()) {
             throw new UserUsernameOrEmailExistException();
         }
     }

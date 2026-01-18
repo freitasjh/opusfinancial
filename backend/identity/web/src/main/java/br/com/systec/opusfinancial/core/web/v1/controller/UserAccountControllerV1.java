@@ -6,6 +6,7 @@ import br.com.systec.opusfinancial.identity.api.services.UserAccountService;
 import br.com.systec.opusfinancial.identity.api.vo.UserAccountVO;
 import br.com.systec.opusfinancial.core.web.v1.dto.UserAccountCreateDTO;
 import br.com.systec.opusfinancial.core.web.v1.mapper.UserAccountMapperV1;
+import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,7 @@ public class UserAccountControllerV1 extends AbstractController {
     }
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> create(@RequestBody UserAccountCreateDTO accountCreate) {
+    public ResponseEntity<Void> create(@RequestBody @Valid UserAccountCreateDTO accountCreate) {
         UserAccountVO accountVO = UserAccountMapperV1.of().toVO(accountCreate);
         accountService.create(accountVO);
         return buildSuccessResponseNoContent();
