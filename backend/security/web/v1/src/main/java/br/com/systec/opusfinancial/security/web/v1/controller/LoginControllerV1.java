@@ -73,6 +73,8 @@ public class LoginControllerV1 extends AbstractController {
 
         LoginAuthenticateVO loginAuthenticateVO = loginService.refreshToken(refreshToken);
 
+        response.addHeader(HttpHeaders.SET_COOKIE, CookieUtil.of().createRefreshToken(loginAuthenticateVO).toString());
+
         return buildSuccessResponse(new RefreshTokenResponseDTO(loginAuthenticateVO.getAccessToken()));
     }
 
