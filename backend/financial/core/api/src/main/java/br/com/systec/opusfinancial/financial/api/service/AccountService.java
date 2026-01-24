@@ -16,4 +16,6 @@ public interface AccountService {
 
     AccountVO findById(UUID id);
 
+    void createDefaultAccount(UUID tenantId);
+
 }

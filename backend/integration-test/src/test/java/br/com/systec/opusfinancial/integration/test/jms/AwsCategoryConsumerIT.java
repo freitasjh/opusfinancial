@@ -1,6 +1,6 @@
 package br.com.systec.opusfinancial.integration.test.jms;
 
-import br.com.systec.opusfinancial.commons.jms.QueueConstants;
+import br.com.systec.opusfinancial.commons.messaging.MessagingConstants;
 import br.com.systec.opusfinancial.integration.test.AbstractIT;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import org.assertj.core.api.Assertions;
@@ -12,21 +12,22 @@ import software.amazon.awssdk.services.sqs.model.QueueAttributeName;
 
 import java.util.concurrent.TimeUnit;
 
-public class CategoryConsumerIT extends AbstractIT {
+public class AwsCategoryConsumerIT extends AbstractIT {
 
     @Autowired
-    private SqsTemplate sqsTemplate; // Para enviar a mensagem
+    private SqsTemplate sqsTemplate;
 
     @Autowired
-    private SqsAsyncClient sqsClient; 
+    private SqsAsyncClient sqsClient;
 
     @Test
     void shouldSendToDlqWhenPayloadIsInvalid() {
+        String dlqName = MessagingConstants.CREATE_CATEGORY + "-dlq";
         // 1. Enviar mensagem inválida
-        sqsTemplate.send(QueueConstants.CREATE_CATEGORY, "Lixo");
+        sqsTemplate.sendAsync(MessagingConstants.CREATE_CATEGORY, "Lixo");
 
         // 2. Pegar a URL da DLQ usando o cliente injetado (forma correta)
-        String dlqUrl = sqsClient.getQueueUrl(r -> r.queueName(QueueConstants.CREATE_CATEGORY + "-dlq"))
+        String dlqUrl = sqsClient.getQueueUrl(r -> r.queueName(dlqName))
                 .join() // Necessário pois o cliente é Async (retorna CompletableFuture)
                 .queueUrl();
 

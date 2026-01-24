@@ -15,4 +15,6 @@ public interface CategoryService {
     CategoryVO findById(UUID id);
 
     Page<CategoryVO> findByFilter(FilterCategory filter);
+
+    void createDefaultCategory(UUID tenantId);
 }

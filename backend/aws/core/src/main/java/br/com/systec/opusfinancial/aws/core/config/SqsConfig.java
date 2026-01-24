@@ -1,11 +1,12 @@
-package br.com.systec.opusfinancial.aws.sqs.config;
+package br.com.systec.opusfinancial.aws.core.config;
 
 import io.awspring.cloud.sqs.config.SqsMessageListenerContainerFactory;
 import io.awspring.cloud.sqs.listener.QueueNotFoundStrategy;
 import io.awspring.cloud.sqs.listener.acknowledgement.handler.AcknowledgementMode;
-import org.springframework.beans.factory.annotation.Value;
+import io.awspring.cloud.sqs.operations.SqsTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -15,30 +16,28 @@ import java.net.URI;
 import java.time.Duration;
 
 @Configuration
+@Profile("aws")
 public class SqsConfig {
 
-    @Value("${spring.cloud.aws.sqs.endpoint}")
-    private String sqsEndpoint; // http://localhost:4566
+    private final AwsProperties awsProperties;
 
-    @Value("${spring.cloud.aws.region.static}")
-    private String region;
-
-    @Value("${spring.cloud.aws.credentials.access-key}")
-    private String accessKey;
-
-    @Value("${spring.cloud.aws.credentials.secret-key}")
-    private String secretKey;
+    public SqsConfig(AwsProperties awsProperties) {
+        this.awsProperties = awsProperties;
+    }
 
     @Bean
     public SqsAsyncClient sqsAsyncClient() {
         return SqsAsyncClient.builder()
-                .region(Region.of(region))
+                .region(Region.of(awsProperties.getRegion()))
                 .credentialsProvider(
                         StaticCredentialsProvider.create(
-                                AwsBasicCredentials.create(accessKey, secretKey)
+                                AwsBasicCredentials.create(
+                                        awsProperties.getCredentials().getAccessKey(),
+                                        awsProperties.getCredentials().getSecretKey()
+                                )
                         )
                 )
-                .endpointOverride(URI.create(sqsEndpoint)) // local
+                .endpointOverride(URI.create(awsProperties.getEndpoints().getSqs()))
                 .build();
     }
 

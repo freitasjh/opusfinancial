@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>br.com.systec.opusfinancial</groupId>
-        <artifactId>financial-catalog</artifactId>
+        <artifactId>financial-core</artifactId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>financial-catalog-jms</artifactId>
-    <name>OpusFinancial Financial Catalog JMS</name>
+    <artifactId>financial-core-jms</artifactId>
+    <name>OpusFinancial Financial Core JMS</name>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -28,12 +28,13 @@
             <artifactId>opusfinancial-commons</artifactId>
         </dependency>
         <dependency>
-            <groupId>br.com.systec.opusfinancial</groupId>
-            <artifactId>financial-catalog-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.awspring.cloud</groupId>
             <artifactId>spring-cloud-aws-starter-sqs</artifactId>
         </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>financial-core-api</artifactId>
+        </dependency>
     </dependencies>
+
 </project>

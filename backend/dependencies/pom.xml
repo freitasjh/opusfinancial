@@ -28,7 +28,7 @@
         <logstash.version>7.4</logstash.version>
         <apache-compress.version>1.28.0</apache-compress.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <aws.sqs.version>3.1.1</aws.sqs.version>
+        <aws.version>3.1.1</aws.version>
     </properties>
 
     <dependencyManagement>
@@ -93,6 +93,13 @@
                 <version>${spring.boot.version}</version>
                 <scope>provided</scope>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-json</artifactId>
+                <version>${spring.boot.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
             <dependency>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-core</artifactId>
@@ -235,8 +242,8 @@
             </dependency>
             <dependency>
                 <groupId>br.com.systec.opusfinancial</groupId>
-                <artifactId>aws-sqs</artifactId>
-                <version>${revision}</version>
+                <artifactId>aws-core</artifactId>
+                <version>${project.version}</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -244,7 +251,14 @@
             <dependency>
                 <groupId>io.awspring.cloud</groupId>
                 <artifactId>spring-cloud-aws-starter-sqs</artifactId>
-                <version>${aws.sqs.version}</version>
+                <version>${aws.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.awspring.cloud</groupId>
+                <artifactId>spring-cloud-aws-starter-sns</artifactId>
+                <version>${aws.version}</version>
                 <scope>provided</scope>
             </dependency>
 

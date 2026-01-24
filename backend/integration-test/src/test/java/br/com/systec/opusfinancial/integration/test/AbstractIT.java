@@ -1,22 +1,24 @@
 package br.com.systec.opusfinancial.integration.test;
 
 import br.com.systec.opusfinancial.OpusfinancialApplication;
-import br.com.systec.opusfinancial.commons.jms.QueueConstants;
+import br.com.systec.opusfinancial.commons.messaging.MessagingConstants;
 import org.junit.jupiter.api.BeforeAll;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.sns.SnsClient;
+import software.amazon.awssdk.services.sns.model.CreateTopicRequest;
+import software.amazon.awssdk.services.sns.model.SubscribeRequest;
 import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.model.CreateQueueRequest;
 import software.amazon.awssdk.services.sqs.model.GetQueueAttributesRequest;
@@ -25,20 +27,19 @@ import software.amazon.awssdk.services.sqs.model.QueueAttributeName;
 import java.util.HashMap;
 import java.util.Map;
 
-@ActiveProfiles("test")
-@SpringBootTest(
-        classes = OpusfinancialApplication.class,
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
+@ActiveProfiles("aws")
+@SpringBootTest(classes = OpusfinancialApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class AbstractIT {
 
-    // 1. Container do LocalStack (Mensageria)
-    @Container
-    static LocalStackContainer localStack = new LocalStackContainer(
-            DockerImageName.parse("localstack/localstack:3.2"))
-            .withServices(LocalStackContainer.Service.SQS);
+    private static final Logger log = LoggerFactory.getLogger(AbstractIT.class);
 
-    // 2. Container do PostgreSQL (Banco de Dados)
+    // NOME DO TÓPICO (Deve ser igual ao usado no UserAccountServiceImpl)
+    private static final String USER_EVENTS_TOPIC_NAME = "user-events-topic";
+
+    @Container
+    static LocalStackContainer localStack = new LocalStackContainer(DockerImageName.parse("localstack/localstack:3.2"))
+            .withServices(LocalStackContainer.Service.SQS, LocalStackContainer.Service.SNS);
+
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine")
             .withDatabaseName("opusfinancial")
@@ -47,75 +48,104 @@ public abstract class AbstractIT {
 
     @BeforeAll
     static void beforeAll() {
-        // Inicia containers explicitamente para garantir ordem, se necessário
-        // (O @Container já cuida disso, mas o start() manual permite setup pré-Spring)
-        localStack.start();
         postgres.start();
-
-        // Configura as filas no LocalStack antes do contexto do Spring subir
-        createQueuesWithDlq();
+        localStack.start();
+        configureMessagingInfrastructure();
     }
 
     @DynamicPropertySource
     static void registerProperties(DynamicPropertyRegistry registry) {
-        // Configurações Dinâmicas do PostgreSQL
+        // Database
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
-        // Garante o driver correto
         registry.add("spring.datasource.driver-class-name", () -> "org.postgresql.Driver");
 
-        // Configurações Dinâmicas do SQS (LocalStack)
-        registry.add("spring.cloud.aws.sqs.endpoint", () -> localStack.getEndpointOverride(LocalStackContainer.Service.SQS).toString());
-        registry.add("spring.cloud.aws.region.static", () -> localStack.getRegion());
-        registry.add("spring.cloud.aws.credentials.access-key", () -> localStack.getAccessKey());
-        registry.add("spring.cloud.aws.credentials.secret-key", () -> localStack.getSecretKey());
+        // AWS - Configuração OPUS
+        registry.add("opus.aws.region", localStack::getRegion);
+        registry.add("opus.aws.credentials.access-key", localStack::getAccessKey);
+        registry.add("opus.aws.credentials.secret-key", localStack::getSecretKey);
+        registry.add("opus.aws.endpoints.sqs", () -> localStack.getEndpointOverride(LocalStackContainer.Service.SQS).toString());
+        // Mapeamento do SNS (Vital para o Publisher funcionar)
+        registry.add("opus.aws.endpoints.sns", () -> localStack.getEndpointOverride(LocalStackContainer.Service.SNS).toString());
     }
 
-    /**
-     * Cria as filas programaticamente com configuração de DLQ e Timeout curto.
-     * Isso permite testar retries e dead-letter rapidamente.
-     */
-    private static void createQueuesWithDlq() {
-        try (SqsClient sqsClient = SqsClient.builder()
-                .endpointOverride(localStack.getEndpointOverride(LocalStackContainer.Service.SQS))
-                .region(Region.of(localStack.getRegion()))
-                .credentialsProvider(StaticCredentialsProvider.create(
-                        AwsBasicCredentials.create(localStack.getAccessKey(), localStack.getSecretKey())
-                ))
-                .build()) {
+    private static void configureMessagingInfrastructure() {
+        log.info("### Configurando Infraestrutura de Mensageria (SNS + SQS) no LocalStack... ###");
 
-            // Defina aqui a fila que você está testando (use a constante do seu projeto)
-            String mainQueueName = QueueConstants.CREATE_CATEGORY;
-            String dlqName = mainQueueName + "-dlq";
+        // Criar Clientes Temporários para o Setup
+        try (
+                SqsClient sqsClient = SqsClient.builder()
+                        .endpointOverride(localStack.getEndpointOverride(LocalStackContainer.Service.SQS))
+                        .region(Region.of(localStack.getRegion()))
+                        .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(localStack.getAccessKey(), localStack.getSecretKey())))
+                        .build();
 
-            // A) Criar a DLQ
-            sqsClient.createQueue(CreateQueueRequest.builder().queueName(dlqName).build());
+                SnsClient snsClient = SnsClient.builder()
+                        .endpointOverride(localStack.getEndpointOverride(LocalStackContainer.Service.SNS))
+                        .region(Region.of(localStack.getRegion()))
+                        .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(localStack.getAccessKey(), localStack.getSecretKey())))
+                        .build()
+        ) {
+            // -----------------------------------------------------------------------
+            // 1. CRIAR O TÓPICO SNS
+            // -----------------------------------------------------------------------
+            log.info("Criando Tópico SNS: {}", USER_EVENTS_TOPIC_NAME);
+            String topicArn = snsClient.createTopic(CreateTopicRequest.builder()
+                    .name(USER_EVENTS_TOPIC_NAME)
+                    .build()).topicArn();
 
-            // B) Obter ARN da DLQ
-            String dlqUrl = sqsClient.getQueueUrl(r -> r.queueName(dlqName)).queueUrl();
-            String dlqArn = sqsClient.getQueueAttributes(GetQueueAttributesRequest.builder()
-                    .queueUrl(dlqUrl)
-                    .attributeNames(QueueAttributeName.QUEUE_ARN)
-                    .build()).attributes().get(QueueAttributeName.QUEUE_ARN);
+            // -----------------------------------------------------------------------
+            // 2. CRIAR AS FILAS SQS (Com DLQ)
+            // -----------------------------------------------------------------------
+            createQueueAndSubscribeInTopic(MessagingConstants.CREATE_CATEGORY, topicArn, snsClient, sqsClient);
+            createQueueAndSubscribeInTopic(MessagingConstants.CREATE_ACCOUNT, topicArn, snsClient, sqsClient);
 
-            // C) Criar Fila Principal com RedrivePolicy + VisibilityTimeout = 1s
-            Map<QueueAttributeName, String> attributes = new HashMap<>();
-            // 1 segundo para o teste falhar e retentar rápido
-            attributes.put(QueueAttributeName.VISIBILITY_TIMEOUT, "1");
-            // Política de DLQ: após 3 falhas, move para a DLQ
-            attributes.put(QueueAttributeName.REDRIVE_POLICY,
-                    String.format("{\"deadLetterTargetArn\":\"%s\",\"maxReceiveCount\":\"3\"}", dlqArn));
-
-            sqsClient.createQueue(CreateQueueRequest.builder()
-                    .queueName(mainQueueName)
-                    .attributes(attributes)
-                    .build());
-
-            System.out.println("### [AbstractIT] Filas criadas: " + mainQueueName + " (c/ DLQ) no Postgres/LocalStack ###");
+            log.info("### Infraestrutura de Teste Pronta! ###");
 
         } catch (Exception e) {
-            throw new RuntimeException("Falha ao configurar filas no LocalStack de teste", e);
+            throw new RuntimeException("Erro ao configurar SNS/SQS no LocalStack", e);
         }
+    }
+
+    private static void createQueueAndSubscribeInTopic(String queueName, String topicArn, SnsClient snsClient, SqsClient sqsClient) {
+        String dlqName = queueName + "-dlq";
+
+        // Criar DLQ
+        sqsClient.createQueue(CreateQueueRequest.builder().queueName(dlqName).build());
+        String dlqUrl = sqsClient.getQueueUrl(r -> r.queueName(dlqName)).queueUrl();
+        String dlqArn = sqsClient.getQueueAttributes(GetQueueAttributesRequest.builder().queueUrl(dlqUrl).attributeNames(QueueAttributeName.QUEUE_ARN).build())
+                .attributes().get(QueueAttributeName.QUEUE_ARN);
+
+        // Criar Fila Principal
+        Map<QueueAttributeName, String> attributes = new HashMap<>();
+        attributes.put(QueueAttributeName.VISIBILITY_TIMEOUT, "1");
+        attributes.put(QueueAttributeName.REDRIVE_POLICY,
+                String.format("{\"deadLetterTargetArn\":\"%s\",\"maxReceiveCount\":\"1\"}", dlqArn));
+
+        log.info("Criando Fila SQS: {}", queueName);
+        sqsClient.createQueue(CreateQueueRequest.builder()
+                .queueName(queueName)
+                .attributes(attributes)
+                .build());
+
+        String queueUrl = sqsClient.getQueueUrl(r -> r.queueName(queueName)).queueUrl();
+        String queueArn = sqsClient.getQueueAttributes(GetQueueAttributesRequest.builder().queueUrl(queueUrl).attributeNames(QueueAttributeName.QUEUE_ARN).build())
+                .attributes().get(QueueAttributeName.QUEUE_ARN);
+
+        // -----------------------------------------------------------------------
+        // 3. FAZER A ASSINATURA (SUBSCRIPTION) - O PULO DO GATO
+        // -----------------------------------------------------------------------
+        // Liga o Tópico (SNS) à Fila (SQS)
+        log.info("Realizando Subscribe: Tópico [{}] -> Fila [{}]", topicArn, queueArn);
+
+        SubscribeRequest subscribeRequest = SubscribeRequest.builder()
+                .topicArn(topicArn)
+                .protocol("sqs")
+                .endpoint(queueArn)
+                .attributes(Map.of("RawMessageDelivery", "true")) // CRÍTICO: Garante que o JSON chegue limpo, sem envelope do SNS
+                .build();
+
+        snsClient.subscribe(subscribeRequest);
     }
 }

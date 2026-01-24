@@ -1,10 +1,12 @@
-package br.com.systec.opusfinancial.financial.jms;
+package br.com.systec.opusfinancial.api.vo;
 
-import br.com.systec.opusfinancial.api.vo.CategoryVO;
-
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
-public class ListCategory {
+public class ListCategoryVO implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 2358153658301498790L;
 
     private List<CategoryVO> categories;
 

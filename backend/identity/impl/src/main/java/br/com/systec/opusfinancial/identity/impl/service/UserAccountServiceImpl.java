@@ -1,16 +1,17 @@
 package br.com.systec.opusfinancial.identity.impl.service;
 
 import br.com.systec.opusfinancial.commons.exceptions.BaseException;
-import br.com.systec.opusfinancial.commons.jms.QueueConstants;
-import br.com.systec.opusfinancial.identity.api.services.UserAccountService;
+import br.com.systec.opusfinancial.commons.messaging.EventPublisher;
+import br.com.systec.opusfinancial.commons.messaging.MessagingConstants;
+import br.com.systec.opusfinancial.commons.messaging.vo.EventPublisherVO;
 import br.com.systec.opusfinancial.identity.api.services.TenantService;
+import br.com.systec.opusfinancial.identity.api.services.UserAccountService;
 import br.com.systec.opusfinancial.identity.api.services.UserService;
-import br.com.systec.opusfinancial.identity.api.vo.UserAccountVO;
 import br.com.systec.opusfinancial.identity.api.vo.TenantVO;
+import br.com.systec.opusfinancial.identity.api.vo.UserAccountVO;
 import br.com.systec.opusfinancial.identity.api.vo.UserVO;
 import br.com.systec.opusfinancial.identity.impl.mapper.TenantMapper;
 import br.com.systec.opusfinancial.identity.impl.mapper.UserMapper;
-import io.awspring.cloud.sqs.operations.SqsTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -23,12 +24,13 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     private final UserService userService;
     private final TenantService tenantService;
-    private final SqsTemplate sqsTemplate;
+    private final EventPublisher eventPublisher;
 
-    public UserAccountServiceImpl(UserService userService, TenantService tenantService, SqsTemplate sqsTemplate) {
+
+    public UserAccountServiceImpl(UserService userService, TenantService tenantService, EventPublisher eventPublisher) {
         this.userService = userService;
         this.tenantService = tenantService;
-        this.sqsTemplate = sqsTemplate;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -48,8 +50,7 @@ public class UserAccountServiceImpl implements UserAccountService {
             log.warn("@@@ Salvando o tenant no usuario @@@");
             userService.saveTenantId(userAfterCreate.getId(), tenantAfterCreate.getId());
 
-            log.warn("@@@ Enviando mensagem para fila criar a categoria @@@");
-            sqsTemplate.sendAsync(QueueConstants.CREATE_CATEGORY, tenantAfterCreate.getId().toString());
+            eventPublisher.publish(MessagingConstants.USER_EVENTS_TOPIC, new EventPublisherVO(tenantAfterCreate.getId()));
 
         } catch (BaseException e) {
             log.error(e.getMessage(), e);
