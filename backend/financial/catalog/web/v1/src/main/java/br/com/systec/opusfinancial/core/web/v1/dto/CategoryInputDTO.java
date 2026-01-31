@@ -14,16 +14,24 @@ public class CategoryInputDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 2017085249402760459L;
 
+    private UUID id;
     private UUID parentId;
     @NotNull
     @NotBlank
     private String name;
     private String colorHex;
     private String iconCode;
-    @NotNull
     private CategoryType categoryType;
     @Min(value = 0)
     private BigDecimal spendingLimit;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
     public UUID getParentId() {
         return parentId;

@@ -34,6 +34,9 @@ public class AwsAccountConsumer implements ConsumerAbstract {
             }
 
             EventPublisherVO eventPublisher = objectMapper.readValue(message, EventPublisherVO.class);
+
+            log.warn("@@@ [AWS] Criando a conta default para o tenantId {}", eventPublisher.tenantId());
+
             accountService.createDefaultAccount(eventPublisher.tenantId());
         } catch (Exception e) {
             log.error("[AWS] Erro ao tentar salvar as contas ", e);

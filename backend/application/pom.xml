@@ -157,6 +157,11 @@
         </dependency>
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>financial-core-jms</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
             <artifactId>financial-catalog-api</artifactId>
             <scope>compile</scope>
         </dependency>

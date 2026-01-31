@@ -14,6 +14,17 @@ const model = ref([
         ]
     },
     {
+        label: 'Cadastros',
+        icon: 'pi pi-fw pi-prime',
+        items: [
+            {
+                label: 'Categoria',
+                icon: 'pi pi-fw pi-check-square',
+                to: '/category'
+            }
+        ]
+    },
+    {
         label: 'UI Components',
         path: '/uikit',
         items: [
@@ -95,24 +106,7 @@ const model = ref([
             }
         ]
     },
-    {
-        label: 'Prime Blocks',
-        icon: 'pi pi-fw pi-prime',
-        path: '/blocks',
-        items: [
-            {
-                label: 'Free Blocks',
-                icon: 'pi pi-fw pi-eye',
-                to: '/blocks/free'
-            },
-            {
-                label: 'All Blocks',
-                icon: 'pi pi-fw pi-globe',
-                url: 'https://blocks.primevue.org/',
-                target: '_blank'
-            }
-        ]
-    },
+
     {
         label: 'Pages',
         icon: 'pi pi-fw pi-briefcase',

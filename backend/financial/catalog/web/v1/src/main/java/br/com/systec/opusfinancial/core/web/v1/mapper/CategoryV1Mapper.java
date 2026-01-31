@@ -6,6 +6,8 @@ import br.com.systec.opusfinancial.core.web.v1.dto.CategoryResponseDTO;
 import br.com.systec.opusfinancial.core.web.v1.dto.CategorySaveResponseDTO;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 public class CategoryV1Mapper {
 
     private CategoryV1Mapper() {}
@@ -16,6 +18,7 @@ public class CategoryV1Mapper {
 
     public CategoryVO inputToVO(CategoryInputDTO inputDTO) {
         CategoryVO categoryVO = new CategoryVO();
+        categoryVO.setId(inputDTO.getId());
         categoryVO.setName(inputDTO.getName());
         categoryVO.setParentId(inputDTO.getParentId());
         categoryVO.setColorHex(inputDTO.getColorHex());
@@ -45,11 +48,16 @@ public class CategoryV1Mapper {
         categoryResponseDTO.setName(categoryVO.getName());
         categoryResponseDTO.setIconCode(categoryVO.getIconCode());
         categoryResponseDTO.setColorHex(categoryVO.getColorHex());
+        categoryResponseDTO.setCategoryType(categoryVO.getCategoryType().name());
 
         return categoryResponseDTO;
     }
 
     public Page<CategoryResponseDTO> toFindResponse(Page<CategoryVO> result) {
         return result.map(this::toResponseDTO);
+    }
+
+    public List<CategoryResponseDTO> toListDTO(List<CategoryVO> listOfCategory) {
+        return listOfCategory.stream().map(this::toResponseDTO).toList();
     }
 }

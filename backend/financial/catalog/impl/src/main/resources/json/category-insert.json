@@ -3,62 +3,86 @@
     {
       "name": "Alimentação",
       "spendingLimit": 1000,
-      "categoryType": 1
+      "categoryType": 1,
+      "iconCode": "pi pi-shopping-cart",
+      "colorHex": "ff0808"
     },
     {
       "name": "Moradia",
       "spendingLimit": 1000,
-      "categoryType": 1
+      "categoryType": 1,
+      "iconCode": "pi pi-home",
+      "colorHex": "ff0808"
     },
     {
       "name": "Transporte",
       "spendingLimit": 1000,
-      "categoryType": 1
+      "categoryType": 1,
+      "iconCode": "pi pi-cart",
+      "colorHex": "ff0808"
     },
     {
       "name": "Saúde",
       "spendingLimit": 1000,
-      "categoryType": 1
+      "categoryType": 1,
+      "iconCode": "pi pi-heart",
+      "colorHex": "ff0808"
     },
     {
       "name": "Educação",
       "spendingLimit": 1000,
-      "categoryType": 1
+      "categoryType": 1,
+      "iconCode": "pi pi-book",
+      "colorHex": "ff0808"
     },
     {
       "name": "Lazer",
       "spendingLimit": 1000,
-      "categoryType": 1
+      "categoryType": 1,
+      "iconCode": "pi pi-ticket",
+      "colorHex": "ff0808"
     },
     {
       "name": "Vestuário",
       "spendingLimit": 1000,
-      "categoryType": 1
+      "categoryType": 1,
+      "iconCode": "pi pi-wallet",
+      "colorHex": "ff0808"
     },
     {
       "name": "Dívidas",
       "spendingLimit": 1000,
-      "categoryType": 1
+      "categoryType": 1,
+      "iconCode": "pi pi-wallet",
+      "colorHex": "ff0808"
     },
     {
       "name": "Investimentos",
       "spendingLimit": 1000,
-      "categoryType": 1
+      "categoryType": 1,
+      "iconCode": "pi pi-building",
+      "colorHex": "ff0808"
     },
     {
       "name": "Outros",
       "spendingLimit": 1000,
-      "categoryType": 1
+      "categoryType": 1,
+      "iconCode": "pi pi-cog",
+      "colorHex": "ff0808"
     },
     {
       "name": "Salario Fixo",
       "spendingLimit": 0.0,
-      "categoryType": 0
+      "categoryType": 0,
+      "iconCode": "pi pi-wallet",
+      "colorHex": "ff0808"
     },
     {
       "name": "Renda extra",
       "spendingLimit": 0.0,
-      "categoryType": 0
+      "categoryType": 0,
+      "iconCode": "pi pi-wallet",
+      "colorHex": "ff0808"
     }
   ]
 }

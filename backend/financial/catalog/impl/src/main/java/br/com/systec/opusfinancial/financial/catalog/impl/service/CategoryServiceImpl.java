@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -90,5 +91,13 @@ public class CategoryServiceImpl implements CategoryService {
             log.error("Erro ao tentar salvar as categorias defaut", e);
             throw new BaseException(e);
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CategoryVO> findByParentId(UUID parentId) {
+        List<Category> listOfCategory = repository.findByParentId(parentId);
+
+        return CategoryMapper.of().toList(listOfCategory);
     }
 }

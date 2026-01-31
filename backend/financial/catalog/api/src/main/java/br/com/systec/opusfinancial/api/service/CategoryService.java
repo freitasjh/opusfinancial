@@ -4,6 +4,7 @@ import br.com.systec.opusfinancial.api.filter.FilterCategory;
 import br.com.systec.opusfinancial.api.vo.CategoryVO;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface CategoryService {
@@ -15,6 +16,8 @@ public interface CategoryService {
     CategoryVO findById(UUID id);
 
     Page<CategoryVO> findByFilter(FilterCategory filter);
+
+    List<CategoryVO> findByParentId(UUID parentId);
 
     void createDefaultCategory(UUID tenantId);
 }
