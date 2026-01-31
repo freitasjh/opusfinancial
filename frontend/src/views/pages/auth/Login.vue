@@ -11,7 +11,7 @@ const email = ref('');
 const password = ref('');
 const checked = ref(false);
 const router = useRouter();
-const toast = useHandlerMessage();
+const handlerMessage = useHandlerMessage();
 const authStore = useAuthStore();
 
 const handleSignIn = async () => {
@@ -21,7 +21,7 @@ const handleSignIn = async () => {
 
         router.push('/');
     } catch (error: AxiosError | any) {
-        toast.handlerError(error);
+        handlerMessage.error(error);
     }
 };
 </script>

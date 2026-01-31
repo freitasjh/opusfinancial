@@ -55,6 +55,11 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>io.awspring.cloud</groupId>
+            <artifactId>spring-cloud-aws-starter-sns</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <scope>compile</scope>
@@ -102,7 +107,7 @@
         </dependency>
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>
-            <artifactId>aws-sqs</artifactId>
+            <artifactId>aws-core</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -148,6 +153,11 @@
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>
             <artifactId>financial-core-web-v1</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>financial-core-jms</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>

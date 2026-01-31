@@ -26,7 +26,7 @@ api.interceptors.response.use(
     async (error: AxiosError) => {
         if (error.response?.status === 401) {
             try {
-                const refreshResponse = await axios.post('/api/v1/auth/refresh', {}, { withCredentials: true });
+                const refreshResponse = await axios.post('/api/v1/auth/refresh-token', {}, { withCredentials: true });
 
                 const newAccessToken = refreshResponse.data.accessToken;
                 console.log(newAccessToken);

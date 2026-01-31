@@ -26,7 +26,7 @@ export function useHandlerMessage() {
     }
 
     // Manipula erros de validação
-    const handlerErrorValidation = (error: CustomAxiosError): void => {
+    const errorValidation = (error: CustomAxiosError): void => {
         let errorMessage = '';
         if (error.response?.data?.errors) {
             errorMessage = error.response.data.errors.map((err: ValidationError) => `<p><b>${err.message}</b></p>`).join('');
@@ -41,14 +41,14 @@ export function useHandlerMessage() {
     };
 
     // Manipula erros genéricos
-    const handlerError = (error: CustomAxiosError | string): void => {
+    const error = (error: CustomAxiosError | string): void => {
         let message = '';
 
         if (typeof error === 'string') {
             message = error;
         } else if (error.response && error.response.data && error.response.data.msg) {
             if (error.response.data.errors && Array.isArray(error.response.data.errors)) {
-                handlerErrorValidation(error);
+                errorValidation(error);
                 return;
             } else {
                 message = error.response.data.msg;
@@ -66,7 +66,7 @@ export function useHandlerMessage() {
     };
 
     // Manipula notificações de sucesso (toast)
-    const handlerToastSuccess = (message: string): void => {
+    const toastSuccess = (message: string): void => {
         const Toast = swal.mixin({
             toast: true,
             position: 'top-end',
@@ -86,7 +86,7 @@ export function useHandlerMessage() {
     };
 
     // Manipula modais de sucesso
-    const handlerModalSuccess = (message: string): void => {
+    const modalSuccess = (message: string): void => {
         swal.fire({
             title: 'Success',
             text: message,
@@ -94,7 +94,7 @@ export function useHandlerMessage() {
         });
     };
 
-    const handlerModalSuccessWithRedirect = (message: string, redirectUrl: string): void => {
+    const modalSuccessWithRedirect = (message: string, redirectUrl: string): void => {
         swal.fire({
             title: 'Success',
             text: message,
@@ -107,10 +107,9 @@ export function useHandlerMessage() {
     };
 
     return {
-        handlerError,
-        handlerErrorValidation,
-        handlerToastSuccess,
-        handlerModalSuccess,
-        handlerModalSuccessWithRedirect
+        error,
+        toastSuccess,
+        modalSuccess,
+        modalSuccessWithRedirect
     };
 }

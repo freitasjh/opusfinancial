@@ -23,6 +23,6 @@
         <module>integration-test</module>
         <module>i18n</module>
         <module>financial</module>
-        <module>aws-sqs</module>
+        <module>aws</module>
     </modules>
 </project>

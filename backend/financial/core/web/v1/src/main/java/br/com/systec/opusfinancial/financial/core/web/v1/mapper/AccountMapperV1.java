@@ -3,7 +3,9 @@ package br.com.systec.opusfinancial.financial.core.web.v1.mapper;
 import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountInfoResponseDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountInputDTO;
+import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountResponseDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountResponseSaveDTO;
+import org.springframework.data.domain.Page;
 
 public class AccountMapperV1 {
 
@@ -45,4 +47,22 @@ public class AccountMapperV1 {
 
         return accountInfoResponseDTO;
     }
+
+    public AccountResponseDTO toResponseDTO(AccountVO accountVO) {
+        AccountResponseDTO accountResponse = new AccountResponseDTO();
+        accountResponse.setId(accountVO.getId());
+        accountResponse.setAccountName(accountVO.getAccountName());
+        accountResponse.setAccountType(accountVO.getAccountType().name());
+
+        if (accountVO.getBank() != null) {
+            accountResponse.setBank(accountVO.getBank().getName());
+        }
+
+        return accountResponse;
+    }
+
+    public Page<AccountResponseDTO> toPageResonse(Page<AccountVO> resultPage) {
+        return resultPage.map(this::toResponseDTO);
+    }
+
 }

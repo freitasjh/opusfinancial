@@ -5,11 +5,15 @@ import br.com.systec.opusfinancial.api.vo.BankVO;
 import br.com.systec.opusfinancial.financial.api.exceptions.AccountNotFoundException;
 import br.com.systec.opusfinancial.financial.api.filter.FilterAccount;
 import br.com.systec.opusfinancial.financial.api.service.AccountService;
+import br.com.systec.opusfinancial.financial.api.vo.AccountType;
 import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
 import br.com.systec.opusfinancial.financial.catalog.impl.domain.Account;
 import br.com.systec.opusfinancial.financial.catalog.impl.filter.AccountSpecification;
 import br.com.systec.opusfinancial.financial.catalog.impl.mapper.AccountMapper;
 import br.com.systec.opusfinancial.financial.catalog.impl.repository.AccountRepository;
+import br.com.systec.opusfinancial.i18n.I18nTranslate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -20,6 +24,9 @@ import java.util.UUID;
 
 @Service
 public class AccountServiceImpl implements AccountService {
+    private static final Logger log = LoggerFactory.getLogger(AccountServiceImpl.class);
+    private static final String BANK_OTHER = "999";
+
     private final AccountRepository repository;
     private final BankService bankService;
 
@@ -71,5 +78,20 @@ public class AccountServiceImpl implements AccountService {
         List<BankVO> banks = bankService.findByIds(bankIds).values().stream().toList();
 
         return AccountMapper.of().toPageVO(result, banks);
+    }
+
+    @Transactional
+    public void createDefaultAccount(UUID tenantId) {
+        log.warn("@@@ Criando Conta default para o tenant {} @@@", tenantId);
+
+        Account account = new Account();
+        account.setAccountName(I18nTranslate.toLocale("account.name.default"));
+        account.setTenantId(tenantId);
+        account.setAccountType(AccountType.WALLET);
+
+        BankVO bankVO = bankService.findByCode(BANK_OTHER);
+        account.setBankId(bankVO.getId());
+
+        repository.save(account);
     }
 }

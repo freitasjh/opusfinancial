@@ -3,6 +3,8 @@ package br.com.systec.opusfinancial.financial.catalog.impl.mapper;
 import br.com.systec.opusfinancial.api.vo.CategoryVO;
 import br.com.systec.opusfinancial.financial.catalog.impl.domain.Category;
 
+import java.util.List;
+
 public class CategoryMapper {
 
     private CategoryMapper() {}
@@ -37,5 +39,9 @@ public class CategoryMapper {
         categoryVO.setSpendingLimit(category.getSpendingLimit());
 
         return categoryVO;
+    }
+
+    public List<CategoryVO> toList(List<Category> listOfCategory) {
+        return listOfCategory.stream().map(this::toVO).toList();
     }
 }

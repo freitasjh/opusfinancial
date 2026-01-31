@@ -1,7 +1,6 @@
 package br.com.systec.opusfinancial.integration.test.financial.core.web.v1.controller;
 
 import br.com.systec.opusfinancial.commons.controller.RestPath;
-import br.com.systec.opusfinancial.financial.catalog.impl.domain.Account;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountInfoResponseDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountResponseSaveDTO;
 import br.com.systec.opusfinancial.integration.test.AbstractIT;
@@ -69,5 +68,18 @@ public class AccountControllerV1IT extends AbstractIT {
         Assertions.assertThat(saveResponse.getAccountName()).isEqualTo(accountFake.getAccountName());
         Assertions.assertThat(saveResponse.getAccountType()).isEqualTo(accountFake.getAccountType());
         Assertions.assertThat(saveResponse.getBankId()).isEqualTo(accountFake.getBankId());
+    }
+
+    @Order(3)
+    @Test
+    void whenFindByFilter_thenReturn200() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT + "/filter")
+                        .header("Authorization", "Bearer "+ IntegrationUtil.accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements").value(2))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
     }
 }

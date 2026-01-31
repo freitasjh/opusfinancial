@@ -14,6 +14,7 @@ public class CategoryResponseDTO implements Serializable {
     private String name;
     private String colorHex;
     private String iconCode;
+    private String categoryType;
 
     public UUID getId() {
         return id;
@@ -61,5 +62,13 @@ public class CategoryResponseDTO implements Serializable {
 
     public void setIconCode(String iconCode) {
         this.iconCode = iconCode;
+    }
+
+    public String getCategoryType() {
+        return categoryType;
+    }
+
+    public void setCategoryType(String categoryType) {
+        this.categoryType = categoryType;
     }
 }
