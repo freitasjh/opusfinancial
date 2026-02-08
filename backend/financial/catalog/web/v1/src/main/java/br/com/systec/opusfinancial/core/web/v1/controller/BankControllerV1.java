@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -53,6 +54,24 @@ public class BankControllerV1 extends AbstractController {
         BankVO bankFindReturn = bankService.findById(bankId);
 
         return buildSuccessResponse(BankMapperV1.of().toFindResponse(bankFindReturn));
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = BankFindResponseDTO.class))
+            }),
+            @ApiResponse(responseCode = "401", description = "Não autorizado", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = StandardError.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Erro generico", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = StandardError.class))
+            })
+    })
+    public ResponseEntity<List<BankFindResponseDTO>> findAll() {
+        List<BankVO> results = bankService.findAll();
+
+        return buildSuccessResponse(BankMapperV1.of().toList(results));
     }
 
     @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)

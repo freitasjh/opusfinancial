@@ -19,9 +19,9 @@ const router = createRouter({
                     component: () => import('@/financial/category/views/page/CategoryPage.vue')
                 },
                 {
-                    path: '/uikit/formlayout',
-                    name: 'formlayout',
-                    component: () => import('@/views/uikit/FormLayout.vue')
+                    path: '/account',
+                    name: 'account',
+                    component: () => import('@/financial/account/views/pages/AccountPage.vue')
                 },
                 {
                     path: '/uikit/input',

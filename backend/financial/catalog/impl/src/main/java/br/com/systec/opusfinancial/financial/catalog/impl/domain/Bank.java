@@ -19,9 +19,6 @@ public class Bank extends BaseEntity {
     private String name;
     @Column(name = "logo_url")
     private String logoUrl;
-    @Column(name = "color")
-    private String color;
-
 
     public String getCode() {
         return code;
@@ -47,11 +44,4 @@ public class Bank extends BaseEntity {
         this.logoUrl = logoUrl;
     }
 
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
 }

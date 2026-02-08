@@ -12,7 +12,6 @@ public class BankVO implements Serializable {
     private String code;
     private String name;
     private String logoUrl;
-    private String color;
 
     public UUID getId() {
         return id;
@@ -46,11 +45,4 @@ public class BankVO implements Serializable {
         this.logoUrl = logoUrl;
     }
 
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
 }

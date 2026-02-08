@@ -13,11 +13,13 @@ public class CategorySpecification {
     }
 
     public Specification<Category> filter(PageParamSearch filter) {
+        Specification<Category> spec = filterByNotParent();
+
         if(filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
-            return Specification.allOf(filterByKeyword(filter));
+            return spec.and(filterByKeyword(filter));
         }
 
-        return Specification.unrestricted();
+        return spec;
     }
 
     private Specification<Category> filterByKeyword(PageParamSearch filter) {
@@ -25,5 +27,9 @@ public class CategorySpecification {
                 criteriaBuilder.or(
                         criteriaBuilder.like(root.get("categoryName"), "%" + filter.getKeyword() + "%")
                 );
+    }
+
+    private Specification<Category> filterByNotParent() {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.isNull(root.get("parentId"));
     }
 }

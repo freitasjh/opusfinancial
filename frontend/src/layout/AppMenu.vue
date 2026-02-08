@@ -21,6 +21,11 @@ const model = ref([
                 label: 'Categoria',
                 icon: 'pi pi-fw pi-check-square',
                 to: '/category'
+            },
+            {
+                label: 'Conta',
+                icon: 'pi pi-fw pi-check-square',
+                to: '/account'
             }
         ]
     },

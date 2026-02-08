@@ -63,7 +63,7 @@ public class CategoryControllerV1 extends AbstractController {
     public ResponseEntity<CategorySaveResponseDTO> create(@RequestBody @Valid CategoryInputDTO categoryInputDTO) {
         CategoryVO categoryToSave = CategoryV1Mapper.of().inputToVO(categoryInputDTO);
         if(categoryToSave.getCategoryType() == null) {
-            categoryToSave.setCategoryType(CategoryType.INCOMING);
+            categoryToSave.setCategoryType(CategoryType.REVENUE);
         }
         CategoryVO categoryAfterSave = categoryService.create(categoryToSave);
 

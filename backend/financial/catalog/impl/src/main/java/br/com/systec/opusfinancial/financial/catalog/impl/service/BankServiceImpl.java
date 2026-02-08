@@ -67,4 +67,11 @@ public class BankServiceImpl implements BankService {
 
         return banksMap;
     }
+
+    @Transactional(readOnly = true)
+    public List<BankVO> findAll() {
+        List<Bank> results = repository.findAll();
+        return BankMapper.of().toList(results);
+    }
+
 }

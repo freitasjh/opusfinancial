@@ -10,7 +10,7 @@ public class CategoryFake {
         categoryInputDTO.setName("Categoria teste 01");
         categoryInputDTO.setColorHex("1123");
         categoryInputDTO.setIconCode("123aa");
-        categoryInputDTO.setCategoryType(CategoryType.INCOMING);
+        categoryInputDTO.setCategoryType(CategoryType.REVENUE);
 
 
         return categoryInputDTO;

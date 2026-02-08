@@ -4,6 +4,8 @@ import br.com.systec.opusfinancial.api.vo.BankVO;
 import br.com.systec.opusfinancial.core.web.v1.dto.BankFindResponseDTO;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 public class BankMapperV1 {
 
     private BankMapperV1() {}
@@ -24,5 +26,9 @@ public class BankMapperV1 {
 
     public Page<BankFindResponseDTO> toPageFindResponse(Page<BankVO> result) {
         return result.map(this::toFindResponse);
+    }
+
+    public List<BankFindResponseDTO> toList(List<BankVO> results) {
+        return results.stream().map(this::toFindResponse).toList();
     }
 }

@@ -35,7 +35,7 @@ public class BankControllerV1IT extends AbstractIT {
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").isNotEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements").value(93))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements").value(22))
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
     }
@@ -53,7 +53,7 @@ public class BankControllerV1IT extends AbstractIT {
         BankFindResponseDTO bankFindResponseDTO = (BankFindResponseDTO) JsonUtil.convertStringToObject(result.getResponse().getContentAsString(), BankFindResponseDTO.class);
 
         Assertions.assertThat(bankFindResponseDTO).isNotNull();
-        Assertions.assertThat(bankFindResponseDTO.getName()).isEqualTo("Banco Cooperativo Sicredi S.A.");
+        Assertions.assertThat(bankFindResponseDTO.getName()).isEqualTo("Sicredi");
 
         IntegrationUtil.bankId = bankFindResponseDTO.getId();
     }
@@ -71,6 +71,6 @@ public class BankControllerV1IT extends AbstractIT {
         BankFindResponseDTO bankFindResponseDTO = (BankFindResponseDTO) JsonUtil.convertStringToObject(result.getResponse().getContentAsString(), BankFindResponseDTO.class);
 
         Assertions.assertThat(bankFindResponseDTO).isNotNull();
-        Assertions.assertThat(bankFindResponseDTO.getName()).isEqualTo("Banco Cooperativo Sicredi S.A.");
+        Assertions.assertThat(bankFindResponseDTO.getName()).isEqualTo("Sicredi");
     }
 }

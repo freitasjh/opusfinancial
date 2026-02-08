@@ -16,7 +16,7 @@ public class CategoryFake {
         category.setColorHex("asdada");
         category.setCategoryName("Categoria de teste");
         category.setParentId(UUID.randomUUID());
-        category.setCategoryType(CategoryType.INCOMING);
+        category.setCategoryType(CategoryType.REVENUE);
 
         return category;
     }
@@ -29,7 +29,7 @@ public class CategoryFake {
         category.setIconCode("icon");
         category.setColorHex("asdada");
         category.setName("Categoria de teste");
-        category.setCategoryType(CategoryType.INCOMING);
+        category.setCategoryType(CategoryType.REVENUE);
 
         return category;
     }
