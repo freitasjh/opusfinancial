@@ -1,6 +1,5 @@
 import { PageResponse } from '@/common/model/page.response';
 import api from '@/service/config/api';
-import { AccountInfoResponse } from '../model/account.info.response.model';
 import { Account } from '../model/account.model';
 import { AccountResponse } from '../model/account.response';
 
@@ -13,7 +12,7 @@ class AccountService {
     }
 
     public async findById(id: string): Promise<Account> {
-        const response = await api.get<AccountInfoResponse>(`${this.endpoint}/${id}`);
+        const response = await api.get<Account>(`${this.endpoint}/${id}`);
         return response.data;
     }
 
@@ -25,7 +24,7 @@ class AccountService {
     }
 
     private async create(account: Account): Promise<AccountResponse> {
-        const response = await api.post<AccountResponse>(this.endpoint, account);
+        const response = await api.post<AccountResponse>(`${this.endpoint}/create`, account);
         return response.data;
     }
 

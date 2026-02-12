@@ -30,6 +30,10 @@ public class Account extends AbstractEntity {
     private BigDecimal balance;
     @JoinColumn(name = "bank_id")
     private UUID bankId;
+    @Column(name = "account_number")
+    private String accountNumber;
+    @Column(name = "agency")
+    private String agency;
 
     public String getAccountName() {
         return accountName;
@@ -61,5 +65,21 @@ public class Account extends AbstractEntity {
 
     public void setBankId(UUID bankId) {
         this.bankId = bankId;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public String getAgency() {
+        return agency;
+    }
+
+    public void setAgency(String agency) {
+        this.agency = agency;
     }
 }

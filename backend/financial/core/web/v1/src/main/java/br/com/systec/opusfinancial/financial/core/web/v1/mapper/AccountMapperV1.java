@@ -21,6 +21,8 @@ public class AccountMapperV1 {
         accountVO.setAccountType(inputDTO.getAccountType());
         accountVO.setBalance(inputDTO.getBalance());
         accountVO.setBankId(inputDTO.getBankId());
+        accountVO.setAgency(inputDTO.getAgency());
+        accountVO.setAccountNumber(inputDTO.getAccountNumber());
 
         return accountVO;
     }
@@ -39,6 +41,8 @@ public class AccountMapperV1 {
         accountInfoResponseDTO.setAccountName(accountVO.getAccountName());
         accountInfoResponseDTO.setAccountType(accountVO.getAccountType());
         accountInfoResponseDTO.setBalance(accountVO.getBalance());
+        accountInfoResponseDTO.setAgency(accountVO.getAgency());
+        accountInfoResponseDTO.setAccountNumber(accountVO.getAccountNumber());
 
         if (accountVO.getBank() != null) {
             accountInfoResponseDTO.setBankId(accountVO.getBank().getId());

@@ -22,6 +22,8 @@ public class AccountMapper {
         account.setAccountName(accountVO.getAccountName());
         account.setBalance(accountVO.getBalance());
         account.setAccountType(accountVO.getAccountType());
+        account.setAgency(accountVO.getAgency());
+        account.setAccountNumber(accountVO.getAccountNumber());
 
         if (accountVO.getBank() != null) {
             account.setBankId(accountVO.getBank().getId());

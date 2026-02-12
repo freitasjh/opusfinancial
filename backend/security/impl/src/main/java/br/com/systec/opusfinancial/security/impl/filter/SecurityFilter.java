@@ -41,10 +41,15 @@ public class SecurityFilter extends OncePerRequestFilter {
                 var username = securityTokenService.getSubject(bearerToken);
                 var userDetails = authenticationService.loadUserByUsername(username);
                 var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                TenantContext.addTenant(securityTokenService.getTenantId(bearerToken));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                TenantContext.runWithTenant(securityTokenService.getTenantId(bearerToken), () -> {
+                    filterChain.doFilter(request, response);
+                    return null;
+                });
+            } else {
+                filterChain.doFilter(request, response);
             }
-            filterChain.doFilter(request, response);
         } catch (BaseException e) {
             log.error(e.getMessage(), e);
             throw e;
@@ -54,7 +59,6 @@ public class SecurityFilter extends OncePerRequestFilter {
         } finally {
             log.warn("@@@ Finalizando o secuirty service");
             SecurityContextHolder.clearContext();
-            TenantContext.clear();
         }
     }
 

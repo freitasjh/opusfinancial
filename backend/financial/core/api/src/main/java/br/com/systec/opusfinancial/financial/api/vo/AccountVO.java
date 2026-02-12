@@ -17,6 +17,8 @@ public class AccountVO implements Serializable {
     private BigDecimal balance;
     private AccountType accountType;
     private BankVO bank;
+    private String accountNumber;
+    private String agency;
 
     public UUID getId() {
         return id;
@@ -67,10 +69,26 @@ public class AccountVO implements Serializable {
     }
 
     public void setBankId(UUID bankId) {
-        if(bank == null) {
+        if (bank == null) {
             bank = new BankVO();
         }
 
         bank.setId(bankId);
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public String getAgency() {
+        return agency;
+    }
+
+    public void setAgency(String agency) {
+        this.agency = agency;
     }
 }

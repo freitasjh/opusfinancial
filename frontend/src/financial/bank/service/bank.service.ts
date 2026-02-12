@@ -9,6 +9,11 @@ class BankService {
         const response = await api.get(`${this._endpoint}/filter?page=${page}&keyword=${keyword}`);
         return response.data;
     }
+
+    public async findAll(): Promise<Bank[]> {
+        const response = await api.get(`${this._endpoint}`);
+        return response.data;
+    }
 }
 
 export default new BankService();

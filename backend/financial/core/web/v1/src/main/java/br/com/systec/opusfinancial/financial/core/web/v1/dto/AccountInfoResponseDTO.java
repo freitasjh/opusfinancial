@@ -18,6 +18,8 @@ public class AccountInfoResponseDTO implements Serializable {
     private AccountType accountType;
     private UUID bankId;
     private String bankName;
+    private String accountNumber;
+    private String agency;
 
     public UUID getId() {
         return id;
@@ -73,5 +75,21 @@ public class AccountInfoResponseDTO implements Serializable {
 
     public void setBankName(String bankName) {
         this.bankName = bankName;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public String getAgency() {
+        return agency;
+    }
+
+    public void setAgency(String agency) {
+        this.agency = agency;
     }
 }

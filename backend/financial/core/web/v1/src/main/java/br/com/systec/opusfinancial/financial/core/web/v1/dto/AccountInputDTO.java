@@ -20,6 +20,8 @@ public class AccountInputDTO implements Serializable {
     private BigDecimal balance;
     @NotNull(message = "Banco não informado")
     private UUID bankId;
+    private String accountNumber;
+    private String agency;
 
     public UUID getId() {
         return id;
@@ -59,5 +61,21 @@ public class AccountInputDTO implements Serializable {
 
     public void setBankId(UUID bankId) {
         this.bankId = bankId;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public String getAgency() {
+        return agency;
+    }
+
+    public void setAgency(String agency) {
+        this.agency = agency;
     }
 }

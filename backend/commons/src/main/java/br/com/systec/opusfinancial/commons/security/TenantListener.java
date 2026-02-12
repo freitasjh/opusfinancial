@@ -22,7 +22,7 @@ public class TenantListener {
             return;
         }
 
-        UUID tenantId = TenantContext.getTenant();
+        UUID tenantId = TenantContext.getCurrentTenant();
 
         if(tenantId == null) {
             log.error("@@ Tenant não encontrado @@@");

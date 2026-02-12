@@ -17,7 +17,7 @@ public class CookieUtil {
                 .httpOnly(true)    // Impede acesso via JavaScript (mitiga XSS)
                 .secure(false)     // Apenas enviado sobre HTTPS (essencial em produção)
                 .path("/") // O cookie só será enviado para os endpoints de autenticação
-                .maxAge(Duration.ofMillis(604800)) // Duração do cookie
+                .maxAge(Duration.ofDays(2)) // Duração do cookie
                 .build();
     }
 
