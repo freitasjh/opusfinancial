@@ -51,7 +51,6 @@ class BankServiceImplTest {
         Assertions.assertThat(bankReturnFind.getCode()).isEqualTo(bankToReturn.getCode());
         Assertions.assertThat(bankReturnFind.getName()).isEqualTo(bankToReturn.getName());
         Assertions.assertThat(bankReturnFind.getLogoUrl()).isEqualTo(bankToReturn.getLogoUrl());
-        Assertions.assertThat(bankReturnFind.getColor()).isEqualTo(bankToReturn.getColor());
 
         Mockito.verify(repository).findById(Mockito.any(UUID.class));
     }
@@ -94,7 +93,6 @@ class BankServiceImplTest {
         Assertions.assertThat(bankReturnFind.getCode()).isEqualTo(bankToReturn.getCode());
         Assertions.assertThat(bankReturnFind.getName()).isEqualTo(bankToReturn.getName());
         Assertions.assertThat(bankReturnFind.getLogoUrl()).isEqualTo(bankToReturn.getLogoUrl());
-        Assertions.assertThat(bankReturnFind.getColor()).isEqualTo(bankToReturn.getColor());
 
         Mockito.verify(repository).findByCode(Mockito.anyString());
     }

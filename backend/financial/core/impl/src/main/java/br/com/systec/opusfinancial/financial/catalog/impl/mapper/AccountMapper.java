@@ -53,4 +53,8 @@ public class AccountMapper {
             return accountVO;
         });
     }
+
+    public List<AccountVO> toList(List<Account> listOfAccount) {
+        return listOfAccount.stream().map(this::toVO).toList();
+    }
 }

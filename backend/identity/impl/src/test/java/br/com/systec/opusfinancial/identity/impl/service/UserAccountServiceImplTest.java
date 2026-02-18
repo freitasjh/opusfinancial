@@ -1,6 +1,7 @@
 package br.com.systec.opusfinancial.identity.impl.service;
 
 import br.com.systec.opusfinancial.commons.exceptions.BaseException;
+import br.com.systec.opusfinancial.commons.messaging.EventPublisher;
 import br.com.systec.opusfinancial.identity.api.exceptions.UsernameNotProvideInformationException;
 import br.com.systec.opusfinancial.identity.api.services.TenantService;
 import br.com.systec.opusfinancial.identity.api.services.UserService;
@@ -30,6 +31,8 @@ class UserAccountServiceImplTest {
     private UserService userService;
     @Mock
     private SqsTemplate sqsTemplate;
+    @Mock
+    private EventPublisher eventPublisher;
 
     @Mock
     private TenantService tenantService;

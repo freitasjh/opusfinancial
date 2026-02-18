@@ -22,7 +22,7 @@
         <java-jwt.version>4.4.0</java-jwt.version>
         <fasterxml.version>2.14.2</fasterxml.version>
         <h2.database.version>2.2.220</h2.database.version>
-        <jacoco.version>0.8.8</jacoco.version>
+        <jacoco.version>0.8.12</jacoco.version>
         <spring.boot.version>3.5.8</spring.boot.version>
         <project.version>${revision}</project.version>
         <logstash.version>7.4</logstash.version>

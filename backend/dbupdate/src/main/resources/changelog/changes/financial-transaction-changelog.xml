@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+    <changeSet id="financial-transaction-16022026-J1" author="Joao">
+        <createTable tableName="financial_transaction">
+            <column name="id" type="uuid" defaultValueComputed="uuid_generate_v4()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="create_at" type="TIMESTAMP" />
+            <column name="update_at" type="TIMESTAMP"/>
+            <column name="tenant_id" type="UUID" />
+            <column name="description" type="VARCHAR(255)" />
+            <column name="due_date" type="DATE" />
+            <column name="payment_at" type="DATE" />
+            <column name="account_id" type="UUID" />
+            <column name="category_id" type="UUID" />
+            <column name="amount" type="DECIMAL(19,2)" />
+            <column name="transaction_type" type="VARCHAR(50)" />
+            <column name="category_transaction_type" type="VARCHAR(50)" />
+            <column name="processed" type="BOOLEAN" defaultValueBoolean="false"/>
+            <column name="processed_at" type="TIMESTAMP" />
+
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

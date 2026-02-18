@@ -4,6 +4,7 @@ import br.com.systec.opusfinancial.financial.api.filter.FilterAccount;
 import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface AccountService {
@@ -18,4 +19,5 @@ public interface AccountService {
 
     void createDefaultAccount(UUID tenantId);
 
+    List<AccountVO> findByIds(List<UUID> listOfAccountId);
 }

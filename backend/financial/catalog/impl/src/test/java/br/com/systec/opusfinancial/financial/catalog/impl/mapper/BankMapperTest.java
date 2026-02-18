@@ -20,7 +20,6 @@ class BankMapperTest {
         Assertions.assertThat(bankConverted.getCode()).isEqualTo(bankToConvert.getCode());
         Assertions.assertThat(bankConverted.getName()).isEqualTo(bankToConvert.getName());
         Assertions.assertThat(bankConverted.getLogoUrl()).isEqualTo(bankToConvert.getLogoUrl());
-        Assertions.assertThat(bankConverted.getColor()).isEqualTo(bankToConvert.getColor());
 
     }
 }

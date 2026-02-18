@@ -11,5 +11,6 @@
     <include file="changelog/changes/category-changelog.xml" />
     <include file="changelog/changes/bank-changelog.xml" />
     <include file="changelog/changes/account-changelog.xml" />
+    <include file="changelog/changes/financial-transaction-changelog.xml" />
 
 </databaseChangeLog>

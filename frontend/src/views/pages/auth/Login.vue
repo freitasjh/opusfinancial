@@ -5,6 +5,7 @@ import AuthenticateService from '@/identity/service/AuthenticateService';
 import { useAuthStore } from '@/identity/store/auth.store';
 import { AxiosError } from 'axios';
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 const email = ref('');
@@ -13,6 +14,7 @@ const checked = ref(false);
 const router = useRouter();
 const handlerMessage = useHandlerMessage();
 const authStore = useAuthStore();
+const { t } = useI18n();
 
 const handleSignIn = async () => {
     try {
@@ -50,8 +52,8 @@ const handleSignIn = async () => {
                                 />
                             </g>
                         </svg>
-                        <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome to PrimeLand!</div>
-                        <span class="text-muted-color font-medium">Sign in to continue</span>
+                        <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">{{ $t('welcome') }}</div>
+                        <span class="text-muted-color font-medium">{{ $t('signinToContinue') }}</span>
                     </div>
 
                     <div>
@@ -62,13 +64,13 @@ const handleSignIn = async () => {
                         <Password id="password1" v-model="password" placeholder="Password" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
 
                         <div class="flex items-center justify-between mt-2 mb-8 gap-8">
-                            <div class="flex items-center">
+                            <!-- <div class="flex items-center">
                                 <Checkbox v-model="checked" id="rememberme1" binary class="mr-2"></Checkbox>
-                                <label for="rememberme1">Remember me</label>
-                            </div>
-                            <a @click="router.push('/auth/register')" class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)">Nova conta</a>
+                                <label for="rememberme1">{{ t('remember') }}</label>
+                            </div> -->
+                            <a @click="router.push('/auth/register')" class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)">{{ $t('register') }}</a>
                         </div>
-                        <Button label="Sign In" class="w-full" @click="handleSignIn"></Button>
+                        <Button :label="t('sigIn')" class="w-full" @click="handleSignIn"></Button>
                     </div>
                 </div>
             </div>

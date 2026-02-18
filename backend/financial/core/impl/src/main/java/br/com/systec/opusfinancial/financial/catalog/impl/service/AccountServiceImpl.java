@@ -19,6 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -80,6 +81,19 @@ public class AccountServiceImpl implements AccountService {
         return AccountMapper.of().toPageVO(result, banks);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<AccountVO> findByIds(List<UUID> listOfAccountId) {
+        if (listOfAccountId == null || listOfAccountId.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<Account> result = repository.findAllById(listOfAccountId);
+
+        return AccountMapper.of().toList(result);
+    }
+
+    @Override
     @Transactional
     public void createDefaultAccount(UUID tenantId) {
         log.warn("@@@ Criando Conta default para o tenant {} @@@", tenantId);

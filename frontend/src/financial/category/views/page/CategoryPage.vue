@@ -3,6 +3,7 @@ import { PageResponse } from '@/common/model/page.response';
 import { useHandlerMessage } from '@/composoable/commons';
 import { AxiosError } from 'axios';
 import { onBeforeMount, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { CategoryFilter } from '../../model/category.filter';
 import { Category } from '../../model/category.model';
 import { CategoryResponse } from '../../model/category.response.mode';
@@ -20,6 +21,7 @@ const validSubmit = ref<boolean>(true);
 const treeNodes = ref();
 const loadingSave = ref<boolean>(false);
 const loadingEdit = ref<boolean>(false);
+const { t } = useI18n();
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -28,8 +30,8 @@ onBeforeMount(async () => {
 });
 
 const typeOptions = ref([
-    { label: 'Receita', value: CategoryType.REVENUE },
-    { label: 'Despesa', value: CategoryType.EXPENSE }
+    { label: t('REVENUE'), value: CategoryType.REVENUE },
+    { label: t('EXPENSE'), value: CategoryType.EXPENSE }
 ]);
 
 const findByFilter = async () => {
@@ -76,7 +78,7 @@ const save = async () => {
         if (!validSubmit.value) return;
 
         await categoryService.save(category.value);
-        handlerMessage.toastSuccess('Categoria salva com sucesso');
+        handlerMessage.toastSuccess(t('categorySavedSuccess'));
         visibleDrawerCadCategory.value = false;
         await findByFilter();
     } catch (error: AxiosError | any) {
@@ -150,12 +152,12 @@ const onExpandRow = async (node: any) => {
     <div class="card">
         <Toolbar class="mb-6">
             <template #start>
-                <Button label="New" icon="pi pi-plus" severity="info" class="mr-2" @click="openCadCategory(null)" />
+                <Button :label="t('new')" icon="pi pi-plus" severity="info" class="mr-2" @click="openCadCategory(null)" />
             </template>
         </Toolbar>
         <TreeTable :value="treeNodes" scrollable scrollHeight="45rem" @node-expand="onExpandRow" :lazy="true" :loading="loading">
-            <Column field="name" header="Name" :expander="true" style="width: 30%" frozen></Column>
-            <Column header="Icone">
+            <Column field="name" :header="t('description')" :expander="true" style="width: 30%" frozen></Column>
+            <Column :header="t('icon')">
                 <template #body="slotProps">
                     <div class="flex flex-wrap gap-2">
                         <i :class="slotProps.node.data.iconCode ? slotProps.node.data.iconCode : 'pi pi-tag'" :style="{ color: '#' + (slotProps.node.data.colorHex || '999') }" class="mr-2"> </i>
@@ -163,22 +165,22 @@ const onExpandRow = async (node: any) => {
                 </template>
             </Column>
 
-            <Column header="Tipo">
+            <Column :header="t('type')">
                 <template #body="slotProps">
-                    <Tag v-if="slotProps.node.data.categoryType" :value="slotProps.node.data.categoryType" severity="secondary" class="ml-2" style="font-size: 10px"> </Tag>
+                    <Tag v-if="slotProps.node.data.categoryType" :value="t(slotProps.node.data.categoryType)" severity="secondary" class="ml-2" style="font-size: 10px"> </Tag>
                     <Tag v-else value="N/A" severity="secondary" class="ml-2" style="font-size: 10px"> </Tag>
                 </template>
             </Column>
-            <Column style="width: 10rem" header="Ações">
+            <Column style="width: 10rem" :header="t('actions')">
                 <template #body="slotProps">
                     <div class="flex flex-wrap gap-2">
                         <Button type="button" icon="pi pi-pencil" rounded severity="info" @click="findById(slotProps.node.data.id)" />
-                        <Button type="button" icon="pi pi-plus" rounded @click="openNewCadCategoryForParent(slotProps.node.data.id)" v-if="!slotProps.node.data.parentId" />
+                        <Button type="button" icon="pi pi-plus" rounded @click="openNewCadCategoryForParent(slotProps.node.data.id)" v-if="!slotProps.node.data.parentId" v-tooltip="{ value: t('addSubCategory'), showDelay: 200 }" />
                     </div>
                 </template>
             </Column>
         </TreeTable>
-        <Drawer v-model:visible="visibleDrawerCadCategory" header="Categoria" position="right" class="!w-full md:!w-80 lg:!w-[30rem]">
+        <Drawer v-model:visible="visibleDrawerCadCategory" :header="t('category')" position="right" class="!w-full md:!w-80 lg:!w-[30rem]">
             <div v-if="loadingEdit">
                 <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
                 <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
@@ -192,17 +194,17 @@ const onExpandRow = async (node: any) => {
             </div>
             <div v-else>
                 <div class="flex flex-col gap-1 mt-2">
-                    <label for="category-name">Nome</label>
+                    <label for="category-name">{{ t('description') }}</label>
                     <InputText id="category-name" v-model="category.name" type="text" fluid />
                     <Message v-show="category.name === '' && validSubmit === false" severity="error" variant="simple" size="small">Informe o nome da categoria</Message>
                 </div>
                 <div class="flex flex-col gap-1 mt-2">
-                    <label>Selecione o ícone</label>
+                    <label>{{ t('selectIcon') }}</label>
                     <IconPicker name="iconCode" v-model="category.iconCode" />
                     <Message v-show="category.iconCode === '' && validSubmit === false" severity="error" variant="simple" size="small">Selecione um icone</Message>
                 </div>
                 <div class="flex flex-col gap-1 mt-2">
-                    <label>Selecione a cor</label>
+                    <label>{{ t('selectColor') }}</label>
                     <ColorPicker name="colorHex" v-model="category.colorHex" />
                 </div>
                 <div class="flex flex-col gap-1 mt-2">
@@ -210,8 +212,8 @@ const onExpandRow = async (node: any) => {
                     <SelectButton v-model="category.categoryType" :options="typeOptions" optionLabel="label" optionValue="value" />
                 </div>
                 <div class="flex flex-col gap-1 mt-5">
-                    <Button type="submit" severity="info" label="Save" @click.prevent="save" :loading="loadingSave" />
-                    <Button type="submit" severity="danger" label="Cancelar" @click.prevent="visibleDrawerCadCategory = false" />
+                    <Button type="submit" severity="info" :label="t('save')" @click.prevent="save" :loading="loadingSave" />
+                    <Button type="submit" severity="danger" :label="t('cancel')" @click.prevent="visibleDrawerCadCategory = false" />
                 </div>
             </div>
         </Drawer>
