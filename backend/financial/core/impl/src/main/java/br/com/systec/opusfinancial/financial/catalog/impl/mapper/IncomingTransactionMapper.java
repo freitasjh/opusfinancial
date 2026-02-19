@@ -94,14 +94,23 @@ public class IncomingTransactionMapper {
         return transaction;
     }
 
-    public Page<FinancialTransactionVO> toPage(Page<FinancialTransaction> pageResult, List<AccountVO> listOfAccount) {
+    public Page<FinancialTransactionVO> toPage(Page<FinancialTransaction> pageResult, List<AccountVO> listOfAccount,
+                                               List<CategoryVO> listOfCategory) {
         Map<UUID, AccountVO> accountMap = listOfAccount.stream()
-                .collect(Collectors.toMap(AccountVO::getId, Function.identity()));
+                .filter(item -> item.getId() != null)
+                .collect(Collectors.toMap(AccountVO::getId, Function.identity(), (existing, replacement) -> existing));
+        Map<UUID, CategoryVO> categoryMap = listOfCategory.stream()
+                .filter(item -> item.getId() != null)
+                .collect(Collectors.toMap(CategoryVO::getId, Function.identity(), (existing, replacement) -> existing));
 
         return pageResult.map(item -> {
             AccountVO account = accountMap.get(item.getAccountId());
+            CategoryVO categoryVO = categoryMap.get(item.getCategoryId());
+
             FinancialTransactionVO financialTransactionVO = toVO(item);
             financialTransactionVO.setAccount(account);
+            financialTransactionVO.setCategory(categoryVO);
+
             return financialTransactionVO;
         });
     }

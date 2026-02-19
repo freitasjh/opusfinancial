@@ -4,13 +4,16 @@ import br.com.systec.opusfinancial.api.vo.CategoryVO;
 import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
 import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingFinancialInputDTO;
+import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingInformationResponseDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingSaveResponseDTO;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 
 public class IncomingTransactionMapperV1 {
 
-    private IncomingTransactionMapperV1() {}
+    private IncomingTransactionMapperV1() {
+    }
 
     public static IncomingTransactionMapperV1 of() {
         return new IncomingTransactionMapperV1();
@@ -40,4 +43,25 @@ public class IncomingTransactionMapperV1 {
         return saveResponse;
     }
 
+    public IncomingInformationResponseDTO toInformationDTO(FinancialTransactionVO transaction) {
+
+        IncomingInformationResponseDTO incomingInformationResponseDTO = new IncomingInformationResponseDTO();
+        incomingInformationResponseDTO.setId(transaction.getId());
+        incomingInformationResponseDTO.setDescription(transaction.getDescription());
+        incomingInformationResponseDTO.setAmount(transaction.getAmount());
+        incomingInformationResponseDTO.setPaymentAt(transaction.getPaymentAt());
+
+        if (transaction.getAccount() != null) {
+            incomingInformationResponseDTO.setAccount(transaction.getAccount().getAccountName());
+        }
+        if (transaction.getCategory() != null) {
+            incomingInformationResponseDTO.setCategory(transaction.getCategory().getName());
+        }
+
+        return incomingInformationResponseDTO;
+    }
+
+    public Page<IncomingInformationResponseDTO> toPage(Page<FinancialTransactionVO> pageResult) {
+        return pageResult.map(this::toInformationDTO);
+    }
 }

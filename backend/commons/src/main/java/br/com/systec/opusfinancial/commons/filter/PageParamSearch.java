@@ -20,7 +20,7 @@ public abstract class PageParamSearch {
 
     protected PageParamSearch(String keyword, int limit, int page) {
         this.keyword = keyword;
-        this.limit = limit;
+        this.limit = Math.min(limit, 200);
         this.page = page;
     }
 

@@ -6,13 +6,14 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class IncomingInformationResponseVO implements Serializable {
+public class IncomingInformationResponseDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = -1167491805376605222L;
 
     private UUID id;
     private String description;
     private String account;
+    private String category;
     private BigDecimal amount;
     private LocalDate paymentAt;
     private LocalDate processedAt;
@@ -63,5 +64,13 @@ public class IncomingInformationResponseVO implements Serializable {
 
     public void setProcessedAt(LocalDate processedAt) {
         this.processedAt = processedAt;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

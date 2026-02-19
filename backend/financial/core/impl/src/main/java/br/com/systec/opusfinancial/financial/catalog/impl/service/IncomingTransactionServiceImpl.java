@@ -1,5 +1,7 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.service;
 
+import br.com.systec.opusfinancial.api.service.CategoryService;
+import br.com.systec.opusfinancial.api.vo.CategoryVO;
 import br.com.systec.opusfinancial.financial.api.exceptions.IncomingFinancialNotFoundException;
 import br.com.systec.opusfinancial.financial.api.filter.IncomingTransactionFilter;
 import br.com.systec.opusfinancial.financial.api.service.AccountService;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -23,12 +26,13 @@ public class IncomingTransactionServiceImpl implements IncomingTransactionServic
 
     private final TransactionRepository repository;
     private final AccountService accountService;
+    private final CategoryService categoryService;
 
-    public IncomingTransactionServiceImpl(TransactionRepository repository, AccountService accountService) {
+    public IncomingTransactionServiceImpl(TransactionRepository repository, AccountService accountService, CategoryService categoryService) {
         this.repository = repository;
         this.accountService = accountService;
+        this.categoryService = categoryService;
     }
-
     @Override
     @Transactional
     public FinancialTransactionVO save(FinancialTransactionVO transaction) {
@@ -56,10 +60,16 @@ public class IncomingTransactionServiceImpl implements IncomingTransactionServic
         Specification<FinancialTransaction> specification = IncomingTransactionSpecification.of().filter(filter);
         Page<FinancialTransaction> pageResult = repository.findAll(specification, filter.getPageable());
 
-        List<UUID> listOfAccountId = pageResult.stream().map(FinancialTransaction::getAccountId).toList();
-        List<AccountVO> listOfAccount = accountService.findByIds(listOfAccountId);
+        List<UUID> listOfAccountId = pageResult.stream().map(FinancialTransaction::getAccountId)
+                .filter(Objects::nonNull).distinct().toList();
+        List<UUID> listOfCategoryId = pageResult.stream().map(FinancialTransaction::getCategoryId)
+                .filter(Objects::nonNull)
+                .distinct().toList();
 
-        return IncomingTransactionMapper.of().toPage(pageResult, listOfAccount);
+        List<AccountVO> listOfAccount = accountService.findByIds(listOfAccountId);
+        List<CategoryVO> listOfCategory = categoryService.findByIds(listOfCategoryId);
+
+        return IncomingTransactionMapper.of().toPage(pageResult, listOfAccount, listOfCategory);
     }
 
     @Override

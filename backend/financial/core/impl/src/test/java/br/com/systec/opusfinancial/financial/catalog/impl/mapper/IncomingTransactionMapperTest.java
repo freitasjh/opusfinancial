@@ -1,9 +1,11 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.mapper;
 
+import br.com.systec.opusfinancial.api.vo.CategoryVO;
 import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
 import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
 import br.com.systec.opusfinancial.financial.catalog.impl.domain.FinancialTransaction;
 import br.com.systec.opusfinancial.financial.catalog.impl.fake.AccountFake;
+import br.com.systec.opusfinancial.financial.catalog.impl.fake.CategoryFake;
 import br.com.systec.opusfinancial.financial.catalog.impl.fake.FinancialTransactionFake;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
@@ -76,8 +78,11 @@ public class IncomingTransactionMapperTest {
         List<AccountVO> listFakeAccount = AccountFake.toFakeVOs();
         listFakeAccount.getFirst().setId(accountId);
 
+        List<CategoryVO> listCategoryFake = List.of(CategoryFake.toFake());
+
         // When
-        Page<FinancialTransactionVO> pageConverted = IncomingTransactionMapper.of().toPage(page, listFakeAccount);
+        Page<FinancialTransactionVO> pageConverted = IncomingTransactionMapper.of()
+                .toPage(page, listFakeAccount, listCategoryFake);
 
         // Then
         assertEquals(1, pageConverted.getTotalElements());

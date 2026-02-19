@@ -22,7 +22,6 @@ public abstract class AbstractEntity extends BaseEntity {
     @Column(name = "tenant_id", updatable = false)
     private UUID tenantId;
 
-
     public UUID getTenantId() {
         return tenantId;
     }

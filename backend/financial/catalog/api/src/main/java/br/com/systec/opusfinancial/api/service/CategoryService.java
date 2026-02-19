@@ -20,4 +20,6 @@ public interface CategoryService {
     List<CategoryVO> findByParentId(UUID parentId);
 
     void createDefaultCategory(UUID tenantId);
+
+    List<CategoryVO> findByIds(List<UUID> ids);
 }

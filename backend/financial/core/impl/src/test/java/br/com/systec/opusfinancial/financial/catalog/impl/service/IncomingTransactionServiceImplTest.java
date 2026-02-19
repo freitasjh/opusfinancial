@@ -1,25 +1,22 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.service;
 
+import br.com.systec.opusfinancial.api.service.CategoryService;
+import br.com.systec.opusfinancial.api.vo.CategoryVO;
 import br.com.systec.opusfinancial.financial.api.exceptions.IncomingFinancialNotFoundException;
 import br.com.systec.opusfinancial.financial.api.filter.IncomingTransactionFilter;
 import br.com.systec.opusfinancial.financial.api.service.AccountService;
 import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
 import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
 import br.com.systec.opusfinancial.financial.catalog.impl.domain.FinancialTransaction;
+import br.com.systec.opusfinancial.financial.catalog.impl.fake.AccountFake;
+import br.com.systec.opusfinancial.financial.catalog.impl.fake.CategoryFake;
 import br.com.systec.opusfinancial.financial.catalog.impl.fake.FinancialTransactionFake;
-import br.com.systec.opusfinancial.financial.catalog.impl.filter.IncomingTransactionSpecification;
-import br.com.systec.opusfinancial.financial.catalog.impl.mapper.IncomingTransactionMapper;
 import br.com.systec.opusfinancial.financial.catalog.impl.repository.TransactionRepository;
 import br.com.systec.opusfinancial.i18n.I18nTranslate;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.Page;
@@ -34,7 +31,8 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class IncomingTransactionServiceImplTest {
@@ -46,6 +44,9 @@ class IncomingTransactionServiceImplTest {
     private AccountService accountService;
 
     @Mock
+    private CategoryService categoryService;
+
+    @Mock
     private ResourceBundleMessageSource messageSource;
     @InjectMocks
     private I18nTranslate i18nTranslate;
@@ -53,125 +54,85 @@ class IncomingTransactionServiceImplTest {
     @InjectMocks
     private IncomingTransactionServiceImpl service;
 
-    private FinancialTransactionVO inputVO;
-    private FinancialTransaction entityBeforeSave;
-    private FinancialTransaction entityAfterSave;
-    private FinancialTransactionVO outputVO;
-    private IncomingTransactionMapper mapperMock;
-    private MockedStatic<IncomingTransactionMapper> mapperStatic;
+    @Test
+    void shouldSaveIncomingTransaction() {
+        FinancialTransactionVO financialTransactionToSave = FinancialTransactionFake.toFakeVO();
+        FinancialTransaction financialTransactionSaved = FinancialTransactionFake.toFake();
 
-    @BeforeEach
-    void setUp() {
-        inputVO = mock(FinancialTransactionVO.class);
-        entityBeforeSave = mock(FinancialTransaction.class);
-        entityAfterSave = mock(FinancialTransaction.class);
-        outputVO = mock(FinancialTransactionVO.class);
+        doReturn(financialTransactionSaved).when(repository).save(any());
 
-        mapperStatic = mockStatic(IncomingTransactionMapper.class);
-        mapperMock = mock(IncomingTransactionMapper.class);
-        mapperStatic.when(IncomingTransactionMapper::of).thenReturn(mapperMock);
-    }
+        FinancialTransactionVO incomingTransactionSaved = service.save(financialTransactionToSave);
 
-    @AfterEach
-    void tearDown() {
-        mapperStatic.close();
+        assertThat(incomingTransactionSaved).isNotNull();
+        assertThat(incomingTransactionSaved.getId()).isNotNull();
+
+        verify(repository).save(any());
     }
 
     @Test
-    @DisplayName("Should save transaction successfully")
-    void save_shouldPersistTransaction() {
-        // Arrange
-        when(mapperMock.toEntity(inputVO)).thenReturn(entityBeforeSave);
-        when(repository.save(entityBeforeSave)).thenReturn(entityAfterSave);
-        when(mapperMock.toVO(entityAfterSave)).thenReturn(outputVO);
-
-        // Act
-        var result = service.save(inputVO);
-
-        // Assert
-        assertThat(result).isNotNull().isEqualTo(outputVO);
-        verify(repository).save(entityBeforeSave);
-    }
-
-    @Test
-    @DisplayName("Should update transaction successfully")
-    @Disabled
-    void update_shouldUpdateTransaction() {
+    void shouldUpdateIncomingTransaction() {
+        FinancialTransaction financialTransactionToFindReturn = FinancialTransactionFake.toFake();
         FinancialTransactionVO financialTransactionToUpdate = FinancialTransactionFake.toFakeVO();
-        FinancialTransaction financialTransactionFindToReturn = FinancialTransactionFake.toFake();
 
-        doReturn(financialTransactionFindToReturn).when(repository).findById(any());
+        FinancialTransaction financialTransactionUpdated = FinancialTransactionFake.toFake();
 
+        doReturn(Optional.of(financialTransactionToFindReturn)).when(repository).findById(any());
+        doReturn(financialTransactionUpdated).when(repository).save(any());
+
+        FinancialTransactionVO incomingTransactionUpdate = service.update(financialTransactionToUpdate);
+
+        assertThat(incomingTransactionUpdate).isNotNull();
+
+        verify(repository).findById(any());
+        verify(repository).save(any());
     }
 
     @Test
-    @DisplayName("Should find transaction by ID when exists")
-    void findById_shouldReturnTransaction_whenExists() {
-        // Arrange
-        var id = UUID.randomUUID();
-        var entity = mock(FinancialTransaction.class);
+    void whenUpdateIncomingTransaction_thenFindObjectNotFound() {
+        FinancialTransactionVO financialTransactionToSave = FinancialTransactionFake.toFakeVO();
 
-        when(repository.findById(id)).thenReturn(Optional.of(entity));
-        when(mapperMock.toVO(entity)).thenReturn(outputVO);
+        doReturn(Optional.empty()).when(repository).findById(any());
 
-        // Act
-        var result = service.findById(id);
-
-        // Assert
-        assertThat(result).isEqualTo(outputVO);
+        assertThatThrownBy(() -> service.update(financialTransactionToSave)).isInstanceOf(IncomingFinancialNotFoundException.class);
     }
 
     @Test
-    @DisplayName("Should throw exception when transaction ID not found")
-    void findById_shouldThrowException_whenNotFound() {
-        // Arrange
-        var id = UUID.randomUUID();
-        when(repository.findById(id)).thenReturn(Optional.empty());
+    void whenFindById_thenReturnIncomingTransaction() {
+        FinancialTransaction financialTransactionToReturn = FinancialTransactionFake.toFake();
 
-        // Act & Assert
-        assertThatThrownBy(() -> service.findById(id))
-                .isInstanceOf(IncomingFinancialNotFoundException.class);
+        doReturn(Optional.of(financialTransactionToReturn)).when(repository).findById(any());
 
-        verify(repository).findById(id);
+        FinancialTransactionVO financialTransaction = service.findById(UUID.randomUUID());
+
+        assertThat(financialTransaction).isNotNull();
     }
 
     @Test
-    @DisplayName("Should find transactions by filter and enrich with account data")
-    void findByFilter_shouldReturnPage() {
-        // Arrange
-        var filter = mock(IncomingTransactionFilter.class);
-        var pageable = mock(Pageable.class);
-        when(filter.getPageable()).thenReturn(pageable);
+    void whenFindById_thenReturnNoFoundException() {
+        doReturn(Optional.empty()).when(repository).findById(any());
 
-        Specification<FinancialTransaction> spec = mock(Specification.class);
-
-        var transactionEntity = mock(FinancialTransaction.class);
-        var accountId = UUID.randomUUID();
-        when(transactionEntity.getAccountId()).thenReturn(accountId);
-
-        Page<FinancialTransaction> pageResult = new PageImpl<>(List.of(transactionEntity));
-
-        var accountVO = mock(AccountVO.class);
-        List<AccountVO> accounts = List.of(accountVO);
-
-        @SuppressWarnings("unchecked")
-        Page<FinancialTransactionVO> outputPage = mock(Page.class);
-
-        try (MockedStatic<IncomingTransactionSpecification> specStatic = mockStatic(IncomingTransactionSpecification.class)) {
-            var specFactory = mock(IncomingTransactionSpecification.class);
-            specStatic.when(IncomingTransactionSpecification::of).thenReturn(specFactory);
-            when(specFactory.filter(filter)).thenReturn(spec);
-
-            when(repository.findAll(spec, pageable)).thenReturn(pageResult);
-            when(accountService.findByIds(List.of(accountId))).thenReturn(accounts);
-            when(mapperMock.toPage(pageResult, accounts)).thenReturn(outputPage);
-
-            // Act
-            var result = service.findByFilter(filter);
-
-            // Assert
-            assertThat(result).isEqualTo(outputPage);
-            verify(accountService).findByIds(List.of(accountId));
-        }
+        assertThatThrownBy(() -> service.findById(UUID.randomUUID())).isInstanceOf(IncomingFinancialNotFoundException.class);
     }
+
+    @Test
+    void whenFindByFilter() {
+        List<FinancialTransaction> listTransactionToReturn = List.of(FinancialTransactionFake.toFake());
+        Page<FinancialTransaction> pageResultToReturn = new PageImpl<>(listTransactionToReturn);
+        List<AccountVO> listOfAccountTOReturn = List.of(AccountFake.toFakeVO());
+        List<CategoryVO> listOfCategoryToReturn = List.of(CategoryFake.toFake());
+
+        doReturn(listOfAccountTOReturn).when(accountService).findByIds(any());
+        doReturn(listOfCategoryToReturn).when(categoryService).findByIds(any());
+        doReturn(pageResultToReturn).when(repository).findAll(any(Specification.class), any(Pageable.class));
+
+        Page<FinancialTransactionVO> pageReturn = service.findByFilter(new IncomingTransactionFilter(null, 30, 0));
+
+        assertThat(pageReturn).isNotNull();
+
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
+        verify(accountService).findByIds(any());
+        verify(categoryService).findByIds(any());
+
+    }
+
 }
