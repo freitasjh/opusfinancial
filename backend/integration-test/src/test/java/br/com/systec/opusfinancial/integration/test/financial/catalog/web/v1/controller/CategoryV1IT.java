@@ -38,7 +38,6 @@ public class CategoryV1IT extends AbstractIT {
 
     @Autowired
     private MockMvc mockMvc;
-    private static UUID categoryId;
 
     @Test
     @Order(1)
@@ -60,14 +59,14 @@ public class CategoryV1IT extends AbstractIT {
 
         assertThat(responseDTO.getId()).isNotNull();
         assertThat(responseDTO.getName()).isEqualTo(categoryToSave.getName());
-        categoryId = responseDTO.getId();
+        IntegrationUtil.categoryId = responseDTO.getId();
     }
 
     @Test
     @Order(2)
     void whenFindCategoryById_thenReturnCategoryFullInformation_200() throws Exception {
         CategoryInputDTO categoryToSave = CategoryFake.fakeInputDTO();
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT + "/"+categoryId.toString())
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT + "/"+IntegrationUtil.categoryId.toString())
                         .header("Authorization", "Bearer "+ IntegrationUtil.accessToken)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().is(200))
@@ -78,7 +77,7 @@ public class CategoryV1IT extends AbstractIT {
 
         assertThat(responseDTO).isNotNull();
         assertThat(responseDTO.getTenantId()).isNotNull();
-        assertThat(responseDTO.getId()).isEqualTo(categoryId);
+        assertThat(responseDTO.getId()).isEqualTo(IntegrationUtil.categoryId);
         assertThat(responseDTO.getName()).isEqualTo(categoryToSave.getName());
         assertThat(responseDTO.getColorHex()).isEqualTo(categoryToSave.getColorHex());
         assertThat(responseDTO.getIconCode()).isEqualTo(categoryToSave.getIconCode());

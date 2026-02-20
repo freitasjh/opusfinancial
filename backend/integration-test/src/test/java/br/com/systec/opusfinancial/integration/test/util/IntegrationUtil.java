@@ -8,5 +8,6 @@ public class IntegrationUtil {
     public static String refreshToken;
     public static UUID bankId;
     public static UUID accountId;
+    public static UUID categoryId;
 
 }

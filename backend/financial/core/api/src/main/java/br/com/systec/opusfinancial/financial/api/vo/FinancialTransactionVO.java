@@ -1,6 +1,7 @@
 package br.com.systec.opusfinancial.financial.api.vo;
 
 import br.com.systec.opusfinancial.api.vo.CategoryVO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,11 +16,18 @@ public class FinancialTransactionVO {
     private String description;
     private Date createAt;
     private TransactionType transactionType;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate paymentAt;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dueDate;
+
     private CategoryTransactionType categoryTransactionType;
     private Boolean processed;
     private CategoryVO category;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime processedAt;
 
     public UUID getId() {

@@ -1,5 +1,7 @@
 package br.com.systec.opusfinancial.financial.core.web.v1.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -15,7 +17,11 @@ public class IncomingInformationResponseDTO implements Serializable {
     private String account;
     private String category;
     private BigDecimal amount;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate paymentAt;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate processedAt;
 
     public UUID getId() {
