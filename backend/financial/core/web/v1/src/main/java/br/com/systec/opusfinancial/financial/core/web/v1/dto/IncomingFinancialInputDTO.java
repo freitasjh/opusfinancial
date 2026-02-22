@@ -1,6 +1,7 @@
 package br.com.systec.opusfinancial.financial.core.web.v1.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.io.Serial;

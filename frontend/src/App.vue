@@ -4,4 +4,8 @@
     <router-view />
 </template>
 
-<style scoped></style>
+<style lang="scss">
+.swal2-container {
+    z-index: 11000 !important;
+}
+</style>

@@ -87,6 +87,10 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <maxmem>1024m</maxmem>
+                    <meminitial>512m</meminitial>
+                    <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
                     <compilerArgs>
                         <arg>--enable-preview</arg>
                     </compilerArgs>

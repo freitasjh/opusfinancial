@@ -28,7 +28,13 @@ export const message_pt_BR = {
     category: 'Categoria',
     subCategory: 'Subcategoria',
     selectIcon: 'Selecione um ícone',
-    selectColor: 'Selecione uma cor'
+    selectColor: 'Selecione uma cor',
+    amount: 'Valor',
+    paymentAt: 'Data do pagamento',
+    processedAt: 'Data processada',
+    account: 'Conta',
+    transactionIncoming: 'Trasação Entrada',
+    incomingTransactionSavedSuccess: 'Transação de entrada salva com sucesso'
 };
 
 export const message_en = {
@@ -60,5 +66,11 @@ export const message_en = {
     categorySavedSuccess: 'Categoria salva com sucesso',
     category: 'Categoria',
     subCategory: 'Subcategoria',
-    selectIcon: 'Selecione um ícone'
+    selectIcon: 'Selecione um ícone',
+    amount: 'Valor',
+    paymentAt: 'Data do pagamento',
+    processedAt: 'Data processada',
+    account: 'Conta',
+    transactionIncoming: 'Transação Entrada',
+    incomingTransactionSavedSuccess: 'Transação de entrada salva com sucesso'
 };

@@ -17,10 +17,8 @@ public class IncomingInformationResponseDTO implements Serializable {
     private String account;
     private String category;
     private BigDecimal amount;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate paymentAt;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate processedAt;
 

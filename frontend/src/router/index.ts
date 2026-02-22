@@ -24,6 +24,11 @@ const router = createRouter({
                     component: () => import('@/financial/account/views/pages/AccountPage.vue')
                 },
                 {
+                    path: '/transaction/incoming',
+                    name: 'incoming',
+                    component: () => import('@/financial/incoming/view/page/IncomingTransaction.vue')
+                },
+                {
                     path: '/uikit/input',
                     name: 'input',
                     component: () => import('@/views/uikit/InputDoc.vue')

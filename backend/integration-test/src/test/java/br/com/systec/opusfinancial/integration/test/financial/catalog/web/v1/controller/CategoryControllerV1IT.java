@@ -24,8 +24,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.UUID;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Order(3)
@@ -33,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("integration")
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class CategoryV1IT extends AbstractIT {
+public class CategoryControllerV1IT extends AbstractIT {
     private static final String ENDPOINT = RestPath.V1 + "/categories";
 
     @Autowired

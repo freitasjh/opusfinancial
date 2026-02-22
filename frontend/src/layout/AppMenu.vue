@@ -30,6 +30,17 @@ const model = ref([
         ]
     },
     {
+        label: 'Transações',
+        icon: 'pi pi-fw pi-prime',
+        items: [
+            {
+                label: 'Entrada',
+                icon: 'pi pi-fw pi-check-square',
+                to: '/transaction/incoming'
+            }
+        ]
+    },
+    {
         label: 'UI Components',
         path: '/uikit',
         items: [

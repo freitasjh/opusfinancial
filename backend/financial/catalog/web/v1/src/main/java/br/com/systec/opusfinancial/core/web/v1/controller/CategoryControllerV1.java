@@ -124,8 +124,14 @@ public class CategoryControllerV1 extends AbstractController {
     })
     public ResponseEntity<Page<CategoryResponseDTO>> findByFilter(@RequestParam(value = "limit", defaultValue = "30") int limit,
                                                                   @RequestParam(value = "page", defaultValue = "0") int page,
-                                                                  @RequestParam(value = "keyword", required = false) String keyword) {
+                                                                  @RequestParam(value = "keyword", required = false) String keyword,
+                                                                  @RequestParam(value = "categoryType", required = false) String categoryType) {
         FilterCategory filter = new FilterCategory(keyword, limit, page);
+
+        if(categoryType != null && !categoryType.isEmpty()) {
+            filter.setCategoryType(CategoryType.valueOf(categoryType));
+        }
+
         Page<CategoryVO> result = categoryService.findByFilter(filter);
 
         return buildSuccessResponse(CategoryV1Mapper.of().toFindResponse(result));

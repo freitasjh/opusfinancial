@@ -2,6 +2,7 @@ package br.com.systec.opusfinancial.integration.test.financial.core.web.v1.contr
 
 import br.com.systec.opusfinancial.commons.controller.RestPath;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingFinancialInputDTO;
+import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingSaveResponseDTO;
 import br.com.systec.opusfinancial.integration.test.AbstractIT;
 import br.com.systec.opusfinancial.integration.test.util.IntegrationUtil;
 import br.com.systec.opusfinancial.integration.test.util.JsonUtil;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @AutoConfigureMockMvc
@@ -29,6 +31,7 @@ public class IncomingFinancialControllerV1IT extends AbstractIT {
 
     @Autowired
     private MockMvc mockMvc;
+    private static UUID incomingSaveId;
 
     @Test
     @Order(1)
@@ -50,6 +53,9 @@ public class IncomingFinancialControllerV1IT extends AbstractIT {
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
+        IncomingSaveResponseDTO responseSave = (IncomingSaveResponseDTO) JsonUtil.convertStringToObject(result.getResponse().getContentAsString(), IncomingSaveResponseDTO.class);
+
+        incomingSaveId = responseSave.getId();
     }
 
     @Test
@@ -59,7 +65,23 @@ public class IncomingFinancialControllerV1IT extends AbstractIT {
                         .header("Authorization", "Bearer "+ IntegrationUtil.accessToken)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements").value(1))
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
     }
+
+
+    @Test
+    @Order(3)
+    void whenFindById_thenReturn200() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT + "/" + incomingSaveId.toString())
+                        .header("Authorization", "Bearer "+ IntegrationUtil.accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(incomingSaveId.toString()))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+    }
+
 }
