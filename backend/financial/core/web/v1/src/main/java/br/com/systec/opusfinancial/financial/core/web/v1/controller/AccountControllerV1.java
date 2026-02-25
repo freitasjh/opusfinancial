@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +55,7 @@ public class AccountControllerV1 extends AbstractController {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = StandardError.class))
             })
     })
-    public ResponseEntity<AccountResponseSaveDTO> create(@RequestBody AccountInputDTO account) {
+    public ResponseEntity<AccountResponseSaveDTO> create(@RequestBody @Valid AccountInputDTO account) {
         AccountVO accountToSave = AccountMapperV1.of().toVO(account);
         AccountVO accountAfterSave = service.create(accountToSave);
 

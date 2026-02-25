@@ -6,6 +6,7 @@ import br.com.systec.opusfinancial.integration.test.financial.core.web.v1.contro
 import br.com.systec.opusfinancial.integration.test.financial.core.web.v1.controller.IncomingFinancialControllerV1IT;
 import br.com.systec.opusfinancial.integration.test.identity.web.v1.controller.UserAccountControllerV1IT;
 import br.com.systec.opusfinancial.integration.test.jms.AwsCategoryConsumerIT;
+import br.com.systec.opusfinancial.integration.test.reporting.web.v1.controller.DashboardControllerV1IT;
 import br.com.systec.opusfinancial.integration.test.security.web.v1.controller.LoginControllerV1IT;
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.TestClassOrder;
@@ -21,7 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
         AwsCategoryConsumerIT.class, UserAccountControllerV1IT.class,
         LoginControllerV1IT.class, CategoryControllerV1IT.class,
         BankControllerV1IT.class, AccountControllerV1IT.class,
-        IncomingFinancialControllerV1IT.class
+        IncomingFinancialControllerV1IT.class, DashboardControllerV1IT.class
     }
 )
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)

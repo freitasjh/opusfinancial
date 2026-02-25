@@ -39,6 +39,8 @@ public class IncomingTransactionServiceImpl implements IncomingTransactionServic
         FinancialTransaction transactionBeforeSave = IncomingTransactionMapper.of().toEntity(transaction);
         FinancialTransaction transactionAfterSave = repository.save(transactionBeforeSave);
 
+        accountService.updateBalance(transactionAfterSave.getAccountId(), transactionAfterSave.getAmount(), transactionAfterSave.getTransactionType());
+
         return IncomingTransactionMapper.of().toVO(transactionAfterSave);
     }
 

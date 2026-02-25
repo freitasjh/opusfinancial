@@ -5,6 +5,7 @@ import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountInfoResponse
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountResponseSaveDTO;
 import br.com.systec.opusfinancial.integration.test.AbstractIT;
 import br.com.systec.opusfinancial.integration.test.fake.AccountFake;
+import br.com.systec.opusfinancial.integration.test.util.IntegrationEndpoint;
 import br.com.systec.opusfinancial.integration.test.util.IntegrationUtil;
 import br.com.systec.opusfinancial.integration.test.util.JsonUtil;
 import org.assertj.core.api.Assertions;
@@ -21,11 +22,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static br.com.systec.opusfinancial.commons.controller.RestPath.V1;
+import static br.com.systec.opusfinancial.integration.test.util.IntegrationEndpoint.*;
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @AutoConfigureMockMvc
 public class AccountControllerV1IT extends AbstractIT {
-    private static final String ENDPOINT = RestPath.V1 + "/accounts";
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -37,8 +39,8 @@ public class AccountControllerV1IT extends AbstractIT {
 
         String body = JsonUtil.converteObjetoParaString(accountFake);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT + "/create")
-                        .header("Authorization", "Bearer "+ IntegrationUtil.accessToken)
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_ACCOUNT_CREATE)
+                        .header("Authorization", getAuthorizationBearer())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(body))
                 .andExpect(MockMvcResultMatchers.status().is(200))
@@ -55,8 +57,8 @@ public class AccountControllerV1IT extends AbstractIT {
         var accountFake = AccountFake.toAccountFake();
         accountFake.setBankId(IntegrationUtil.bankId);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT + "/"+ IntegrationUtil.accountId)
-                        .header("Authorization", "Bearer "+ IntegrationUtil.accessToken)
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("%s/%s".formatted(ENDPOINT_ACCOUNT_V1, IntegrationUtil.accountId))
+                        .header("Authorization", getAuthorizationBearer())
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andDo(MockMvcResultHandlers.print())
@@ -73,8 +75,8 @@ public class AccountControllerV1IT extends AbstractIT {
     @Order(3)
     @Test
     void whenFindByFilter_thenReturn200() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT + "/filter")
-                        .header("Authorization", "Bearer "+ IntegrationUtil.accessToken)
+        mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_ACCOUNT_FILTER)
+                        .header("Authorization", getAuthorizationBearer())
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").isNotEmpty())

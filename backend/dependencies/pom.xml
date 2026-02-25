@@ -258,7 +258,24 @@
                 <version>${project.version}</version>
                 <scope>provided</scope>
             </dependency>
-
+            <dependency>
+                <groupId>br.com.systec.opusfinancial</groupId>
+                <artifactId>reporting-api</artifactId>
+                <version>${project.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>br.com.systec.opusfinancial</groupId>
+                <artifactId>reporting-impl</artifactId>
+                <version>${project.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>br.com.systec.opusfinancial</groupId>
+                <artifactId>reporting-web-v1</artifactId>
+                <version>${project.version}</version>
+                <scope>provided</scope>
+            </dependency>
             <!-- aws -->
             <dependency>
                 <groupId>io.awspring.cloud</groupId>

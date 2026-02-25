@@ -1,6 +1,7 @@
 package br.com.systec.opusfinancial.financial.core.web.v1.dto;
 
 import br.com.systec.opusfinancial.financial.api.vo.AccountType;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.io.Serial;
@@ -14,11 +15,14 @@ public class AccountInputDTO implements Serializable {
 
     private UUID id;
     @NotNull(message = "Nome da conta não informado")
+    @NotBlank(message = "Nome da conta não informado")
     private String accountName;
     @NotNull(message = "Informe o tipo de conta")
+    @NotBlank(message = "Informe o tipo de conta")
     private AccountType accountType;
     private BigDecimal balance;
     @NotNull(message = "Banco não informado")
+    @NotBlank(message = "Banco não informado")
     private UUID bankId;
     private String accountNumber;
     private String agency;

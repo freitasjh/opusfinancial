@@ -24,6 +24,7 @@
         <module>i18n</module>
         <module>financial</module>
         <module>aws</module>
+        <module>reporting</module>
     </modules>
 
     <build>

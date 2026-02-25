@@ -23,6 +23,14 @@ const loadingSave = ref<boolean>(false);
 const loadingEdit = ref<boolean>(false);
 const { t } = useI18n();
 
+const home = ref({
+    icon: 'pi pi-home',
+    route: '/'
+});
+const items = ref([
+    { label: t('cad') },
+    { label: t('category'), route: '/category' }
+]);
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 onBeforeMount(async () => {
@@ -108,7 +116,7 @@ const openNewCadCategoryForParent = (parentId: string) => {
         clearCategory();
         category.value.parentId = parentId;
         visibleDrawerCadCategory.value = true;
-    } catch (error) {}
+    } catch (error) { }
 };
 
 const clearCategory = () => {
@@ -149,38 +157,65 @@ const onExpandRow = async (node: any) => {
 };
 </script>
 <template>
-    <div class="card">
-        <Toolbar class="mb-6">
-            <template #start>
-                <Button :label="t('new')" icon="pi pi-plus" severity="info" class="mr-2" @click="openCadCategory(null)" />
-            </template>
-        </Toolbar>
-        <TreeTable :value="treeNodes" scrollable scrollHeight="45rem" @node-expand="onExpandRow" :lazy="true" :loading="loading">
+    <Toolbar class="bg-surface-0 dark:bg-surface-900 shadow-sm p-5 rounded-2xl mb-2">
+        <template #start>
+            <Button :label="t('new')" icon="pi pi-plus" severity="info" class="mr-2" @click="openCadCategory(null)" />
+        </template>
+        <template #end>
+            <div class="flex items-center gap-2">
+                <Breadcrumb :home="home" :model="items">
+                    <template #item="{ item, props }">
+                        <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+                            <a :href="href" v-bind="props.action" @click="navigate">
+                                <span :class="[item.icon, 'text-color']" />
+                                <span class="text-primary font-semibold">{{ item.label }}</span>
+                            </a>
+                        </router-link>
+                        <a v-else :href="item.url" :target="item.target" v-bind="props.action">
+                            <span class="text-surface-700 dark:text-surface-0">{{ item.label }}</span>
+                        </a>
+                    </template>
+                </Breadcrumb>
+            </div>
+        </template>
+    </Toolbar>
+
+    <div class="bg-surface-0 dark:bg-surface-900 shadow-sm p-5 rounded-2xl">
+
+        <TreeTable :value="treeNodes" scrollable scrollHeight="45rem" @node-expand="onExpandRow" :lazy="true"
+            stripedRows :loading="loading">
             <Column field="name" :header="t('description')" :expander="true" style="width: 30%" frozen></Column>
             <Column :header="t('icon')">
                 <template #body="slotProps">
                     <div class="flex flex-wrap gap-2">
-                        <i :class="slotProps.node.data.iconCode ? slotProps.node.data.iconCode : 'pi pi-tag'" :style="{ color: '#' + (slotProps.node.data.colorHex || '999') }" class="mr-2"> </i>
+                        <i :class="slotProps.node.data.iconCode ? slotProps.node.data.iconCode : 'pi pi-tag'"
+                            :style="{ color: '#' + (slotProps.node.data.colorHex || '999') }" class="mr-2"> </i>
                     </div>
                 </template>
             </Column>
 
             <Column :header="t('type')">
                 <template #body="slotProps">
-                    <Tag v-if="slotProps.node.data.categoryType" :value="t(slotProps.node.data.categoryType)" severity="secondary" class="ml-2" style="font-size: 10px"> </Tag>
+                    <Tag v-if="slotProps.node.data.categoryType" :value="t(slotProps.node.data.categoryType)"
+                        severity="secondary" class="ml-2" style="font-size: 10px"> </Tag>
                     <Tag v-else value="N/A" severity="secondary" class="ml-2" style="font-size: 10px"> </Tag>
                 </template>
             </Column>
             <Column style="width: 10rem" :header="t('actions')">
                 <template #body="slotProps">
                     <div class="flex flex-wrap gap-2">
-                        <Button type="button" icon="pi pi-pencil" rounded severity="info" @click="findById(slotProps.node.data.id)" />
-                        <Button type="button" icon="pi pi-plus" rounded @click="openNewCadCategoryForParent(slotProps.node.data.id)" v-if="!slotProps.node.data.parentId" v-tooltip="{ value: t('addSubCategory'), showDelay: 200 }" />
+                        <Button type="button" icon="pi pi-pencil" rounded severity="info"
+                            @click="findById(slotProps.node.data.id)" />
+                        <Button type="button" icon="pi pi-plus" rounded
+                            @click="openNewCadCategoryForParent(slotProps.node.data.id)"
+                            v-if="!slotProps.node.data.parentId"
+                            v-tooltip="{ value: t('addSubCategory'), showDelay: 200 }" />
                     </div>
                 </template>
             </Column>
         </TreeTable>
-        <Drawer v-model:visible="visibleDrawerCadCategory" :header="t('category')" position="right" class="!w-full md:!w-80 lg:!w-[30rem]">
+        <Drawer v-model:visible="visibleDrawerCadCategory" :header="t('category')" position="right"
+            class="!w-full md:!w-80 lg:!w-[30rem]">
             <div v-if="loadingEdit">
                 <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
                 <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
@@ -196,12 +231,14 @@ const onExpandRow = async (node: any) => {
                 <div class="flex flex-col gap-1 mt-2">
                     <label for="category-name">{{ t('description') }}</label>
                     <InputText id="category-name" v-model="category.name" type="text" fluid />
-                    <Message v-show="category.name === '' && validSubmit === false" severity="error" variant="simple" size="small">Informe o nome da categoria</Message>
+                    <Message v-show="category.name === '' && validSubmit === false" severity="error" variant="simple"
+                        size="small">Informe o nome da categoria</Message>
                 </div>
                 <div class="flex flex-col gap-1 mt-2">
                     <label>{{ t('selectIcon') }}</label>
                     <IconPicker name="iconCode" v-model="category.iconCode" />
-                    <Message v-show="category.iconCode === '' && validSubmit === false" severity="error" variant="simple" size="small">Selecione um icone</Message>
+                    <Message v-show="category.iconCode === '' && validSubmit === false" severity="error"
+                        variant="simple" size="small">Selecione um icone</Message>
                 </div>
                 <div class="flex flex-col gap-1 mt-2">
                     <label>{{ t('selectColor') }}</label>
@@ -209,11 +246,14 @@ const onExpandRow = async (node: any) => {
                 </div>
                 <div class="flex flex-col gap-1 mt-2">
                     <label>Tipo de Categoria</label>
-                    <SelectButton v-model="category.categoryType" :options="typeOptions" optionLabel="label" optionValue="value" />
+                    <SelectButton v-model="category.categoryType" :options="typeOptions" optionLabel="label"
+                        optionValue="value" />
                 </div>
                 <div class="flex flex-col gap-1 mt-5">
-                    <Button type="submit" severity="info" :label="t('save')" @click.prevent="save" :loading="loadingSave" />
-                    <Button type="submit" severity="danger" :label="t('cancel')" @click.prevent="visibleDrawerCadCategory = false" />
+                    <Button type="submit" severity="info" :label="t('save')" @click.prevent="save"
+                        :loading="loadingSave" />
+                    <Button type="submit" severity="danger" :label="t('cancel')"
+                        @click.prevent="visibleDrawerCadCategory = false" />
                 </div>
             </div>
         </Drawer>

@@ -3,6 +3,7 @@ package br.com.systec.opusfinancial.integration.test.financial.catalog.web.v1.co
 import br.com.systec.opusfinancial.commons.controller.RestPath;
 import br.com.systec.opusfinancial.core.web.v1.dto.BankFindResponseDTO;
 import br.com.systec.opusfinancial.integration.test.AbstractIT;
+import br.com.systec.opusfinancial.integration.test.util.IntegrationEndpoint;
 import br.com.systec.opusfinancial.integration.test.util.IntegrationUtil;
 import br.com.systec.opusfinancial.integration.test.util.JsonUtil;
 import org.assertj.core.api.Assertions;
@@ -19,19 +20,19 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static br.com.systec.opusfinancial.integration.test.util.IntegrationEndpoint.*;
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @AutoConfigureMockMvc
 public class BankControllerV1IT extends AbstractIT {
-    private static final String ENDPOINT = RestPath.V1 + "/banks";
-
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     @Order(1)
     void whenFindByFilter_thenReturnSuccess_200() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT + "/filter")
-                        .header("Authorization", "Bearer "+ IntegrationUtil.accessToken)
+        mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_BANK_FILTER)
+                        .header("Authorization", getAuthorizationBearer())
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").isNotEmpty())
@@ -43,8 +44,8 @@ public class BankControllerV1IT extends AbstractIT {
     @Test
     @Order(2)
     void whenFindByBankCode_thenReturnSuccess_200() throws Exception {
-        MvcResult result =  mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT + "/code/748")
-                        .header("Authorization", "Bearer "+ IntegrationUtil.accessToken)
+        MvcResult result =  mockMvc.perform(MockMvcRequestBuilders.get("%s/code/748".formatted(ENDPOINT_BANK))
+                        .header("Authorization", getAuthorizationBearer())
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andDo(MockMvcResultHandlers.print())
@@ -61,8 +62,8 @@ public class BankControllerV1IT extends AbstractIT {
     @Test
     @Order(3)
     void whenFindById_thenReturnSuccess_200() throws Exception {
-        MvcResult result =  mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT + "/" + IntegrationUtil.bankId)
-                        .header("Authorization", "Bearer "+ IntegrationUtil.accessToken)
+        MvcResult result =  mockMvc.perform(MockMvcRequestBuilders.get("%s/%s".formatted(ENDPOINT_BANK, IntegrationUtil.bankId))
+                        .header("Authorization", getAuthorizationBearer())
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andDo(MockMvcResultHandlers.print())

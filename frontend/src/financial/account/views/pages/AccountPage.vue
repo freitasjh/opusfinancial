@@ -28,6 +28,15 @@ onBeforeMount(async () => {
     await findByFilter();
 });
 
+const home = ref({
+    icon: 'pi pi-home',
+    route: '/'
+});
+const items = ref([
+    { label: t('cad') },
+    { label: t('account'), route: '/account' }
+]);
+
 const typeOptions = ref([
     { label: t('WALLET'), value: AccountType.WALLET },
     { label: t('INVESTMENT'), value: AccountType.INVESTMENT },
@@ -84,13 +93,34 @@ const save = async () => {
 </script>
 <template>
     <div>
-        <div class="card">
-            <Toolbar class="mb-6">
+        <div class="">
+            <Toolbar class="bg-surface-0 dark:bg-surface-900 shadow-sm p-5 rounded-2xl mb-2">
                 <template #start>
                     <Button :label="t('new')" icon="pi pi-plus" severity="info" class="mr-2" @click="openDrawerCad" />
                 </template>
+                <template #end>
+                    <div class="flex items-center gap-2">
+                        <Breadcrumb :home="home" :model="items">
+                            <template #item="{ item, props }">
+                                <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+                                    <a :href="href" v-bind="props.action" @click="navigate">
+                                        <span :class="[item.icon, 'text-color']" />
+                                        <span class="text-primary font-semibold">{{ item.label }}</span>
+                                    </a>
+                                </router-link>
+                                <a v-else :href="item.url" :target="item.target" v-bind="props.action">
+                                    <span class="text-surface-700 dark:text-surface-0">{{ item.label }}</span>
+                                </a>
+                            </template>
+                        </Breadcrumb>
+                    </div>
+                </template>
+
             </Toolbar>
-            <DataTable ref="dt" v-model:selection="accountSelected" :value="pageAccountResult?.content" dataKey="id" :paginator="true" :rows="30">
+        </div>
+        <div class=" bg-surface-0 dark:bg-surface-900 shadow-sm p-5 rounded-2xl">
+            <DataTable ref="dt" v-model:selection="accountSelected" :value="pageAccountResult?.content" dataKey="id"
+                stripedRows :paginator="true" :rows="30">
                 <Column field="accountName" :header="t('description')" sortable style="min-width: 12rem" />
                 <Column field="bank" :header="t('bank')" sortable style="min-width: 12rem" />
                 <Column field="accountType" :header="t('accountType')" sortable style="min-width: 12rem">
@@ -101,12 +131,14 @@ const save = async () => {
                 <Column style="width: 10rem" :header="t('actions')">
                     <template #body="slotProps">
                         <div class="flex flex-wrap gap-2">
-                            <Button type="button" icon="pi pi-pencil" rounded severity="info" @click="findById(slotProps.data.id)" />
+                            <Button type="button" icon="pi pi-pencil" rounded severity="info"
+                                @click="findById(slotProps.data.id)" />
                         </div>
                     </template>
                 </Column>
             </DataTable>
-            <Drawer v-model:visible="visibleDrawerCadAccount" :dismissable="false" header="Conta" position="right" class="!w-full md:!w-80 lg:!w-[30rem]">
+            <Drawer v-model:visible="visibleDrawerCadAccount" :dismissable="false" header="Conta" position="right"
+                class="!w-full md:!w-80 lg:!w-[30rem]">
                 <div class="flex flex-col gap-1 mt-2">
                     <label for="account-name">{{ t('description') }}</label>
                     <InputText id="account-name" v-model="account.accountName" type="text" fluid size="small" />
@@ -125,15 +157,18 @@ const save = async () => {
                 </div>
                 <div class="flex flex-col gap-1 mt-2">
                     <label>{{ t('accountType') }}</label>
-                    <SelectButton v-model="account.accountType" :options="typeOptions" optionLabel="label" optionValue="value" />
+                    <SelectButton v-model="account.accountType" :options="typeOptions" optionLabel="label"
+                        optionValue="value" />
                 </div>
                 <div class="flex flex-col gap-1 mt-2">
                     <label>{{ t('bank') }}</label>
-                    <Select :options="listBank" fluid :placeholder="t('selectBank')" filter optionLabel="name" v-model="bankSelected" showClear @before-show="findAllBank"></Select>
+                    <Select :options="listBank" fluid :placeholder="t('selectBank')" filter optionLabel="name"
+                        v-model="bankSelected" showClear @before-show="findAllBank"></Select>
                 </div>
                 <div class="flex flex-col gap-1 mt-5">
                     <Button type="submit" severity="info" :label="t('save')" @click="save" />
-                    <Button type="submit" severity="danger" :label="t('cancel')" @click.prevent="visibleDrawerCadAccount = false" />
+                    <Button type="submit" severity="danger" :label="t('cancel')"
+                        @click.prevent="visibleDrawerCadAccount = false" />
                 </div>
             </Drawer>
         </div>

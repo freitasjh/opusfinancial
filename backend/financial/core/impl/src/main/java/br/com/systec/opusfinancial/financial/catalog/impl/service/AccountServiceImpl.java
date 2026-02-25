@@ -7,6 +7,7 @@ import br.com.systec.opusfinancial.financial.api.filter.FilterAccount;
 import br.com.systec.opusfinancial.financial.api.service.AccountService;
 import br.com.systec.opusfinancial.financial.api.vo.AccountType;
 import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
+import br.com.systec.opusfinancial.financial.api.vo.TransactionType;
 import br.com.systec.opusfinancial.financial.catalog.impl.domain.Account;
 import br.com.systec.opusfinancial.financial.catalog.impl.filter.AccountSpecification;
 import br.com.systec.opusfinancial.financial.catalog.impl.mapper.AccountMapper;
@@ -19,6 +20,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -107,5 +109,23 @@ public class AccountServiceImpl implements AccountService {
         account.setBankId(bankVO.getId());
 
         repository.save(account);
+    }
+
+    @Override
+    @Transactional
+    public void updateBalance(UUID accountId, BigDecimal amount, TransactionType transactionType) {
+        Account accountToUpdate = repository.findById(accountId).orElseThrow(AccountNotFoundException::new);
+
+        BigDecimal balanceOld = accountToUpdate.getBalance();
+        BigDecimal balanceNew;
+
+        if (transactionType == TransactionType.INCOMING) {
+            balanceNew = balanceOld.add(amount);
+        } else {
+            balanceNew = balanceOld.subtract(amount);
+        }
+
+        accountToUpdate.setBalance(balanceNew);
+        repository.save(accountToUpdate);
     }
 }

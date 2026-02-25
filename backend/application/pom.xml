@@ -190,5 +190,20 @@
             <artifactId>i18n</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>reporting-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>reporting-impl</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>reporting-web-v1</artifactId>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>

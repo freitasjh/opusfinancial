@@ -1,7 +1,6 @@
 package br.com.systec.opusfinancial.integration.test.financial.catalog.web.v1.controller;
 
 import br.com.systec.opusfinancial.OpusfinancialApplication;
-import br.com.systec.opusfinancial.commons.controller.RestPath;
 import br.com.systec.opusfinancial.core.web.v1.dto.CategoryInputDTO;
 import br.com.systec.opusfinancial.core.web.v1.dto.CategoryResponseDTO;
 import br.com.systec.opusfinancial.core.web.v1.dto.CategorySaveResponseDTO;
@@ -24,6 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static br.com.systec.opusfinancial.integration.test.util.IntegrationEndpoint.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Order(3)
@@ -32,7 +32,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CategoryControllerV1IT extends AbstractIT {
-    private static final String ENDPOINT = RestPath.V1 + "/categories";
 
     @Autowired
     private MockMvc mockMvc;
@@ -44,8 +43,8 @@ public class CategoryControllerV1IT extends AbstractIT {
 
         String body = JsonUtil.converteObjetoParaString(categoryToSave);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT + "/create")
-                        .header("Authorization", "Bearer "+ IntegrationUtil.accessToken)
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_CATEGORIES_CREATE)
+                        .header("Authorization", getAuthorizationBearer())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(body))
                 .andExpect(MockMvcResultMatchers.status().is(200))
@@ -64,8 +63,8 @@ public class CategoryControllerV1IT extends AbstractIT {
     @Order(2)
     void whenFindCategoryById_thenReturnCategoryFullInformation_200() throws Exception {
         CategoryInputDTO categoryToSave = CategoryFake.fakeInputDTO();
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT + "/"+IntegrationUtil.categoryId.toString())
-                        .header("Authorization", "Bearer "+ IntegrationUtil.accessToken)
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("%s/%s".formatted(ENDPOINT_CATEGORIES, IntegrationUtil.categoryId.toString()))
+                        .header("Authorization", getAuthorizationBearer())
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andDo(MockMvcResultHandlers.print())
@@ -84,8 +83,8 @@ public class CategoryControllerV1IT extends AbstractIT {
     @Test
     @Order(3)
     void whenFindCategoryByFilter_thenReturnPaginatedResult() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT + "/filter")
-                        .header("Authorization", "Bearer "+ IntegrationUtil.accessToken)
+        mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_CATEGORIES_FILTER)
+                        .header("Authorization", getAuthorizationBearer())
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").isNotEmpty())
