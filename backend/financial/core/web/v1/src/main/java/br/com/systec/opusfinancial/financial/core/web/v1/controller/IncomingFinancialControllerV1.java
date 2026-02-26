@@ -6,9 +6,7 @@ import br.com.systec.opusfinancial.commons.exceptions.StandardError;
 import br.com.systec.opusfinancial.financial.api.filter.IncomingTransactionFilter;
 import br.com.systec.opusfinancial.financial.api.service.IncomingTransactionService;
 import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
-import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountResponseDTO;
-import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountResponseSaveDTO;
-import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingFinancialInputDTO;
+import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingTransactionInputDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingInformationResponseDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingSaveResponseDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.mapper.IncomingTransactionMapperV1;
@@ -56,7 +54,7 @@ public class IncomingFinancialControllerV1 extends AbstractController {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = StandardError.class))
             })
     })
-    public ResponseEntity<IncomingSaveResponseDTO> save(@RequestBody @Valid IncomingFinancialInputDTO incomingFinancialInputDTO) {
+    public ResponseEntity<IncomingSaveResponseDTO> save(@RequestBody @Valid IncomingTransactionInputDTO incomingFinancialInputDTO) {
         FinancialTransactionVO financialTransactionToSave = IncomingTransactionMapperV1.of().toVO(incomingFinancialInputDTO);
         FinancialTransactionVO financialTransactionAfterSave = service.save(financialTransactionToSave);
 
@@ -75,7 +73,7 @@ public class IncomingFinancialControllerV1 extends AbstractController {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = StandardError.class))
             })
     })
-    public ResponseEntity<IncomingSaveResponseDTO> update(@RequestBody @Valid IncomingFinancialInputDTO incomingFinancialInputDTO) {
+    public ResponseEntity<IncomingSaveResponseDTO> update(@RequestBody @Valid IncomingTransactionInputDTO incomingFinancialInputDTO) {
         FinancialTransactionVO financialTransactionToSave = IncomingTransactionMapperV1.of().toVO(incomingFinancialInputDTO);
         FinancialTransactionVO financialTransactionAfterSave = service.update(financialTransactionToSave);
 

@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
@@ -95,7 +96,7 @@ class AccountServiceImplTest {
     void when_update_with_validAccount_then_returnUpdatedAccount() {
         AccountVO accountVO = createAccountVO();
         Account existingAccount = createAccountFromVO(accountVO);
-        Date createdAt = new Date();
+        LocalDateTime createdAt = LocalDateTime.now();
         existingAccount.setCreateAt(createdAt);
 
         when(repository.findById(accountVO.getId())).thenReturn(Optional.of(existingAccount));

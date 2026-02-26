@@ -1,7 +1,6 @@
 package br.com.systec.opusfinancial.financial.core.web.v1.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.io.Serial;
@@ -11,7 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class IncomingFinancialInputDTO implements Serializable {
+public class IncomingTransactionInputDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 8813503759204255612L;

@@ -3,12 +3,10 @@ package br.com.systec.opusfinancial.financial.core.web.v1.mapper;
 import br.com.systec.opusfinancial.api.vo.CategoryVO;
 import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
 import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
-import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingFinancialInputDTO;
+import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingTransactionInputDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingInformationResponseDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingSaveResponseDTO;
 import org.springframework.data.domain.Page;
-
-import java.time.LocalDateTime;
 
 public class IncomingTransactionMapperV1 {
 
@@ -19,7 +17,7 @@ public class IncomingTransactionMapperV1 {
         return new IncomingTransactionMapperV1();
     }
 
-    public FinancialTransactionVO toVO(IncomingFinancialInputDTO inputDTO) {
+    public FinancialTransactionVO toVO(IncomingTransactionInputDTO inputDTO) {
         FinancialTransactionVO financialTransaction = new FinancialTransactionVO();
         financialTransaction.setId(inputDTO.getId());
         financialTransaction.setDescription(inputDTO.getDescription());

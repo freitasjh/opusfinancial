@@ -196,7 +196,7 @@ public class SecurityTokenServiceImpl implements SecurityTokenService {
             SecurityToken securityToken = new SecurityToken();
             securityToken.setUserId(user.getId());
             securityToken.setTokenId(jti);
-            securityToken.setCreateAt(new Date());
+            securityToken.setCreateAt(LocalDateTime.now());
             securityToken.setExpiresAt(Instant.now().plusSeconds(60L * 60 * 24 * 14));
             securityToken.setRefreshToken(refreshToken);
             securityToken.setTenantId(user.getTenantId());

@@ -17,7 +17,7 @@ public class FinancialTransactionFake {
     public static FinancialTransaction toFake() {
         FinancialTransaction financialTransaction = new FinancialTransaction();
         financialTransaction.setId(UUID.randomUUID());
-        financialTransaction.setCreateAt(new Date());
+        financialTransaction.setCreateAt(LocalDateTime.now());
         financialTransaction.setAccountId(UUID.randomUUID());
         financialTransaction.setCategoryId(UUID.randomUUID());
         financialTransaction.setTransactionType(TransactionType.INCOMING);
@@ -36,7 +36,7 @@ public class FinancialTransactionFake {
     public static FinancialTransactionVO toFakeVO() {
         FinancialTransactionVO financialTransaction = new FinancialTransactionVO();
         financialTransaction.setId(UUID.randomUUID());
-        financialTransaction.setCreateAt(new Date());
+        financialTransaction.setCreateAt(LocalDateTime.now());
         financialTransaction.setAccount(AccountFake.toFakeVO());
         CategoryVO categoryVO = new CategoryVO();
         categoryVO.setId(UUID.randomUUID());

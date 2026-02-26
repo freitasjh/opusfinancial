@@ -10,6 +10,7 @@ import jakarta.persistence.PreUpdate;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -23,18 +24,21 @@ public abstract class BaseEntity implements Serializable {
     protected UUID id;
 
     @Column(updatable = false)
-    protected Date createAt;
-    protected Date updateAt;
+    protected LocalDateTime createAt;
+    protected LocalDateTime updateAt;
 
     @PrePersist
     protected void prePersist() {
-        this.createAt = new Date();
-        this.updateAt = new Date();
+        if (createAt == null) {
+            this.createAt = LocalDateTime.now();
+        }
+
+        this.updateAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void preUpdate() {
-        this.updateAt = new Date();
+        this.updateAt = LocalDateTime.now();
     }
 
     public UUID getId() {
@@ -45,19 +49,19 @@ public abstract class BaseEntity implements Serializable {
         this.id = id;
     }
 
-    public Date getCreateAt() {
+    public LocalDateTime getCreateAt() {
         return createAt;
     }
 
-    public Date getUpdateAt() {
+    public LocalDateTime getUpdateAt() {
         return updateAt;
     }
 
-    public void setCreateAt(Date createAt) {
+    public void setCreateAt(LocalDateTime createAt) {
         this.createAt = createAt;
     }
 
-    public void setUpdateAt(Date updateAt) {
+    public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
     }
 }

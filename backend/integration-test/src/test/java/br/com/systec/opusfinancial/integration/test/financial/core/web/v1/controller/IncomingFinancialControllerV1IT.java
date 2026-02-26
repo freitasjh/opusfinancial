@@ -1,10 +1,8 @@
 package br.com.systec.opusfinancial.integration.test.financial.core.web.v1.controller;
 
-import br.com.systec.opusfinancial.commons.controller.RestPath;
-import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingFinancialInputDTO;
+import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingTransactionInputDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingSaveResponseDTO;
 import br.com.systec.opusfinancial.integration.test.AbstractIT;
-import br.com.systec.opusfinancial.integration.test.util.IntegrationEndpoint;
 import br.com.systec.opusfinancial.integration.test.util.IntegrationUtil;
 import br.com.systec.opusfinancial.integration.test.util.JsonUtil;
 import org.junit.jupiter.api.MethodOrderer;
@@ -37,7 +35,7 @@ public class IncomingFinancialControllerV1IT extends AbstractIT {
     @Test
     @Order(1)
     void whenCreateIncomingTransaction_thenReturn200() throws Exception {
-        IncomingFinancialInputDTO incomingFinancialInputDTO = new IncomingFinancialInputDTO();
+        IncomingTransactionInputDTO incomingFinancialInputDTO = new IncomingTransactionInputDTO();
         incomingFinancialInputDTO.setAccountId(IntegrationUtil.accountId);
         incomingFinancialInputDTO.setAmount(BigDecimal.valueOf(100.0));
         incomingFinancialInputDTO.setDescription("Teste de cadastro de receita");
