@@ -10,11 +10,9 @@ import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
 import br.com.systec.opusfinancial.financial.api.vo.CategoryTransactionType;
 import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
 import br.com.systec.opusfinancial.financial.api.vo.TransactionType;
-import br.com.systec.opusfinancial.financial.catalog.impl.domain.FinancialTransaction;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.FinancialTransaction;
 import br.com.systec.opusfinancial.financial.catalog.impl.filter.ExpenseTransactionSpecification;
-import br.com.systec.opusfinancial.financial.catalog.impl.filter.IncomingTransactionSpecification;
 import br.com.systec.opusfinancial.financial.catalog.impl.mapper.FinancialTransactionMapper;
-import br.com.systec.opusfinancial.financial.catalog.impl.mapper.IncomingTransactionMapper;
 import br.com.systec.opusfinancial.financial.catalog.impl.repository.TransactionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
@@ -40,7 +38,7 @@ public class ExpenseTransactionServiceImpl implements ExpenseTransactionService 
 
     @Override
     @Transactional
-    public FinancialTransactionVO save(FinancialTransactionVO financialTransaction) {
+    public FinancialTransactionVO create(FinancialTransactionVO financialTransaction) {
         FinancialTransaction expenseTransaction = FinancialTransactionMapper.of().toEntity(
                 financialTransaction,
                 TransactionType.EXPENSE,
@@ -49,7 +47,10 @@ public class ExpenseTransactionServiceImpl implements ExpenseTransactionService 
 
         FinancialTransaction expenseTransactionAfterSave = repository.save(expenseTransaction);
 
-        accountService.updateBalance(expenseTransactionAfterSave.getAccountId(), expenseTransactionAfterSave.getAmount(), TransactionType.EXPENSE);
+        if (expenseTransactionAfterSave.getProcessed() == true) {
+            accountService.updateBalance(expenseTransactionAfterSave.getAccountId(), expenseTransactionAfterSave.getAmount(), TransactionType.EXPENSE);
+        }
+
 
         return FinancialTransactionMapper.of().toVO(expenseTransactionAfterSave);
     }
@@ -61,7 +62,10 @@ public class ExpenseTransactionServiceImpl implements ExpenseTransactionService 
 
         repository.delete(expenseTransaction);
 
-        accountService.updateBalance(expenseTransaction.getAccountId(), expenseTransaction.getAmount(), TransactionType.INCOMING);
+        if(expenseTransaction.getProcessed() == true) {
+            accountService.updateBalance(expenseTransaction.getAccountId(), expenseTransaction.getAmount(), TransactionType.INCOMING);
+        }
+
     }
 
     @Override

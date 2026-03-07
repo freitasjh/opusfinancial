@@ -32,8 +32,9 @@ const home = ref({
     icon: 'pi pi-home',
     route: '/'
 });
+
 const items = ref([
-    { label: t('cad') },
+    { label: t('register') },
     { label: t('account'), route: '/account' }
 ]);
 
@@ -85,7 +86,7 @@ const save = async () => {
         account.value.bankId = bankSelected.value?.id;
 
         await AccountService.save(account.value);
-        handlerMessage.toastSuccess('Conta salva com sucesso');
+        handlerMessage.toastSuccess(t('accountSavedSuccess'));
     } catch (error: AxiosError | any) {
         handlerMessage.error(error);
     }
@@ -137,8 +138,8 @@ const save = async () => {
                     </template>
                 </Column>
             </DataTable>
-            <Drawer v-model:visible="visibleDrawerCadAccount" :dismissable="false" header="Conta" position="right"
-                class="!w-full md:!w-80 lg:!w-[30rem]">
+            <Drawer v-model:visible="visibleDrawerCadAccount" :dismissable="false" :header="t('account')"
+                position="right" class="!w-full md:!w-80 lg:!w-[30rem]">
                 <div class="flex flex-col gap-1 mt-2">
                     <label for="account-name">{{ t('description') }}</label>
                     <InputText id="account-name" v-model="account.accountName" type="text" fluid size="small" />

@@ -6,7 +6,7 @@ import br.com.systec.opusfinancial.financial.api.exceptions.AccountNotFoundExcep
 import br.com.systec.opusfinancial.financial.api.filter.FilterAccount;
 import br.com.systec.opusfinancial.financial.api.vo.AccountType;
 import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
-import br.com.systec.opusfinancial.financial.catalog.impl.domain.Account;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.Account;
 import br.com.systec.opusfinancial.financial.catalog.impl.repository.AccountRepository;
 import br.com.systec.opusfinancial.i18n.I18nTranslate;
 import br.com.systec.opusfinancial.financial.api.vo.TransactionType;
@@ -26,7 +26,6 @@ import org.springframework.data.jpa.domain.Specification;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 

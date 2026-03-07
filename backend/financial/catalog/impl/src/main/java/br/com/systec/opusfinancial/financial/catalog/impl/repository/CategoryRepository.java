@@ -1,6 +1,6 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.repository;
 
-import br.com.systec.opusfinancial.financial.catalog.impl.domain.Category;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

@@ -2,7 +2,7 @@ package br.com.systec.opusfinancial.financial.catalog.impl.mapper;
 
 
 import br.com.systec.opusfinancial.api.vo.BankVO;
-import br.com.systec.opusfinancial.financial.catalog.impl.domain.Bank;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.Bank;
 import br.com.systec.opusfinancial.financial.catalog.impl.fake.BankFake;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

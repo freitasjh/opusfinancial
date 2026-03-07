@@ -1,4 +1,5 @@
 import type { AxiosError } from 'axios';
+import { format, parseISO } from 'date-fns';
 import type { SweetAlert2 } from 'sweetalert2';
 import { inject } from 'vue';
 import { useRouter } from 'vue-router';
@@ -14,6 +15,28 @@ interface ApiErrorResponse {
 }
 
 interface CustomAxiosError extends AxiosError<ApiErrorResponse> {}
+
+export function formatDate(date: any, formatStr: string = 'dd/MM/yyyy'): string {
+    if (!date) return '';
+
+    if (typeof date === 'string') {
+        // Se a string for no formato YYYY-MM-DD (LocalDate do Java)
+        if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+            const [year, month, day] = date.split('-').map(Number);
+            // Cria a data usando o construtor local (year, monthIndex, day)
+            // monthIndex é 0-based em JS
+            return format(new Date(year, month - 1, day), formatStr);
+        }
+        // Para outros formatos ISO, usamos parseISO
+        return format(parseISO(date), formatStr);
+    }
+
+    return format(date, formatStr);
+}
+
+export function formatCurrency(value: any) {
+    return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
 
 export function useHandlerMessage() {
     // Injetar SweetAlert2 com tipagem

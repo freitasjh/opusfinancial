@@ -5,7 +5,7 @@ import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
 import br.com.systec.opusfinancial.financial.api.vo.CategoryTransactionType;
 import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
 import br.com.systec.opusfinancial.financial.api.vo.TransactionType;
-import br.com.systec.opusfinancial.financial.catalog.impl.domain.FinancialTransaction;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.FinancialTransaction;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -34,8 +34,8 @@ public class FinancialTransactionMapper {
         transaction.setDueDate(transactionVO.getDueDate());
         transaction.setAmount(transactionVO.getAmount());
         transaction.setPaymentAt(transactionVO.getPaymentAt());
-        transaction.setTransactionType(TransactionType.INCOMING);
-        transaction.setCategoryTransactionType(CategoryTransactionType.RECEIVER);
+        transaction.setTransactionType(transactionType);
+        transaction.setCategoryTransactionType(categoryTransactionType);
 
         if (transactionVO.getAccount() != null) {
             transaction.setAccountId(transactionVO.getAccount().getId());
@@ -81,8 +81,6 @@ public class FinancialTransactionMapper {
         transaction.setDueDate(transactionVO.getDueDate());
         transaction.setAmount(transactionVO.getAmount());
         transaction.setPaymentAt(transactionVO.getPaymentAt());
-//        transaction.setTransactionType(TransactionType.INCOMING);
-//        transaction.setCategoryTransactionType(CategoryTransactionType.RECEIVER);
 
         if (transactionVO.getAccount() != null && !Objects.equals(transactionVO.getAccount().getId(), transaction.getAccountId())) {
             transaction.setAccountId(transactionVO.getAccount().getId());

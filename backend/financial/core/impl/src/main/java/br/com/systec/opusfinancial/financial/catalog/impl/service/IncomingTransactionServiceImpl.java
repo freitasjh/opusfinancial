@@ -7,10 +7,13 @@ import br.com.systec.opusfinancial.financial.api.filter.IncomingTransactionFilte
 import br.com.systec.opusfinancial.financial.api.service.AccountService;
 import br.com.systec.opusfinancial.financial.api.service.IncomingTransactionService;
 import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
+import br.com.systec.opusfinancial.financial.api.vo.CategoryTransactionType;
 import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
-import br.com.systec.opusfinancial.financial.catalog.impl.domain.FinancialTransaction;
+import br.com.systec.opusfinancial.financial.api.vo.TransactionType;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.FinancialTransaction;
 import br.com.systec.opusfinancial.financial.catalog.impl.filter.IncomingTransactionSpecification;
-import br.com.systec.opusfinancial.financial.catalog.impl.mapper.IncomingTransactionMapper;
+import br.com.systec.opusfinancial.financial.catalog.impl.mapper.FinancialTransactionMapper;
+
 import br.com.systec.opusfinancial.financial.catalog.impl.repository.TransactionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
@@ -36,12 +39,16 @@ public class IncomingTransactionServiceImpl implements IncomingTransactionServic
     @Override
     @Transactional
     public FinancialTransactionVO save(FinancialTransactionVO transaction) {
-        FinancialTransaction transactionBeforeSave = IncomingTransactionMapper.of().toEntity(transaction);
+        FinancialTransaction transactionBeforeSave = FinancialTransactionMapper.of().toEntity(
+                transaction,
+                TransactionType.INCOMING,
+                CategoryTransactionType.RECEIVER
+        );
         FinancialTransaction transactionAfterSave = repository.save(transactionBeforeSave);
 
         accountService.updateBalance(transactionAfterSave.getAccountId(), transactionAfterSave.getAmount(), transactionAfterSave.getTransactionType());
 
-        return IncomingTransactionMapper.of().toVO(transactionAfterSave);
+        return FinancialTransactionMapper.of().toVO(transactionAfterSave);
     }
 
     @Override
@@ -50,10 +57,10 @@ public class IncomingTransactionServiceImpl implements IncomingTransactionServic
         FinancialTransaction financialTransactionSaved = repository.findById(transaction.getId())
                 .orElseThrow(IncomingFinancialNotFoundException::new);
 
-        FinancialTransaction financialTransactionBeforeSave = IncomingTransactionMapper.of().updateEntityFromVO(financialTransactionSaved, transaction);
+        FinancialTransaction financialTransactionBeforeSave = FinancialTransactionMapper.of().updateEntityFromVO(financialTransactionSaved, transaction);
         FinancialTransaction financialTransactionAfterSave = repository.save(financialTransactionBeforeSave);
 
-        return IncomingTransactionMapper.of().toVO(financialTransactionAfterSave);
+        return FinancialTransactionMapper.of().toVO(financialTransactionAfterSave);
     }
 
     @Override
@@ -71,7 +78,7 @@ public class IncomingTransactionServiceImpl implements IncomingTransactionServic
         List<AccountVO> listOfAccount = accountService.findByIds(listOfAccountId);
         List<CategoryVO> listOfCategory = categoryService.findByIds(listOfCategoryId);
 
-        return IncomingTransactionMapper.of().toPage(pageResult, listOfAccount, listOfCategory);
+        return FinancialTransactionMapper.of().toPage(pageResult, listOfAccount, listOfCategory);
     }
 
     @Override
@@ -79,6 +86,6 @@ public class IncomingTransactionServiceImpl implements IncomingTransactionServic
     public FinancialTransactionVO findById(UUID id) {
         FinancialTransaction financialTransaction = repository.findById(id).orElseThrow(IncomingFinancialNotFoundException::new);
 
-        return IncomingTransactionMapper.of().toVO(financialTransaction);
+        return FinancialTransactionMapper.of().toVO(financialTransaction);
     }
 }

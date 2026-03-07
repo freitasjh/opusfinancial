@@ -1,4 +1,4 @@
-package br.com.systec.opusfinancial.financial.catalog.impl.domain;
+package br.com.systec.opusfinancial.financial.catalog.impl.entity;
 
 import br.com.systec.opusfinancial.commons.entities.BaseEntity;
 import jakarta.persistence.Column;

@@ -1,7 +1,7 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.filter;
 
 import br.com.systec.opusfinancial.commons.filter.PageParamSearch;
-import br.com.systec.opusfinancial.financial.catalog.impl.domain.Account;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.Account;
 import org.springframework.data.jpa.domain.Specification;
 
 public class AccountSpecification {

@@ -7,7 +7,7 @@ import br.com.systec.opusfinancial.financial.api.filter.IncomingTransactionFilte
 import br.com.systec.opusfinancial.financial.api.service.AccountService;
 import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
 import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
-import br.com.systec.opusfinancial.financial.catalog.impl.domain.FinancialTransaction;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.FinancialTransaction;
 import br.com.systec.opusfinancial.financial.catalog.impl.fake.AccountFake;
 import br.com.systec.opusfinancial.financial.catalog.impl.fake.CategoryFake;
 import br.com.systec.opusfinancial.financial.catalog.impl.fake.FinancialTransactionFake;
@@ -56,8 +56,8 @@ class IncomingTransactionServiceImplTest {
 
     @Test
     void shouldSaveIncomingTransaction() {
-        FinancialTransactionVO financialTransactionToSave = FinancialTransactionFake.toFakeVO();
-        FinancialTransaction financialTransactionSaved = FinancialTransactionFake.toFake();
+        FinancialTransactionVO financialTransactionToSave = FinancialTransactionFake.createIncomingTransactionVO();
+        FinancialTransaction financialTransactionSaved = FinancialTransactionFake.createIncomingTransaction();
 
         doReturn(financialTransactionSaved).when(repository).save(any());
 
@@ -71,10 +71,10 @@ class IncomingTransactionServiceImplTest {
 
     @Test
     void shouldUpdateIncomingTransaction() {
-        FinancialTransaction financialTransactionToFindReturn = FinancialTransactionFake.toFake();
-        FinancialTransactionVO financialTransactionToUpdate = FinancialTransactionFake.toFakeVO();
+        FinancialTransaction financialTransactionToFindReturn = FinancialTransactionFake.createIncomingTransaction();
+        FinancialTransactionVO financialTransactionToUpdate = FinancialTransactionFake.createExpenseTransactionVO();
 
-        FinancialTransaction financialTransactionUpdated = FinancialTransactionFake.toFake();
+        FinancialTransaction financialTransactionUpdated = FinancialTransactionFake.createIncomingTransaction();
 
         doReturn(Optional.of(financialTransactionToFindReturn)).when(repository).findById(any());
         doReturn(financialTransactionUpdated).when(repository).save(any());
@@ -89,7 +89,7 @@ class IncomingTransactionServiceImplTest {
 
     @Test
     void whenUpdateIncomingTransaction_thenFindObjectNotFound() {
-        FinancialTransactionVO financialTransactionToSave = FinancialTransactionFake.toFakeVO();
+        FinancialTransactionVO financialTransactionToSave = FinancialTransactionFake.createIncomingTransactionVO();
 
         doReturn(Optional.empty()).when(repository).findById(any());
 
@@ -98,7 +98,7 @@ class IncomingTransactionServiceImplTest {
 
     @Test
     void whenFindById_thenReturnIncomingTransaction() {
-        FinancialTransaction financialTransactionToReturn = FinancialTransactionFake.toFake();
+        FinancialTransaction financialTransactionToReturn = FinancialTransactionFake.createIncomingTransaction();
 
         doReturn(Optional.of(financialTransactionToReturn)).when(repository).findById(any());
 
@@ -116,10 +116,10 @@ class IncomingTransactionServiceImplTest {
 
     @Test
     void whenFindByFilter() {
-        List<FinancialTransaction> listTransactionToReturn = List.of(FinancialTransactionFake.toFake());
+        List<FinancialTransaction> listTransactionToReturn = List.of(FinancialTransactionFake.createIncomingTransaction());
         Page<FinancialTransaction> pageResultToReturn = new PageImpl<>(listTransactionToReturn);
         List<AccountVO> listOfAccountTOReturn = List.of(AccountFake.toFakeVO());
-        List<CategoryVO> listOfCategoryToReturn = List.of(CategoryFake.toFake());
+        List<CategoryVO> listOfCategoryToReturn = List.of(CategoryFake.toFakeVO());
 
         doReturn(listOfAccountTOReturn).when(accountService).findByIds(any());
         doReturn(listOfCategoryToReturn).when(categoryService).findByIds(any());

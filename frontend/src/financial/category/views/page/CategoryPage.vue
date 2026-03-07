@@ -5,22 +5,19 @@ import { AxiosError } from 'axios';
 import { onBeforeMount, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { CategoryFilter } from '../../model/category.filter';
-import { Category } from '../../model/category.model';
 import { CategoryResponse } from '../../model/category.response.mode';
-import { CategoryType } from '../../model/category.type';
 import categoryService from '../../service/category.service';
+import CategoryFormDrawer from '../components/CategoryFormDrawer.vue';
 
 const pageResult = ref<PageResponse<CategoryResponse> | null>(null);
 const handlerMessage = useHandlerMessage();
 const categorySelected = ref<CategoryResponse | null>(null);
 const loading = ref<boolean>(false);
 const visibleDrawerCadCategory = ref<boolean>(false);
+const selectedCategoryId = ref<string | null>(null);
+const selectedParentId = ref<string | null>(null);
 const filterCategory = ref<CategoryFilter | null>(null);
-const category = ref<Category>({} as Category);
-const validSubmit = ref<boolean>(true);
 const treeNodes = ref();
-const loadingSave = ref<boolean>(false);
-const loadingEdit = ref<boolean>(false);
 const { t } = useI18n();
 
 const home = ref({
@@ -28,19 +25,13 @@ const home = ref({
     route: '/'
 });
 const items = ref([
-    { label: t('cad') },
+    { label: t('register') },
     { label: t('category'), route: '/category' }
 ]);
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 onBeforeMount(async () => {
     await findByFilter();
 });
-
-const typeOptions = ref([
-    { label: t('REVENUE'), value: CategoryType.REVENUE },
-    { label: t('EXPENSE'), value: CategoryType.EXPENSE }
-]);
 
 const findByFilter = async () => {
     try {
@@ -61,66 +52,22 @@ const findByFilter = async () => {
     }
 };
 
-const findById = async (id: string) => {
-    try {
-        loadingEdit.value = true;
-        clearCategory();
-
-        visibleDrawerCadCategory.value = true;
-        await delay(1000);
-        const response = await categoryService.findById(id);
-        openCadCategory(response);
-    } catch (error: AxiosError | any) {
-        handlerMessage.error(error);
-        visibleDrawerCadCategory.value = false;
-    } finally {
-        loadingEdit.value = false;
-    }
-};
-
-const save = async () => {
-    try {
-        loadingSave.value = true;
-
-        await validateEmptyRequiredForm();
-        if (!validSubmit.value) return;
-
-        await categoryService.save(category.value);
-        handlerMessage.toastSuccess(t('categorySavedSuccess'));
-        visibleDrawerCadCategory.value = false;
-        await findByFilter();
-    } catch (error: AxiosError | any) {
-        handlerMessage.error(error);
-    } finally {
-        loadingSave.value = false;
-    }
-};
-
-const validateEmptyRequiredForm = async () => {
-    validSubmit.value = !(category.value.name === '' || category.value.colorHex === '' || category.value.iconCode === '');
-};
-
-const openCadCategory = (categoryReturn: Category | null) => {
-    validSubmit.value = true;
+const findById = (id: string) => {
+    selectedCategoryId.value = id;
+    selectedParentId.value = null;
     visibleDrawerCadCategory.value = true;
+};
 
-    if (categoryReturn) {
-        category.value = categoryReturn;
-    } else {
-        clearCategory();
-    }
+const openCadCategory = () => {
+    selectedCategoryId.value = null;
+    selectedParentId.value = null;
+    visibleDrawerCadCategory.value = true;
 };
 
 const openNewCadCategoryForParent = (parentId: string) => {
-    try {
-        clearCategory();
-        category.value.parentId = parentId;
-        visibleDrawerCadCategory.value = true;
-    } catch (error) { }
-};
-
-const clearCategory = () => {
-    category.value = { colorHex: 'ff0808', iconCode: '', name: '', categoryType: CategoryType.REVENUE } as Category;
+    selectedCategoryId.value = null;
+    selectedParentId.value = parentId;
+    visibleDrawerCadCategory.value = true;
 };
 
 const onExpandRow = async (node: any) => {
@@ -159,7 +106,7 @@ const onExpandRow = async (node: any) => {
 <template>
     <Toolbar class="bg-surface-0 dark:bg-surface-900 shadow-sm p-5 rounded-2xl mb-2">
         <template #start>
-            <Button :label="t('new')" icon="pi pi-plus" severity="info" class="mr-2" @click="openCadCategory(null)" />
+            <Button :label="t('new')" icon="pi pi-plus" severity="info" class="mr-2" @click="openCadCategory()" />
         </template>
         <template #end>
             <div class="flex items-center gap-2">
@@ -184,6 +131,12 @@ const onExpandRow = async (node: any) => {
 
         <TreeTable :value="treeNodes" scrollable scrollHeight="45rem" @node-expand="onExpandRow" :lazy="true"
             stripedRows :loading="loading">
+            <template #empty>
+                <div class="flex flex-col items-center justify-center p-8 gap-4">
+                    <i class="pi pi-inbox text-surface-400" style="font-size: 3rem"></i>
+                    <div class="text-surface-500 font-semibold">{{ t('empty') }}</div>
+                </div>
+            </template>
             <Column field="name" :header="t('description')" :expander="true" style="width: 30%" frozen></Column>
             <Column :header="t('icon')">
                 <template #body="slotProps">
@@ -214,48 +167,7 @@ const onExpandRow = async (node: any) => {
                 </template>
             </Column>
         </TreeTable>
-        <Drawer v-model:visible="visibleDrawerCadCategory" :header="t('category')" position="right"
-            class="!w-full md:!w-80 lg:!w-[30rem]">
-            <div v-if="loadingEdit">
-                <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
-                <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
-                <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
-                <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
-                <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
-                <div class="flex flex-col gap-1 mt-5">
-                    <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
-                    <Skeleton class="mb-2" borderRadius="16px"></Skeleton>
-                </div>
-            </div>
-            <div v-else>
-                <div class="flex flex-col gap-1 mt-2">
-                    <label for="category-name">{{ t('description') }}</label>
-                    <InputText id="category-name" v-model="category.name" type="text" fluid />
-                    <Message v-show="category.name === '' && validSubmit === false" severity="error" variant="simple"
-                        size="small">Informe o nome da categoria</Message>
-                </div>
-                <div class="flex flex-col gap-1 mt-2">
-                    <label>{{ t('selectIcon') }}</label>
-                    <IconPicker name="iconCode" v-model="category.iconCode" />
-                    <Message v-show="category.iconCode === '' && validSubmit === false" severity="error"
-                        variant="simple" size="small">Selecione um icone</Message>
-                </div>
-                <div class="flex flex-col gap-1 mt-2">
-                    <label>{{ t('selectColor') }}</label>
-                    <ColorPicker name="colorHex" v-model="category.colorHex" />
-                </div>
-                <div class="flex flex-col gap-1 mt-2">
-                    <label>Tipo de Categoria</label>
-                    <SelectButton v-model="category.categoryType" :options="typeOptions" optionLabel="label"
-                        optionValue="value" />
-                </div>
-                <div class="flex flex-col gap-1 mt-5">
-                    <Button type="submit" severity="info" :label="t('save')" @click.prevent="save"
-                        :loading="loadingSave" />
-                    <Button type="submit" severity="danger" :label="t('cancel')"
-                        @click.prevent="visibleDrawerCadCategory = false" />
-                </div>
-            </div>
-        </Drawer>
+        <CategoryFormDrawer v-model:visible="visibleDrawerCadCategory" :categoryId="selectedCategoryId"
+            :parentId="selectedParentId" @saved="findByFilter" />
     </div>
 </template>

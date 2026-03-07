@@ -3,7 +3,7 @@ package br.com.systec.opusfinancial.financial.catalog.impl.service;
 import br.com.systec.opusfinancial.api.exceptions.BankNotFoundException;
 import br.com.systec.opusfinancial.api.filter.FilterBank;
 import br.com.systec.opusfinancial.api.vo.BankVO;
-import br.com.systec.opusfinancial.financial.catalog.impl.domain.Bank;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.Bank;
 import br.com.systec.opusfinancial.financial.catalog.impl.fake.BankFake;
 import br.com.systec.opusfinancial.financial.catalog.impl.repository.BankRepository;
 import br.com.systec.opusfinancial.i18n.I18nTranslate;

@@ -6,7 +6,7 @@ import br.com.systec.opusfinancial.api.service.CategoryService;
 import br.com.systec.opusfinancial.api.vo.CategoryVO;
 import br.com.systec.opusfinancial.api.vo.ListCategoryVO;
 import br.com.systec.opusfinancial.commons.exceptions.BaseException;
-import br.com.systec.opusfinancial.financial.catalog.impl.domain.Category;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.Category;
 import br.com.systec.opusfinancial.financial.catalog.impl.filter.CategorySpecification;
 import br.com.systec.opusfinancial.financial.catalog.impl.mapper.CategoryMapper;
 import br.com.systec.opusfinancial.financial.catalog.impl.repository.CategoryRepository;

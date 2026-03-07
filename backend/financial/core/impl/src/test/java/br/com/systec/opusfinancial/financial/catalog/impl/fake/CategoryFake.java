@@ -6,10 +6,11 @@ import java.util.UUID;
 
 public class CategoryFake {
 
-    public static CategoryVO toFake() {
+    public static CategoryVO toFakeVO() {
         CategoryVO categoryVO = new CategoryVO();
         categoryVO.setId(UUID.randomUUID());
 
         return categoryVO;
     }
+
 }

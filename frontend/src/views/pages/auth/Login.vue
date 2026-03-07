@@ -57,18 +57,18 @@ const handleSignIn = async () => {
                     </div>
 
                     <div>
-                        <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
-                        <InputText id="email1" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-8" v-model="email" />
+                        <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">{{ t('email') }}</label>
+                        <InputText id="email1" type="text" :placeholder="t('email')" class="w-full md:w-[30rem] mb-8" v-model="email" />
 
-                        <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>
-                        <Password id="password1" v-model="password" placeholder="Password" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
+                        <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">{{ t('password') }}</label>
+                        <Password id="password1" v-model="password" :placeholder="t('password')" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
 
                         <div class="flex items-center justify-between mt-2 mb-8 gap-8">
                             <!-- <div class="flex items-center">
                                 <Checkbox v-model="checked" id="rememberme1" binary class="mr-2"></Checkbox>
                                 <label for="rememberme1">{{ t('remember') }}</label>
                             </div> -->
-                            <a @click="router.push('/auth/register')" class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)">{{ $t('register') }}</a>
+                            <a @click="router.push('/auth/register')" class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)">{{ t('register') }}</a>
                         </div>
                         <Button :label="t('sigIn')" class="w-full" @click="handleSignIn"></Button>
                     </div>

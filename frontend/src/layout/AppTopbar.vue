@@ -2,9 +2,11 @@
 import { useAuthStore } from '@/identity/store/auth.store';
 import { useLayout } from '@/layout/composables/layout';
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import AppConfigurator from './AppConfigurator.vue';
 
+const { t } = useI18n();
 const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
 
 const authStore = useAuthStore();
@@ -17,7 +19,7 @@ const userInitials = computed(() => {
 
 const items = ref([
     {
-        label: 'Configurações',
+        label: t('settings'),
         icon: 'pi pi-cog',
         command: () => router.push('/settings')
     },
@@ -25,7 +27,7 @@ const items = ref([
         separator: true
     },
     {
-        label: 'Sair',
+        label: t('logout'),
         icon: 'pi pi-sign-out',
         command: () => {
             authStore.logout();
@@ -97,15 +99,15 @@ const toggleProfile = (event) => {
                 <div class="layout-topbar-menu-content">
                     <button type="button" class="layout-topbar-action">
                         <i class="pi pi-calendar"></i>
-                        <span>Calendar</span>
+                        <span>{{ t('calendar') }}</span>
                     </button>
                     <button type="button" class="layout-topbar-action">
                         <i class="pi pi-inbox"></i>
-                        <span>Messages</span>
+                        <span>{{ t('messages') }}</span>
                     </button>
                     <button type="button" class="layout-topbar-action" @click="toggleProfile">
                         <i class="pi pi-user"></i>
-                        <span>Profile</span>
+                        <span>{{ t('profile') }}</span>
                     </button>
                     <OverlayPanel ref="profile" id="overlay_profile_menu" class="m-0 p-0" style="padding: 0">
                         <Menu :model="items" class="w-full md:w-[16rem] border-none shadow-none p-0">

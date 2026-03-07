@@ -1,6 +1,6 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.fake;
 
-import br.com.systec.opusfinancial.financial.catalog.impl.domain.Bank;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.Bank;
 
 import java.util.UUID;
 

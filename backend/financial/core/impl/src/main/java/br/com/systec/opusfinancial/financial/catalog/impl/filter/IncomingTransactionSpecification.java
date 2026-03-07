@@ -1,7 +1,7 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.filter;
 
 import br.com.systec.opusfinancial.financial.api.filter.IncomingTransactionFilter;
-import br.com.systec.opusfinancial.financial.catalog.impl.domain.FinancialTransaction;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.FinancialTransaction;
 import org.springframework.data.jpa.domain.Specification;
 
 public class IncomingTransactionSpecification {

@@ -1,7 +1,7 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.mapper;
 
 import br.com.systec.opusfinancial.api.vo.BankVO;
-import br.com.systec.opusfinancial.financial.catalog.impl.domain.Bank;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.Bank;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

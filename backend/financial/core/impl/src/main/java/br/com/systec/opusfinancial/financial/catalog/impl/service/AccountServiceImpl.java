@@ -8,7 +8,7 @@ import br.com.systec.opusfinancial.financial.api.service.AccountService;
 import br.com.systec.opusfinancial.financial.api.vo.AccountType;
 import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
 import br.com.systec.opusfinancial.financial.api.vo.TransactionType;
-import br.com.systec.opusfinancial.financial.catalog.impl.domain.Account;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.Account;
 import br.com.systec.opusfinancial.financial.catalog.impl.filter.AccountSpecification;
 import br.com.systec.opusfinancial.financial.catalog.impl.mapper.AccountMapper;
 import br.com.systec.opusfinancial.financial.catalog.impl.repository.AccountRepository;

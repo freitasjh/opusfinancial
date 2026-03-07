@@ -60,7 +60,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div ref="sidebarRef" class="layout-sidebar">
+    <div ref="sidebarRef" class="layout-sidebar bg-surface-0 dark:bg-surface-900 shadow-sm p-5 rounded-2xl">
         <AppMenu />
     </div>
 </template>

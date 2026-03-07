@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface ExpenseTransactionService {
 
-    FinancialTransactionVO save(FinancialTransactionVO financialTransaction);
+    FinancialTransactionVO create(FinancialTransactionVO financialTransaction);
 
     void delete(UUID expenseTransactionId);
 

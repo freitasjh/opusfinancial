@@ -2,7 +2,7 @@ package br.com.systec.opusfinancial.financial.catalog.impl.service;
 
 import br.com.systec.opusfinancial.api.exceptions.CategoryNotFoundException;
 import br.com.systec.opusfinancial.api.vo.CategoryVO;
-import br.com.systec.opusfinancial.financial.catalog.impl.domain.Category;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.Category;
 import br.com.systec.opusfinancial.financial.catalog.impl.fake.CategoryFake;
 import br.com.systec.opusfinancial.financial.catalog.impl.repository.CategoryRepository;
 import br.com.systec.opusfinancial.i18n.I18nTranslate;

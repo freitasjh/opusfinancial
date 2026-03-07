@@ -5,7 +5,7 @@ import br.com.systec.opusfinancial.api.exceptions.BankNotFoundException;
 import br.com.systec.opusfinancial.api.filter.FilterBank;
 import br.com.systec.opusfinancial.api.service.BankService;
 import br.com.systec.opusfinancial.api.vo.BankVO;
-import br.com.systec.opusfinancial.financial.catalog.impl.domain.Bank;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.Bank;
 import br.com.systec.opusfinancial.financial.catalog.impl.filter.BankSpecification;
 import br.com.systec.opusfinancial.financial.catalog.impl.mapper.BankMapper;
 import br.com.systec.opusfinancial.financial.catalog.impl.repository.BankRepository;

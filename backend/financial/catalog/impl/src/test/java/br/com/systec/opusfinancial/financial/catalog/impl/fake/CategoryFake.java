@@ -2,7 +2,7 @@ package br.com.systec.opusfinancial.financial.catalog.impl.fake;
 
 import br.com.systec.opusfinancial.api.vo.CategoryType;
 import br.com.systec.opusfinancial.api.vo.CategoryVO;
-import br.com.systec.opusfinancial.financial.catalog.impl.domain.Category;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.Category;
 
 import java.util.UUID;
 

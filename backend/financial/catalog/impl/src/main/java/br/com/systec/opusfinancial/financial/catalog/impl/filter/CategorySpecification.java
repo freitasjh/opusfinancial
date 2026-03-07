@@ -1,11 +1,8 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.filter;
 
 import br.com.systec.opusfinancial.api.filter.FilterCategory;
-import br.com.systec.opusfinancial.commons.filter.PageParamSearch;
-import br.com.systec.opusfinancial.financial.catalog.impl.domain.Category;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.Category;
 import org.springframework.data.jpa.domain.Specification;
-
-import java.util.logging.Filter;
 
 public class CategorySpecification {
 
