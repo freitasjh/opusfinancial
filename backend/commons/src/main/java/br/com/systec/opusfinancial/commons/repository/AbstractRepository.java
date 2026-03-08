@@ -80,7 +80,7 @@ public abstract class AbstractRepository<T, J> implements CrudRepository<T, J> {
     @Override
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public @NonNull Iterable<T> findAll() {
-        throw new UnsupportedOperationException();
+       return findAllPrivate();
     }
 
     private Iterable<T> findAllPrivate() {

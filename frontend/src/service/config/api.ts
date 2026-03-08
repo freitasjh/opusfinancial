@@ -29,7 +29,6 @@ api.interceptors.response.use(
                 const refreshResponse = await axios.post('/api/v1/auth/refresh-token', {}, { withCredentials: true });
 
                 const newAccessToken = refreshResponse.data.accessToken;
-                console.log(newAccessToken);
                 if (newAccessToken === null || newAccessToken === undefined) {
                     return Promise.reject(error);
                 }
@@ -41,13 +40,11 @@ api.interceptors.response.use(
                     return api.request(error.config);
                 }
             } catch (refreshError) {
-                console.log(refreshError);
                 localStorage.clear();
                 // window.location.reload();
             }
         } else if (error.response?.status === 403) {
         }
-        console.log(error);
 
         return Promise.reject(error);
     }

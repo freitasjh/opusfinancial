@@ -16,5 +16,6 @@
     <modules>
         <module>core</module>
         <module>catalog</module>
+        <module>credit-card</module>
     </modules>
 </project>

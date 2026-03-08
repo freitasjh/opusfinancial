@@ -11,11 +11,14 @@ import { AxiosError } from 'axios';
 import { DatePicker, Drawer } from 'primevue';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import AppFormDrawer from '@/components/AppFormDrawer.vue';
+import { useDashboardStore } from '@/reporting/dashboard/store/dashboard.store';
 import { Incoming } from '../../model/incoming';
 import IncomingTransactionService from '../../service/incoming.transaction.service';
 
 const { t } = useI18n();
 const handlerMessage = useHandlerMessage();
+const dashboardStore = useDashboardStore();
 
 const props = defineProps<{
     visible: boolean;
@@ -78,6 +81,7 @@ const save = async () => {
         }
 
         await IncomingTransactionService.save(incoming.value);
+        await dashboardStore.fetchBalanceSummary();
         handlerMessage.toastSuccess(t('incomingTransactionSavedSuccess'));
         close();
         emit('saved');
@@ -90,35 +94,39 @@ const save = async () => {
 </script>
 
 <template>
-    <Drawer :header="t('transactionIncoming')" :visible="visible" @update:visible="emit('update:visible', $event)"
-        :dismissable="false" position="right" class="!w-full md:!w-80 lg:!w-[30rem]">
-        <div class="flex flex-col gap-1 mt-2">
-            <label for="desc" class="font-bold">{{ t('description') }}</label>
-            <InputText id="desc" v-model="incoming.description" />
-        </div>
-        <div class="flex flex-col gap-1 mt-2">
-            <label class="font-bold">{{ t('account') }}</label>
-            <Select :options="pageAccountResult?.content" option-label="accountName" @vue:before-mount="findAccount"
-                fluid v-model="accountSelected" show-clear />
-        </div>
-        <div class="flex flex-col gap-1 mt-2">
-            <label class="font-bold">{{ t('category') }}</label>
-            <Select :options="pageCategoryResult?.content" option-label="name" @vue:before-mount="findCategory" fluid
-                v-model="categorySelected" show-clear />
-        </div>
+    <AppFormDrawer 
+        :visible="visible" 
+        @update:visible="emit('update:visible', $event)" 
+        :header="t('transactionIncoming')" 
+        :loading="loadingSave"
+        @save="save"
+        @cancel="close"
+    >
+        <div class="flex flex-col gap-4 mt-2">
+            <div class="flex flex-col gap-1">
+                <label for="desc" class="font-medium text-sm">{{ t('description') }}</label>
+                <InputText id="desc" v-model="incoming.description" fluid />
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="font-medium text-sm">{{ t('account') }}</label>
+                <Select :options="pageAccountResult?.content" option-label="accountName" @vue:before-mount="findAccount"
+                    fluid v-model="accountSelected" show-clear />
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="font-medium text-sm">{{ t('category') }}</label>
+                <Select :options="pageCategoryResult?.content" option-label="name" @vue:before-mount="findCategory" fluid
+                    v-model="categorySelected" show-clear />
+            </div>
 
-        <div class="flex flex-col gap-1 mt-2">
-            <label for="amount" class="font-bold">{{ t('amount') }}</label>
-            <InputNumber id="amount" v-model="incoming.amount" mode="currency" currency="BRL" locale="pt-BR" />
-        </div>
+            <div class="flex flex-col gap-1">
+                <label for="amount" class="font-medium text-sm">{{ t('amount') }}</label>
+                <InputNumber id="amount" v-model="incoming.amount" mode="currency" currency="BRL" locale="pt-BR" fluid />
+            </div>
 
-        <div class="flex flex-col gap-1 mt-2">
-            <label for="date" class="font-bold">{{ t('paymentAt') }}</label>
-            <DatePicker id="date" v-model="incoming.paymentAt" dateFormat="dd/mm/yy" showIcon fluid />
+            <div class="flex flex-col gap-1">
+                <label for="date" class="font-medium text-sm">{{ t('paymentAt') }}</label>
+                <DatePicker id="date" v-model="incoming.paymentAt" dateFormat="dd/mm/yy" showIcon fluid />
+            </div>
         </div>
-        <div class="flex flex-col gap-1 mt-5">
-            <Button type="submit" severity="info" :label="t('save')" @click="save" :loading="loadingSave" />
-            <Button type="submit" severity="danger" :label="t('cancel')" @click.prevent="close" />
-        </div>
-    </Drawer>
+    </AppFormDrawer>
 </template>

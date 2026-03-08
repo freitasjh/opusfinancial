@@ -8,14 +8,18 @@ import { AxiosError } from 'axios';
 import { Select, Tag } from 'primevue';
 import { onBeforeMount, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import AppFormDrawer from '@/components/AppFormDrawer.vue';
+import { useDashboardStore } from '@/reporting/dashboard/store/dashboard.store';
 import { Account } from '../../model/account.model';
 import { AccountResponse } from '../../model/account.response';
 import { AccountType } from '../../model/account.type';
 import AccountService from '../../service/account.service';
 
 const handlerMessage = useHandlerMessage();
+const dashboardStore = useDashboardStore();
 
 const loadingTable = ref<boolean>(false);
+const loadingSave = ref<boolean>(false);
 const pageAccountResult = ref<PageResponse<AccountResponse> | null>();
 const accountSelected = ref<AccountResponse | any>();
 const listBank = ref<Bank[]>([]);
@@ -83,21 +87,27 @@ const findById = async (id: string) => {
 
 const save = async () => {
     try {
+        loadingSave.value = true;
         account.value.bankId = bankSelected.value?.id;
 
         await AccountService.save(account.value);
+        await dashboardStore.fetchBalanceSummary();
         handlerMessage.toastSuccess(t('accountSavedSuccess'));
+        visibleDrawerCadAccount.value = false;
+        await findByFilter();
     } catch (error: AxiosError | any) {
         handlerMessage.error(error);
+    } finally {
+        loadingSave.value = false;
     }
 };
 </script>
 <template>
     <div>
         <div class="">
-            <Toolbar class="bg-surface-0 dark:bg-surface-900 shadow-sm p-5 rounded-2xl mb-2">
+            <Toolbar class="bg-surface-0 dark:bg-surface-900 shadow-sm p-5 rounded-2xl mb-4 border border-surface-200 dark:border-surface-800">
                 <template #start>
-                    <Button :label="t('new')" icon="pi pi-plus" severity="info" class="mr-2" @click="openDrawerCad" />
+                    <Button :label="t('new')" icon="pi pi-plus" severity="primary" class="mr-2" @click="openDrawerCad" />
                 </template>
                 <template #end>
                     <div class="flex items-center gap-2">
@@ -119,14 +129,14 @@ const save = async () => {
 
             </Toolbar>
         </div>
-        <div class=" bg-surface-0 dark:bg-surface-900 shadow-sm p-5 rounded-2xl">
+        <div class="bg-surface-0 dark:bg-surface-900 shadow-sm p-6 rounded-2xl border border-surface-200 dark:border-surface-800">
             <DataTable ref="dt" v-model:selection="accountSelected" :value="pageAccountResult?.content" dataKey="id"
                 stripedRows :paginator="true" :rows="30">
                 <Column field="accountName" :header="t('description')" sortable style="min-width: 12rem" />
                 <Column field="bank" :header="t('bank')" sortable style="min-width: 12rem" />
                 <Column field="accountType" :header="t('accountType')" sortable style="min-width: 12rem">
                     <template #body="slotProps">
-                        <Tag :value="t(slotProps.data.accountType)" />
+                        <Tag :value="t(slotProps.data.accountType)" severity="secondary" />
                     </template>
                 </Column>
                 <Column style="width: 10rem" :header="t('actions')">
@@ -138,40 +148,43 @@ const save = async () => {
                     </template>
                 </Column>
             </DataTable>
-            <Drawer v-model:visible="visibleDrawerCadAccount" :dismissable="false" :header="t('account')"
-                position="right" class="!w-full md:!w-80 lg:!w-[30rem]">
-                <div class="flex flex-col gap-1 mt-2">
-                    <label for="account-name">{{ t('description') }}</label>
-                    <InputText id="account-name" v-model="account.accountName" type="text" fluid size="small" />
+            <AppFormDrawer 
+                :visible="visibleDrawerCadAccount" 
+                @update:visible="visibleDrawerCadAccount = $event" 
+                :header="t('account')" 
+                :loading="loadingSave"
+                @save="save"
+                @cancel="visibleDrawerCadAccount = false"
+            >
+                <div class="flex flex-col gap-4 mt-2">
+                    <div class="flex flex-col gap-1">
+                        <label for="account-name" class="font-medium text-sm">{{ t('description') }}</label>
+                        <InputText id="account-name" v-model="account.accountName" type="text" fluid />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label for="agency" class="font-medium text-sm">{{ t('agency') }}</label>
+                        <InputText id="agency" v-model="account.agency" type="text" fluid />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label for="account-number" class="font-medium text-sm">{{ t('accountNumber') }}</label>
+                        <InputText id="account-number" v-model="account.accountNumber" type="text" fluid />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label for="balance" class="font-medium text-sm">{{ t('balance') }}</label>
+                        <InputNumber id="balance" v-model="account.balance" mode="currency" currency="BRL" locale="pt-BR" fluid />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="font-medium text-sm">{{ t('accountType') }}</label>
+                        <SelectButton v-model="account.accountType" :options="typeOptions" optionLabel="label"
+                            optionValue="value" class="w-full" />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="font-medium text-sm">{{ t('bank') }}</label>
+                        <Select :options="listBank" fluid :placeholder="t('selectBank')" filter optionLabel="name"
+                            v-model="bankSelected" showClear @before-show="findAllBank"></Select>
+                    </div>
                 </div>
-                <div class="flex flex-col gap-1 mt-2">
-                    <label for="account-name">{{ t('agency') }}</label>
-                    <InputText id="account-name" v-model="account.agency" type="text" fluid size="small" />
-                </div>
-                <div class="flex flex-col gap-1 mt-2">
-                    <label for="account-name">{{ t('accountNumber') }}</label>
-                    <InputText id="account-name" v-model="account.accountNumber" type="text" fluid size="small" />
-                </div>
-                <div class="flex flex-col gap-1 mt-2">
-                    <label for="account-name">{{ t('balance') }}</label>
-                    <InputNumber id="account-name" v-model="account.balance" type="text" fluid size="small" />
-                </div>
-                <div class="flex flex-col gap-1 mt-2">
-                    <label>{{ t('accountType') }}</label>
-                    <SelectButton v-model="account.accountType" :options="typeOptions" optionLabel="label"
-                        optionValue="value" />
-                </div>
-                <div class="flex flex-col gap-1 mt-2">
-                    <label>{{ t('bank') }}</label>
-                    <Select :options="listBank" fluid :placeholder="t('selectBank')" filter optionLabel="name"
-                        v-model="bankSelected" showClear @before-show="findAllBank"></Select>
-                </div>
-                <div class="flex flex-col gap-1 mt-5">
-                    <Button type="submit" severity="info" :label="t('save')" @click="save" />
-                    <Button type="submit" severity="danger" :label="t('cancel')"
-                        @click.prevent="visibleDrawerCadAccount = false" />
-                </div>
-            </Drawer>
+            </AppFormDrawer>
         </div>
     </div>
 </template>

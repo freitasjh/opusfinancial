@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>opusfinancial-commons</artifactId>
+    <artifactId>financial-commons</artifactId>
     <name>OpusFinancial - Commons</name>
     <packaging>jar</packaging>
 

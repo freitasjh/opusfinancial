@@ -104,9 +104,9 @@ const onExpandRow = async (node: any) => {
 };
 </script>
 <template>
-    <Toolbar class="bg-surface-0 dark:bg-surface-900 shadow-sm p-5 rounded-2xl mb-2">
+    <Toolbar class="bg-surface-0 dark:bg-surface-900 shadow-sm p-5 rounded-2xl mb-4 border border-surface-200 dark:border-surface-800">
         <template #start>
-            <Button :label="t('new')" icon="pi pi-plus" severity="info" class="mr-2" @click="openCadCategory()" />
+            <Button :label="t('new')" icon="pi pi-plus" severity="primary" class="mr-2" @click="openCadCategory()" />
         </template>
         <template #end>
             <div class="flex items-center gap-2">
@@ -127,7 +127,7 @@ const onExpandRow = async (node: any) => {
         </template>
     </Toolbar>
 
-    <div class="bg-surface-0 dark:bg-surface-900 shadow-sm p-5 rounded-2xl">
+    <div class="bg-surface-0 dark:bg-surface-900 shadow-sm p-6 rounded-2xl border border-surface-200 dark:border-surface-800">
 
         <TreeTable :value="treeNodes" scrollable scrollHeight="45rem" @node-expand="onExpandRow" :lazy="true"
             stripedRows :loading="loading">

@@ -54,9 +54,9 @@ const findByFilter = async () => {
 </script>
 
 <template>
-    <Toolbar class="bg-surface-0 dark:bg-surface-900 shadow-sm p-5 rounded-2xl mb-2">
+    <Toolbar class="bg-surface-0 dark:bg-surface-900 shadow-sm p-5 rounded-2xl mb-4 border border-surface-200 dark:border-surface-800">
         <template #start>
-            <Button :label="t('new')" icon="pi pi-plus" severity="info" class="mr-2" @click="visibleCad = true" />
+            <Button :label="t('new')" icon="pi pi-plus" severity="primary" class="mr-2" @click="visibleCad = true" />
         </template>
         <template #end>
             <div class="flex items-center gap-2">
@@ -76,11 +76,11 @@ const findByFilter = async () => {
             </div>
         </template>
     </Toolbar>
-    <div class="bg-surface-0 dark:bg-surface-900 shadow-sm p-5 rounded-2xl">
+    <div class="bg-surface-0 dark:bg-surface-900 shadow-sm p-6 rounded-2xl border border-surface-200 dark:border-surface-800">
         <DataTable ref="dt" :value="expensePageResult?.content" stripedRows :loading="loadingFindExpense">
             <template #header>
                 <div class="flex flex-wrap gap-2 items-center justify-between">
-                    <h4 class="m-0">{{ t('expense') }}</h4>
+                    <h4 class="m-0 font-bold text-xl">{{ t('expense') }}</h4>
                     <IconField>
                         <InputIcon>
                             <i class="pi pi-search" />
@@ -108,7 +108,7 @@ const findByFilter = async () => {
             </Column>
             <Column field="amount" :header="t('amount')" style="min-width: 12rem">
                 <template #body="slotProps">
-                    {{ formatCurrency(slotProps.data.amount) }}
+                    <span class="text-red-600 dark:text-red-400 font-bold">{{ formatCurrency(slotProps.data.amount) }}</span>
                 </template>
             </Column>
             <Column field="category" :header="t('category')"></Column>

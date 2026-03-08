@@ -20,7 +20,7 @@ withDefaults(defineProps<StatisticWidgetProps>(), {
 
 <template>
     <div class="col-span-12 lg:col-span-6 xl:col-span-3">
-        <div class="bg-surface-0 dark:bg-surface-900 shadow-sm p-5 rounded-2xl">
+        <div class="bg-surface-0 dark:bg-surface-900 shadow-sm p-6 rounded-2xl border border-surface-200 dark:border-surface-800 transition-all hover:shadow-md">
             <div class="flex justify-between gap-4">
                 <div class="flex flex-col gap-2">
                     <span class="text-surface-700 dark:text-surface-300 font-normal leading-tight">{{ title }}</span>

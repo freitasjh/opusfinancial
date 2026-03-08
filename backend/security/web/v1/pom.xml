@@ -28,7 +28,7 @@
         </dependency>
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>
-            <artifactId>opusfinancial-commons</artifactId>
+            <artifactId>financial-commons</artifactId>
         </dependency>
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>

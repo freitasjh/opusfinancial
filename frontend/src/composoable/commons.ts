@@ -14,7 +14,7 @@ interface ApiErrorResponse {
     errors?: ValidationError[];
 }
 
-interface CustomAxiosError extends AxiosError<ApiErrorResponse> {}
+interface CustomAxiosError extends AxiosError<ApiErrorResponse> { }
 
 export function formatDate(date: any, formatStr: string = 'dd/MM/yyyy'): string {
     if (!date) return '';
@@ -35,6 +35,7 @@ export function formatDate(date: any, formatStr: string = 'dd/MM/yyyy'): string 
 }
 
 export function formatCurrency(value: any) {
+    if (value === undefined || value === null) return 'R$ 0,00';
     return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
