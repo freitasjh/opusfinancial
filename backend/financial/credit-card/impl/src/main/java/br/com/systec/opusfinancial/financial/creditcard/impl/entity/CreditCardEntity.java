@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "credit_card")
-public class CreditCard extends AbstractEntity {
+public class CreditCardEntity extends AbstractEntity {
     @Serial
     private static final long serialVersionUID = -1793559910410745419L;
 

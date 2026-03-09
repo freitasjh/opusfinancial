@@ -2,11 +2,11 @@ package br.com.systec.opusfinancial.financial.creditcard.impl.service;
 
 import br.com.systec.opusfinancial.financial.api.service.AccountService;
 import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
-import br.com.systec.opusfinancial.financial.creditcard.api.domain.CreditCardVO;
+import br.com.systec.opusfinancial.financial.creditcard.api.domain.CreditCard;
 import br.com.systec.opusfinancial.financial.creditcard.api.exceptions.CreditCardNotFoundException;
 import br.com.systec.opusfinancial.financial.creditcard.api.filter.FilterCreditCard;
 import br.com.systec.opusfinancial.financial.creditcard.api.service.CreditCardService;
-import br.com.systec.opusfinancial.financial.creditcard.impl.entity.CreditCard;
+import br.com.systec.opusfinancial.financial.creditcard.impl.entity.CreditCardEntity;
 import br.com.systec.opusfinancial.financial.creditcard.impl.filter.CreditCardSpecification;
 import br.com.systec.opusfinancial.financial.creditcard.impl.mapper.CreditCardMapper;
 import br.com.systec.opusfinancial.financial.creditcard.impl.repository.CreditCardRepository;
@@ -29,16 +29,16 @@ public class CreditCardServiceImpl implements CreditCardService {
     }
 
     @Transactional
-    public CreditCardVO create(CreditCardVO creditCard) {
-        CreditCard creditCardBeforeSave = CreditCardMapper.of().toEntity(creditCard);
-        CreditCard creditCardSaved = repository.save(creditCardBeforeSave);
+    public CreditCard create(CreditCard creditCard) {
+        CreditCardEntity creditCardBeforeSave = CreditCardMapper.of().toEntity(creditCard);
+        CreditCardEntity creditCardSaved = repository.save(creditCardBeforeSave);
 
         return CreditCardMapper.of().toVO(creditCardSaved, null);
     }
 
     @Transactional(readOnly = true)
-    public CreditCardVO findById(UUID creditCardId) {
-        CreditCard creditCard =  repository.findById(creditCardId)
+    public CreditCard findById(UUID creditCardId) {
+        CreditCardEntity creditCard =  repository.findById(creditCardId)
                 .orElseThrow(CreditCardNotFoundException::new);
 
         AccountVO accountVO = accountService.findById(creditCard.getAccountId());
@@ -47,11 +47,11 @@ public class CreditCardServiceImpl implements CreditCardService {
     }
 
     @Transactional(readOnly = true)
-    public Page<CreditCardVO> findByFilter(FilterCreditCard filter) {
-        Specification<CreditCard> specification = CreditCardSpecification.of().filter(filter);
-        Page<CreditCard> pageResult = repository.findAll(specification, filter.getPageable());
+    public Page<CreditCard> findByFilter(FilterCreditCard filter) {
+        Specification<CreditCardEntity> specification = CreditCardSpecification.of().filter(filter);
+        Page<CreditCardEntity> pageResult = repository.findAll(specification, filter.getPageable());
 
-        List<UUID> listOfAccount = pageResult.stream().map(CreditCard::getAccountId).toList();
+        List<UUID> listOfAccount = pageResult.stream().map(CreditCardEntity::getAccountId).toList();
         List<AccountVO> listOfAccountVO = accountService.findByIds(listOfAccount);
 
         return CreditCardMapper.of().toPage(pageResult, listOfAccountVO);

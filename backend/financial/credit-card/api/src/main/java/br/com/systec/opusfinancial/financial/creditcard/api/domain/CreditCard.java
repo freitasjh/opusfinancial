@@ -6,7 +6,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
 
-public class CreditCardVO implements Serializable {
+public class CreditCard implements Serializable {
     @Serial
     private static final long serialVersionUID = 1634777599605567844L;
     private UUID id;

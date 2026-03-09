@@ -1,8 +1,8 @@
 package br.com.systec.opusfinancial.financial.creditcard.impl.mapper;
 
 import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
-import br.com.systec.opusfinancial.financial.creditcard.api.domain.CreditCardVO;
-import br.com.systec.opusfinancial.financial.creditcard.impl.entity.CreditCard;
+import br.com.systec.opusfinancial.financial.creditcard.api.domain.CreditCard;
+import br.com.systec.opusfinancial.financial.creditcard.impl.entity.CreditCardEntity;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -19,8 +19,8 @@ public class CreditCardMapper {
         return new CreditCardMapper();
     }
 
-    public CreditCard toEntity(CreditCardVO vo) {
-        CreditCard creditCard = new CreditCard();
+    public CreditCardEntity toEntity(CreditCard vo) {
+        CreditCardEntity creditCard = new CreditCardEntity();
         creditCard.setId(vo.getId());
         creditCard.setName(vo.getName());
         creditCard.setNameCreditCard(vo.getNameCreditCard());
@@ -34,8 +34,8 @@ public class CreditCardMapper {
         return creditCard;
     }
 
-    public CreditCardVO toVO(CreditCard entity, AccountVO account) {
-        CreditCardVO creditCardVO = new CreditCardVO();
+    public CreditCard toVO(CreditCardEntity entity, AccountVO account) {
+        CreditCard creditCardVO = new CreditCard();
         creditCardVO.setId(entity.getId());
         creditCardVO.setName(entity.getName());
         creditCardVO.setNameCreditCard(entity.getNameCreditCard());
@@ -56,7 +56,7 @@ public class CreditCardMapper {
         return creditCardVO;
     }
 
-    public Page<CreditCardVO> toPage(Page<CreditCard> pageResult, List<AccountVO> listOfAccount) {
+    public Page<CreditCard> toPage(Page<CreditCardEntity> pageResult, List<AccountVO> listOfAccount) {
         Map<UUID, AccountVO> accountMap = listOfAccount.stream()
                 .filter(item -> item.getId() != null)
                 .collect(Collectors.toMap(AccountVO::getId, Function.identity(), (existing, replacement) -> existing));

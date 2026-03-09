@@ -15,7 +15,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "credit_card_installment")
-public class CreditCardInstallment extends BaseEntity {
+public class CreditCardInstallmentEntity extends BaseEntity {
     @Serial
     private static final long serialVersionUID = 7823017171233755256L;
 
@@ -29,7 +29,7 @@ public class CreditCardInstallment extends BaseEntity {
     private int installment;
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "transaction_id")
-    private CreditCardTransaction transaction;
+    private CreditCardTransactionEntity transaction;
     @Column(name = "credit_card_invoice_id")
     private Long creditCardInvoiceId;
     @Column(name = "paid_at")
@@ -67,11 +67,11 @@ public class CreditCardInstallment extends BaseEntity {
         this.installment = installment;
     }
 
-    public CreditCardTransaction getTransaction() {
+    public CreditCardTransactionEntity getTransaction() {
         return transaction;
     }
 
-    public void setTransaction(CreditCardTransaction transaction) {
+    public void setTransaction(CreditCardTransactionEntity transaction) {
         this.transaction = transaction;
     }
 

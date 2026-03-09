@@ -16,12 +16,12 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "credit_card_invoice")
-public class CreditCardInvoice extends AbstractEntity {
+public class CreditCardInvoiceEntity extends AbstractEntity {
     @Serial
     private static final long serialVersionUID = -5536954624935926846L;
-    @ManyToOne(cascade = CascadeType.REFRESH, targetEntity = CreditCard.class)
+    @ManyToOne(cascade = CascadeType.REFRESH, targetEntity = CreditCardEntity.class)
     @JoinColumn(name = "credit_card_id")
-    private CreditCard creditCard;
+    private CreditCardEntity creditCard;
     @Column(name = "status_type")
     @Enumerated(EnumType.STRING)
     private InvoiceStatusType statusType;
@@ -33,11 +33,11 @@ public class CreditCardInvoice extends AbstractEntity {
     private LocalDate datePaid;
 
 
-    public CreditCard getCreditCard() {
+    public CreditCardEntity getCreditCard() {
         return creditCard;
     }
 
-    public void setCreditCard(CreditCard creditCard) {
+    public void setCreditCard(CreditCardEntity creditCard) {
         this.creditCard = creditCard;
     }
 

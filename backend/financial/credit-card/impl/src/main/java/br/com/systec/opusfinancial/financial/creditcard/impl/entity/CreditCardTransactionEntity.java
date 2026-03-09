@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "credit_card_transaction")
-public class CreditCardTransaction extends AbstractEntity {
+public class CreditCardTransactionEntity extends AbstractEntity {
     @Serial
     private static final long serialVersionUID = 4844581979165827806L;
 
@@ -28,9 +28,9 @@ public class CreditCardTransaction extends AbstractEntity {
     private int installments;
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "credit_card_id")
-    private CreditCard creditCard;
+    private CreditCardEntity creditCard;
     @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL)
-    private List<CreditCardInstallment> listOfInstallment;
+    private List<CreditCardInstallmentEntity> listOfInstallment;
     @Column(name = "transactionAt")
     private LocalDate transactionAt;
     @Column(name = "category_id", nullable = false)
@@ -60,19 +60,19 @@ public class CreditCardTransaction extends AbstractEntity {
         this.installments = installments;
     }
 
-    public CreditCard getCreditCard() {
+    public CreditCardEntity getCreditCard() {
         return creditCard;
     }
 
-    public void setCreditCard(CreditCard creditCard) {
+    public void setCreditCard(CreditCardEntity creditCard) {
         this.creditCard = creditCard;
     }
 
-    public List<CreditCardInstallment> getListOfInstallment() {
+    public List<CreditCardInstallmentEntity> getListOfInstallment() {
         return listOfInstallment;
     }
 
-    public void setListOfInstallment(List<CreditCardInstallment> listOfInstallment) {
+    public void setListOfInstallment(List<CreditCardInstallmentEntity> listOfInstallment) {
         this.listOfInstallment = listOfInstallment;
     }
 
