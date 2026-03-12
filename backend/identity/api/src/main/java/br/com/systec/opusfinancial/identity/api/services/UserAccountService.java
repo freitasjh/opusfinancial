@@ -1,9 +1,9 @@
 package br.com.systec.opusfinancial.identity.api.services;
 
-import br.com.systec.opusfinancial.commons.exceptions.BaseException;
-import br.com.systec.opusfinancial.identity.api.vo.UserAccountVO;
+import br.com.systec.opusfinancial.commons.api.exceptions.BaseException;
+import br.com.systec.opusfinancial.identity.api.domain.UserAccount;
 
 public interface UserAccountService {
 
-    void create(UserAccountVO accountVO) throws BaseException;
+    void create(UserAccount accountVO) throws BaseException;
 }

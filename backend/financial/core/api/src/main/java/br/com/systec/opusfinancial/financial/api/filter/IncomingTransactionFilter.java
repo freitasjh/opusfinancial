@@ -1,7 +1,7 @@
 package br.com.systec.opusfinancial.financial.api.filter;
 
-import br.com.systec.opusfinancial.commons.filter.PageParamSearch;
-import br.com.systec.opusfinancial.financial.api.vo.TransactionType;
+import br.com.systec.opusfinancial.commons.api.filter.PageParamSearch;
+import br.com.systec.opusfinancial.financial.api.domain.TransactionType;
 
 public class IncomingTransactionFilter extends PageParamSearch {
 

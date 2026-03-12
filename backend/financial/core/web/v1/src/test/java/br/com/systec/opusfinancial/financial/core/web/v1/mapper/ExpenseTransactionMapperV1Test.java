@@ -1,8 +1,8 @@
 package br.com.systec.opusfinancial.financial.core.web.v1.mapper;
 
-import br.com.systec.opusfinancial.financial.api.vo.CategoryTransactionType;
-import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
-import br.com.systec.opusfinancial.financial.api.vo.TransactionType;
+import br.com.systec.opusfinancial.financial.api.domain.CategoryTransactionType;
+import br.com.systec.opusfinancial.financial.api.domain.FinancialTransaction;
+import br.com.systec.opusfinancial.financial.api.domain.TransactionType;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.ExpenseTransactionInfoDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.ExpenseTransactionInputDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.ExpenseTransactionSaveResponseDTO;
@@ -22,7 +22,7 @@ class ExpenseTransactionMapperV1Test {
     void shouldMapInputDTOToVO() {
         ExpenseTransactionInputDTO inputDTO = ExpenseTransactionFake.toInputDTO();
 
-        FinancialTransactionVO result = mapper.toVO(inputDTO);
+        FinancialTransaction result = mapper.toVO(inputDTO);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(inputDTO.getId(), result.getId());
@@ -42,7 +42,7 @@ class ExpenseTransactionMapperV1Test {
 
     @Test
     void shouldMapVOToSaveResponse() {
-        FinancialTransactionVO vo = ExpenseTransactionFake.toVO();
+        FinancialTransaction vo = ExpenseTransactionFake.toVO();
 
         ExpenseTransactionSaveResponseDTO result = mapper.toSaveResponse(vo);
 
@@ -52,7 +52,7 @@ class ExpenseTransactionMapperV1Test {
 
     @Test
     void shouldMapVOToInfoDTO() {
-        FinancialTransactionVO vo = ExpenseTransactionFake.toVO();
+        FinancialTransaction vo = ExpenseTransactionFake.toVO();
 
         ExpenseTransactionInfoDTO result = mapper.toInfoDTO(vo);
 
@@ -68,7 +68,7 @@ class ExpenseTransactionMapperV1Test {
 
     @Test
     void shouldMapVOToInputDTO() {
-        FinancialTransactionVO vo = ExpenseTransactionFake.toVO();
+        FinancialTransaction vo = ExpenseTransactionFake.toVO();
 
         ExpenseTransactionInputDTO result = mapper.toDTO(vo);
 
@@ -85,8 +85,8 @@ class ExpenseTransactionMapperV1Test {
 
     @Test
     void shouldMapPageVOToPageInfoDTO() {
-        FinancialTransactionVO vo = ExpenseTransactionFake.toVO();
-        Page<FinancialTransactionVO> page = new PageImpl<>(Collections.singletonList(vo));
+        FinancialTransaction vo = ExpenseTransactionFake.toVO();
+        Page<FinancialTransaction> page = new PageImpl<>(Collections.singletonList(vo));
 
         Page<ExpenseTransactionInfoDTO> result = mapper.toPageDTO(page);
 

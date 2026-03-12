@@ -14,7 +14,7 @@
     <name>OpusFinancial Financial Catalog Web</name>
     <packaging>pom</packaging>
     <modules>
-        <module>v1</module>
+        <module>internal</module>
     </modules>
 
 </project>

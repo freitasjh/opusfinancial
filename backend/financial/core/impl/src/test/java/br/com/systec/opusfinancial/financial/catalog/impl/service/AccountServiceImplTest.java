@@ -1,15 +1,15 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.service;
 
 import br.com.systec.opusfinancial.api.service.BankService;
-import br.com.systec.opusfinancial.api.vo.BankVO;
+import br.com.systec.opusfinancial.api.domain.Bank;
 import br.com.systec.opusfinancial.financial.api.exceptions.AccountNotFoundException;
 import br.com.systec.opusfinancial.financial.api.filter.FilterAccount;
-import br.com.systec.opusfinancial.financial.api.vo.AccountType;
-import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
-import br.com.systec.opusfinancial.financial.catalog.impl.entity.Account;
+import br.com.systec.opusfinancial.financial.api.domain.AccountType;
+import br.com.systec.opusfinancial.financial.api.domain.Account;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.AccountEntity;
 import br.com.systec.opusfinancial.financial.catalog.impl.repository.AccountRepository;
 import br.com.systec.opusfinancial.i18n.I18nTranslate;
-import br.com.systec.opusfinancial.financial.api.vo.TransactionType;
+import br.com.systec.opusfinancial.financial.api.domain.TransactionType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,13 +53,13 @@ class AccountServiceImplTest {
     @Test
     @DisplayName("Should create account successfully")
     void when_create_with_validAccount_then_returnCreatedAccount() {
-        AccountVO accountVO = createAccountVO();
-        Account account = createAccountFromVO(accountVO);
+        Account accountVO = createAccountVO();
+        AccountEntity account = createAccountFromVO(accountVO);
 
 
-        when(repository.save(any(Account.class))).thenReturn(account);
+        when(repository.save(any(AccountEntity.class))).thenReturn(account);
 
-        AccountVO result = service.create(accountVO);
+        Account result = service.create(accountVO);
 
         assertNotNull(result);
         assertEquals(accountVO.getId(), result.getId());
@@ -67,77 +67,77 @@ class AccountServiceImplTest {
         assertEquals(accountVO.getBalance(), result.getBalance());
         assertEquals(accountVO.getAccountType(), result.getAccountType());
 
-        verify(repository, times(1)).save(any(Account.class));
+        verify(repository, times(1)).save(any(AccountEntity.class));
     }
 
     @Test
     @DisplayName("Should create account without bank successfully")
     void when_create_without_bank_then_returnCreatedAccount() {
-        AccountVO accountVO = createAccountVO();
+        Account accountVO = createAccountVO();
         accountVO.setBank(null);
 
-        Account account = createAccountFromVO(accountVO);
+        AccountEntity account = createAccountFromVO(accountVO);
         account.setBankId(null);
 
-        when(repository.save(any(Account.class))).thenReturn(account);
+        when(repository.save(any(AccountEntity.class))).thenReturn(account);
 
-        AccountVO result = service.create(accountVO);
+        Account result = service.create(accountVO);
 
         assertNotNull(result);
         assertEquals(accountVO.getId(), result.getId());
         assertNull(result.getBank());
 
-        verify(repository, times(1)).save(any(Account.class));
+        verify(repository, times(1)).save(any(AccountEntity.class));
     }
 
     @Test
     @DisplayName("Should update account successfully")
     void when_update_with_validAccount_then_returnUpdatedAccount() {
-        AccountVO accountVO = createAccountVO();
-        Account existingAccount = createAccountFromVO(accountVO);
+        Account accountVO = createAccountVO();
+        AccountEntity existingAccount = createAccountFromVO(accountVO);
         LocalDateTime createdAt = LocalDateTime.now();
         existingAccount.setCreateAt(createdAt);
 
         when(repository.findById(accountVO.getId())).thenReturn(Optional.of(existingAccount));
         // The service saves the entity converted from VO, but with createdAt from existing
-        when(repository.save(any(Account.class))).thenAnswer(invocation -> {
-            Account saved = invocation.getArgument(0);
+        when(repository.save(any(AccountEntity.class))).thenAnswer(invocation -> {
+            AccountEntity saved = invocation.getArgument(0);
             // Verify createdAt was preserved
             assertEquals(createdAt, saved.getCreateAt());
             return saved;
         });
 
-        AccountVO result = service.update(accountVO);
+        Account result = service.update(accountVO);
 
         assertNotNull(result);
         assertEquals(accountVO.getId(), result.getId());
         verify(repository, times(1)).findById(accountVO.getId());
-        verify(repository, times(1)).save(any(Account.class));
+        verify(repository, times(1)).save(any(AccountEntity.class));
     }
 
     @Test
     @DisplayName("Should throw AccountNotFoundException when updating non-existent account")
     void when_update_with_nonExistentAccount_then_throwAccountNotFoundException() {
-        AccountVO accountVO = createAccountVO();
+        Account accountVO = createAccountVO();
 
         when(repository.findById(accountVO.getId())).thenReturn(Optional.empty());
 
         assertThrows(AccountNotFoundException.class, () -> service.update(accountVO));
         verify(repository, times(1)).findById(accountVO.getId());
-        verify(repository, never()).save(any(Account.class));
+        verify(repository, never()).save(any(AccountEntity.class));
     }
 
     @Test
     @DisplayName("Should find account by ID successfully")
     void when_findById_with_existingAccount_then_returnAccount() {
         UUID id = UUID.randomUUID();
-        Account account = createAccount();
+        AccountEntity account = createAccount();
         account.setId(id);
 
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(account));
         when(bankService.findById(any(UUID.class))).thenReturn(createBankVO());
 
-        AccountVO result = service.findById(id);
+        Account result = service.findById(id);
 
         assertNotNull(result);
         assertEquals(id, result.getId());
@@ -160,12 +160,12 @@ class AccountServiceImplTest {
     @DisplayName("Should find accounts by filter successfully")
     void when_findByFilter_with_validFilter_then_returnPage() {
         FilterAccount filter = new FilterAccount("test", 10, 0);
-        Account account = createAccount();
-        Page<Account> page = new PageImpl<>(Collections.singletonList(account));
+        AccountEntity account = createAccount();
+        Page<AccountEntity> page = new PageImpl<>(Collections.singletonList(account));
 
         when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
 
-        Page<AccountVO> result = service.findByFilter(filter);
+        Page<Account> result = service.findByFilter(filter);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
@@ -176,12 +176,12 @@ class AccountServiceImplTest {
     @DisplayName("Should find accounts by filter with empty keyword successfully")
     void when_findByFilter_with_emptyKeyword_then_returnPage() {
         FilterAccount filter = new FilterAccount("", 10, 0);
-        Account account = createAccount();
-        Page<Account> page = new PageImpl<>(Collections.singletonList(account));
+        AccountEntity account = createAccount();
+        Page<AccountEntity> page = new PageImpl<>(Collections.singletonList(account));
 
         when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
 
-        Page<AccountVO> result = service.findByFilter(filter);
+        Page<Account> result = service.findByFilter(filter);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
@@ -192,7 +192,7 @@ class AccountServiceImplTest {
     @DisplayName("Should update balance for incoming transaction")
     void when_updateBalance_with_incomingTransaction_then_increaseBalance() {
         UUID accountId = UUID.randomUUID();
-        Account account = createAccount();
+        AccountEntity account = createAccount();
         account.setId(accountId);
         account.setBalance(new BigDecimal("100.00"));
 
@@ -200,10 +200,10 @@ class AccountServiceImplTest {
 
         service.updateBalance(accountId, new BigDecimal("50.00"), TransactionType.INCOMING);
 
-        ArgumentCaptor<Account> accountCaptor = ArgumentCaptor.forClass(Account.class);
+        ArgumentCaptor<AccountEntity> accountCaptor = ArgumentCaptor.forClass(AccountEntity.class);
         verify(repository).save(accountCaptor.capture());
 
-        Account savedAccount = accountCaptor.getValue();
+        AccountEntity savedAccount = accountCaptor.getValue();
         assertThat(savedAccount.getBalance()).isEqualByComparingTo(new BigDecimal("150.00"));
     }
 
@@ -211,7 +211,7 @@ class AccountServiceImplTest {
     @DisplayName("Should update balance for expense transaction")
     void when_updateBalance_with_expenseTransaction_then_decreaseBalance() {
         UUID accountId = UUID.randomUUID();
-        Account account = createAccount();
+        AccountEntity account = createAccount();
         account.setId(accountId);
         account.setBalance(new BigDecimal("100.00"));
 
@@ -219,10 +219,10 @@ class AccountServiceImplTest {
 
         service.updateBalance(accountId, new BigDecimal("40.00"), TransactionType.EXPENSE);
 
-        ArgumentCaptor<Account> accountCaptor = ArgumentCaptor.forClass(Account.class);
+        ArgumentCaptor<AccountEntity> accountCaptor = ArgumentCaptor.forClass(AccountEntity.class);
         verify(repository).save(accountCaptor.capture());
 
-        Account savedAccount = accountCaptor.getValue();
+        AccountEntity savedAccount = accountCaptor.getValue();
         assertThat(savedAccount.getBalance()).isEqualByComparingTo(new BigDecimal("60.00"));
     }
 
@@ -235,11 +235,11 @@ class AccountServiceImplTest {
         assertThrows(AccountNotFoundException.class, () ->
                 service.updateBalance(accountId, BigDecimal.TEN, TransactionType.INCOMING));
 
-        verify(repository, never()).save(any(Account.class));
+        verify(repository, never()).save(any(AccountEntity.class));
     }
 
-    private AccountVO createAccountVO() {
-        AccountVO vo = new AccountVO();
+    private Account createAccountVO() {
+        Account vo = new Account();
         vo.setId(UUID.randomUUID());
         vo.setAccountName("Test Account");
         vo.setBalance(BigDecimal.TEN);
@@ -251,14 +251,14 @@ class AccountServiceImplTest {
         return vo;
     }
 
-    private BankVO createBankVO() {
-        BankVO bankVO = new BankVO();
+    private Bank createBankVO() {
+        Bank bankVO = new Bank();
         bankVO.setId(UUID.randomUUID());
         return bankVO;
     }
 
-    private Account createAccount() {
-        Account account = new Account();
+    private AccountEntity createAccount() {
+        AccountEntity account = new AccountEntity();
         account.setId(UUID.randomUUID());
         account.setAccountName("Test Account");
         account.setBalance(BigDecimal.TEN);
@@ -268,8 +268,8 @@ class AccountServiceImplTest {
         return account;
     }
     
-    private Account createAccountFromVO(AccountVO vo) {
-        Account account = new Account();
+    private AccountEntity createAccountFromVO(Account vo) {
+        AccountEntity account = new AccountEntity();
         account.setId(vo.getId());
         account.setAccountName(vo.getAccountName());
         account.setBalance(vo.getBalance());

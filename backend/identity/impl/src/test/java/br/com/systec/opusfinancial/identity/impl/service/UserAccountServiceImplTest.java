@@ -1,16 +1,17 @@
 package br.com.systec.opusfinancial.identity.impl.service;
 
-import br.com.systec.opusfinancial.commons.exceptions.BaseException;
-import br.com.systec.opusfinancial.commons.messaging.EventPublisher;
+import br.com.systec.opusfinancial.commons.api.exceptions.BaseException;
+import br.com.systec.opusfinancial.commons.jms.vo.factory.EventPublisher;
+
 import br.com.systec.opusfinancial.identity.api.exceptions.UsernameNotProvideInformationException;
-import br.com.systec.opusfinancial.identity.api.services.TenantService;
 import br.com.systec.opusfinancial.identity.api.services.UserService;
-import br.com.systec.opusfinancial.identity.api.vo.UserAccountVO;
-import br.com.systec.opusfinancial.identity.api.vo.TenantVO;
-import br.com.systec.opusfinancial.identity.api.vo.UserVO;
+import br.com.systec.opusfinancial.identity.api.domain.UserAccount;
+import br.com.systec.opusfinancial.identity.api.domain.User;
 import br.com.systec.opusfinancial.identity.impl.fake.AccountFake;
 import br.com.systec.opusfinancial.identity.impl.fake.TenantFake;
 import br.com.systec.opusfinancial.identity.impl.fake.UserFake;
+import br.com.systec.opusfinancial.tenant.api.domain.Tenant;
+import br.com.systec.opusfinancial.tenant.api.service.TenantService;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,9 +41,9 @@ class UserAccountServiceImplTest {
     @InjectMocks
     private UserAccountServiceImpl accountService;
 
-    private UserAccountVO accountVO;
-    private UserVO userVO;
-    private TenantVO tenantVO;
+    private UserAccount accountVO;
+    private User userVO;
+    private Tenant tenantVO;
 
     @BeforeEach
     void setUp() {
@@ -54,21 +55,21 @@ class UserAccountServiceImplTest {
     @Test
     void create_shouldCreateUserAndTenantSuccessfully() throws BaseException {
         // Arrange
-        when(userService.create(any(UserVO.class))).thenReturn(userVO);
+        when(userService.create(any(User.class))).thenReturn(userVO);
         doReturn(tenantVO).when(tenantService).create(any());
 
         // Act
         accountService.create(accountVO);
 
         // Assert
-        verify(userService, times(1)).create(any(UserVO.class));
+        verify(userService, times(1)).create(any(User.class));
         verify(tenantService, times(1)).create(any());
     }
 
     @Test
     void create_shouldThrowBaseException_whenUserCreationFails() {
         // Arrange
-        when(userService.create(any(UserVO.class))).thenThrow(new RuntimeException("User creation failed"));
+        when(userService.create(any(User.class))).thenThrow(new RuntimeException("User creation failed"));
 
         // Act & Assert
         assertThrows(BaseException.class, () -> accountService.create(accountVO));
@@ -78,12 +79,12 @@ class UserAccountServiceImplTest {
     @Test
     void create_shouldThrowBaseException_whenTenantCreationFails() {
         // Arrange
-        when(userService.create(any(UserVO.class))).thenReturn(userVO);
+        when(userService.create(any(User.class))).thenReturn(userVO);
         doThrow(new RuntimeException("Tenant creation failed")).when(tenantService).create(any());
 
         // Act & Assert
         assertThrows(BaseException.class, () -> accountService.create(accountVO));
-        verify(userService, times(1)).create(any(UserVO.class));
+        verify(userService, times(1)).create(any(User.class));
         verify(tenantService, times(1)).create(any());
     }
 

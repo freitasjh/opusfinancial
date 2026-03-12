@@ -10,6 +10,8 @@ public interface CreditCardService {
 
     CreditCard create(CreditCard creditCard);
 
+    CreditCard update(CreditCard creditCard);
+
     CreditCard findById(UUID creditCardId);
 
     Page<CreditCard> findByFilter(FilterCreditCard filter);

@@ -14,13 +14,12 @@ class CategoryService {
 
     public async findByFilter(filter: CategoryFilter | null): Promise<PageResponse<CategoryResponse>> {
         let query = '';
-        console.log(filter);
+
         if (filter != null) {
             query = `?keyword=${filter.keyword}&limit=${filter.limit}&page=${filter.page}`;
             if (filter.categoryType !== '' && filter.categoryType !== null) {
                 query += `&categoryType=${filter.categoryType}`;
             }
-            console.log(query);
         }
 
         const response = await api.get(`${this._endpoint}/filter${query}`);

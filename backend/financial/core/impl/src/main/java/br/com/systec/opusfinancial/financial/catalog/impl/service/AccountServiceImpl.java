@@ -1,14 +1,14 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.service;
 
 import br.com.systec.opusfinancial.api.service.BankService;
-import br.com.systec.opusfinancial.api.vo.BankVO;
+import br.com.systec.opusfinancial.api.domain.Bank;
 import br.com.systec.opusfinancial.financial.api.exceptions.AccountNotFoundException;
 import br.com.systec.opusfinancial.financial.api.filter.FilterAccount;
 import br.com.systec.opusfinancial.financial.api.service.AccountService;
-import br.com.systec.opusfinancial.financial.api.vo.AccountType;
-import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
-import br.com.systec.opusfinancial.financial.api.vo.TransactionType;
-import br.com.systec.opusfinancial.financial.catalog.impl.entity.Account;
+import br.com.systec.opusfinancial.financial.api.domain.AccountType;
+import br.com.systec.opusfinancial.financial.api.domain.Account;
+import br.com.systec.opusfinancial.financial.api.domain.TransactionType;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.AccountEntity;
 import br.com.systec.opusfinancial.financial.catalog.impl.filter.AccountSpecification;
 import br.com.systec.opusfinancial.financial.catalog.impl.mapper.AccountMapper;
 import br.com.systec.opusfinancial.financial.catalog.impl.repository.AccountRepository;
@@ -40,32 +40,32 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public AccountVO create(AccountVO account) {
-        Account accountBeforeSave = AccountMapper.of().toEntity(account);
-        Account accountAfterSave = repository.save(accountBeforeSave);
+    public Account create(Account account) {
+        AccountEntity accountBeforeSave = AccountMapper.of().toEntity(account);
+        AccountEntity accountAfterSave = repository.save(accountBeforeSave);
 
         return AccountMapper.of().toVO(accountAfterSave);
     }
 
     @Override
     @Transactional
-    public AccountVO update(AccountVO account) {
-        Account accountSaved = repository.findById(account.getId()).orElseThrow(AccountNotFoundException::new);
-        Account accountBeforeUpdate = AccountMapper.of().toEntity(account);
+    public Account update(Account account) {
+        AccountEntity accountSaved = repository.findById(account.getId()).orElseThrow(AccountNotFoundException::new);
+        AccountEntity accountBeforeUpdate = AccountMapper.of().toEntity(account);
         accountBeforeUpdate.setCreateAt(accountSaved.getCreateAt());
 
-        Account accountAfterUpdate = repository.save(accountBeforeUpdate);
+        AccountEntity accountAfterUpdate = repository.save(accountBeforeUpdate);
 
         return AccountMapper.of().toVO(accountAfterUpdate);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public AccountVO findById(UUID id) {
-        Account accountReturn = repository.findById(id).orElseThrow(AccountNotFoundException::new);
-        BankVO bankReturnFind = bankService.findById(accountReturn.getBankId());
+    public Account findById(UUID id) {
+        AccountEntity accountReturn = repository.findById(id).orElseThrow(AccountNotFoundException::new);
+        Bank bankReturnFind = bankService.findById(accountReturn.getBankId());
 
-        AccountVO accountToReturn = AccountMapper.of().toVO(accountReturn);
+        Account accountToReturn = AccountMapper.of().toVO(accountReturn);
         accountToReturn.setBank(bankReturnFind);
 
         return accountToReturn;
@@ -73,24 +73,24 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<AccountVO> findByFilter(FilterAccount filter) {
-        Specification<Account> specification = AccountSpecification.of().filter(filter);
-        Page<Account> result = repository.findAll(specification, filter.getPageable());
+    public Page<Account> findByFilter(FilterAccount filter) {
+        Specification<AccountEntity> specification = AccountSpecification.of().filter(filter);
+        Page<AccountEntity> result = repository.findAll(specification, filter.getPageable());
 
-        List<UUID> bankIds = result.stream().map(Account::getBankId).toList();
-        List<BankVO> banks = bankService.findByIds(bankIds).values().stream().toList();
+        List<UUID> bankIds = result.stream().map(AccountEntity::getBankId).toList();
+        List<Bank> banks = bankService.findByIds(bankIds).values().stream().toList();
 
         return AccountMapper.of().toPageVO(result, banks);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<AccountVO> findByIds(List<UUID> listOfAccountId) {
+    public List<Account> findByIds(List<UUID> listOfAccountId) {
         if (listOfAccountId == null || listOfAccountId.isEmpty()) {
             return new ArrayList<>();
         }
 
-        List<Account> result = repository.findAllById(listOfAccountId);
+        List<AccountEntity> result = repository.findAllById(listOfAccountId);
 
         return AccountMapper.of().toList(result);
     }
@@ -100,12 +100,12 @@ public class AccountServiceImpl implements AccountService {
     public void createDefaultAccount(UUID tenantId) {
         log.warn("@@@ Criando Conta default para o tenant {} @@@", tenantId);
 
-        Account account = new Account();
+        AccountEntity account = new AccountEntity();
         account.setAccountName(I18nTranslate.toLocale("account.name.default"));
         account.setTenantId(tenantId);
         account.setAccountType(AccountType.WALLET);
 
-        BankVO bankVO = bankService.findByCode(BANK_OTHER);
+        Bank bankVO = bankService.findByCode(BANK_OTHER);
         account.setBankId(bankVO.getId());
 
         repository.save(account);
@@ -114,7 +114,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public void updateBalance(UUID accountId, BigDecimal amount, TransactionType transactionType) {
-        Account accountToUpdate = repository.findById(accountId).orElseThrow(AccountNotFoundException::new);
+        AccountEntity accountToUpdate = repository.findById(accountId).orElseThrow(AccountNotFoundException::new);
 
         BigDecimal balanceOld = accountToUpdate.getBalance();
         BigDecimal balanceNew;

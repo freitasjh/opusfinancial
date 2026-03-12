@@ -1,14 +1,14 @@
 package br.com.systec.opusfinancial.financial.core.web.v1.controller;
 
-import br.com.systec.opusfinancial.commons.controller.AbstractController;
-import br.com.systec.opusfinancial.commons.controller.RestPath;
-import br.com.systec.opusfinancial.commons.exceptions.StandardError;
+import br.com.systec.opusfinancial.commons.api.tools.controller.RestControllerTool;
+import br.com.systec.opusfinancial.commons.api.tools.controller.RestPath;
+import br.com.systec.opusfinancial.commons.api.tools.exceptions.StandardError;
 import br.com.systec.opusfinancial.financial.api.filter.IncomingTransactionFilter;
 import br.com.systec.opusfinancial.financial.api.service.IncomingTransactionService;
-import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
-import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingTransactionInputDTO;
+import br.com.systec.opusfinancial.financial.api.domain.FinancialTransaction;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingInformationResponseDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingSaveResponseDTO;
+import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingTransactionInputDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.mapper.IncomingTransactionMapperV1;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,9 +32,9 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(RestPath.V1 + "/incomings")
-@Tag(name = "Receitas", description = "Cadastro de receitas")
+@Tag(name = "Financeiro - Receitas", description = "Registro e controle de entradas e rendimentos")
 @SecurityRequirement(name = "Authorization")
-public class IncomingFinancialControllerV1 extends AbstractController {
+public class IncomingFinancialControllerV1 {
 
     private final IncomingTransactionService service;
 
@@ -55,10 +55,10 @@ public class IncomingFinancialControllerV1 extends AbstractController {
             })
     })
     public ResponseEntity<IncomingSaveResponseDTO> save(@RequestBody @Valid IncomingTransactionInputDTO incomingFinancialInputDTO) {
-        FinancialTransactionVO financialTransactionToSave = IncomingTransactionMapperV1.of().toVO(incomingFinancialInputDTO);
-        FinancialTransactionVO financialTransactionAfterSave = service.save(financialTransactionToSave);
+        FinancialTransaction financialTransactionToSave = IncomingTransactionMapperV1.of().toVO(incomingFinancialInputDTO);
+        FinancialTransaction financialTransactionAfterSave = service.save(financialTransactionToSave);
 
-        return buildSuccessResponse(IncomingTransactionMapperV1.of().toSaveResponse(financialTransactionAfterSave));
+        return RestControllerTool.of().buildSuccessResponse(IncomingTransactionMapperV1.of().toSaveResponse(financialTransactionAfterSave));
     }
 
     @PostMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -74,10 +74,10 @@ public class IncomingFinancialControllerV1 extends AbstractController {
             })
     })
     public ResponseEntity<IncomingSaveResponseDTO> update(@RequestBody @Valid IncomingTransactionInputDTO incomingFinancialInputDTO) {
-        FinancialTransactionVO financialTransactionToSave = IncomingTransactionMapperV1.of().toVO(incomingFinancialInputDTO);
-        FinancialTransactionVO financialTransactionAfterSave = service.update(financialTransactionToSave);
+        FinancialTransaction financialTransactionToSave = IncomingTransactionMapperV1.of().toVO(incomingFinancialInputDTO);
+        FinancialTransaction financialTransactionAfterSave = service.update(financialTransactionToSave);
 
-        return buildSuccessResponse(IncomingTransactionMapperV1.of().toSaveResponse(financialTransactionAfterSave));
+        return RestControllerTool.of().buildSuccessResponse(IncomingTransactionMapperV1.of().toSaveResponse(financialTransactionAfterSave));
     }
 
     @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -96,9 +96,9 @@ public class IncomingFinancialControllerV1 extends AbstractController {
                                                                              @RequestParam(value = "page", defaultValue = "0") int page,
                                                                              @RequestParam(value = "keyword", required = false) String keyword) {
         IncomingTransactionFilter filter = new IncomingTransactionFilter(keyword, limit, page);
-        Page<FinancialTransactionVO> result = service.findByFilter(filter);
+        Page<FinancialTransaction> result = service.findByFilter(filter);
 
-        return buildSuccessResponse(IncomingTransactionMapperV1.of().toPage(result));
+        return RestControllerTool.of().buildSuccessResponse(IncomingTransactionMapperV1.of().toPage(result));
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -114,7 +114,7 @@ public class IncomingFinancialControllerV1 extends AbstractController {
             })
     })
     public ResponseEntity<IncomingInformationResponseDTO> findById(@PathVariable("id") String id) {
-        FinancialTransactionVO financialTransactionReturn = service.findById(UUID.fromString(id));
-        return buildSuccessResponse(IncomingTransactionMapperV1.of().toInformationDTO(financialTransactionReturn));
+        FinancialTransaction financialTransactionReturn = service.findById(UUID.fromString(id));
+        return RestControllerTool.of().buildSuccessResponse(IncomingTransactionMapperV1.of().toInformationDTO(financialTransactionReturn));
     }
 }

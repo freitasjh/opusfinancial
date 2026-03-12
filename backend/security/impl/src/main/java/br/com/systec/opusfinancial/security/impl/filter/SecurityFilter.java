@@ -1,16 +1,16 @@
 package br.com.systec.opusfinancial.security.impl.filter;
 
-import br.com.systec.opusfinancial.commons.exceptions.BaseException;
-import br.com.systec.opusfinancial.commons.security.TenantContext;
+import br.com.systec.opusfinancial.commons.api.exceptions.BaseException;
+import br.com.systec.opusfinancial.commons.impl.security.TenantContext;
 import br.com.systec.opusfinancial.security.api.exceptions.SecurityException;
 import br.com.systec.opusfinancial.security.api.service.AuthenticationService;
 import br.com.systec.opusfinancial.security.api.service.SecurityTokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;

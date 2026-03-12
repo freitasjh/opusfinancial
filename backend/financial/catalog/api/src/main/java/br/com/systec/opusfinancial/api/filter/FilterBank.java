@@ -1,6 +1,7 @@
 package br.com.systec.opusfinancial.api.filter;
 
-import br.com.systec.opusfinancial.commons.filter.PageParamSearch;
+
+import br.com.systec.opusfinancial.commons.api.filter.PageParamSearch;
 
 public class FilterBank extends PageParamSearch {
 

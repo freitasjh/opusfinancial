@@ -1,7 +1,7 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.mapper;
 
-import br.com.systec.opusfinancial.api.vo.CategoryVO;
-import br.com.systec.opusfinancial.financial.catalog.impl.entity.Category;
+import br.com.systec.opusfinancial.api.domain.Category;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.CategoryEntity;
 import br.com.systec.opusfinancial.financial.catalog.impl.fake.CategoryFake;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -12,9 +12,9 @@ class CategoryMapperTest {
 
     @Test
     void whenConverterCategoryVO_thenReturnCategory() {
-        CategoryVO categoryToConverter = CategoryFake.toFakeVO();
+        Category categoryToConverter = CategoryFake.toFakeVO();
 
-        Category categoryConverted = CategoryMapper.of().toEntity(categoryToConverter);
+        CategoryEntity categoryConverted = CategoryMapper.of().toEntity(categoryToConverter);
 
         Assertions.assertNotNull(categoryConverted);
         Assertions.assertNotNull(categoryConverted.getTenantId());
@@ -31,9 +31,9 @@ class CategoryMapperTest {
 
     @Test
     void whenConverterCategory_thenReturnCategoryVO() {
-        Category categoryToConverter = CategoryFake.toFake();
+        CategoryEntity categoryToConverter = CategoryFake.toFake();
 
-        CategoryVO categoryConverted = CategoryMapper.of().toVO(categoryToConverter);
+        Category categoryConverted = CategoryMapper.of().toVO(categoryToConverter);
 
         Assertions.assertNotNull(categoryConverted);
         Assertions.assertNotNull(categoryConverted.getTenantId());

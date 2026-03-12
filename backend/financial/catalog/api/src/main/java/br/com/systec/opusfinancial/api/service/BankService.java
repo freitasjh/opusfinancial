@@ -2,7 +2,7 @@ package br.com.systec.opusfinancial.api.service;
 
 
 import br.com.systec.opusfinancial.api.filter.FilterBank;
-import br.com.systec.opusfinancial.api.vo.BankVO;
+import br.com.systec.opusfinancial.api.domain.Bank;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -11,13 +11,13 @@ import java.util.UUID;
 
 public interface BankService {
 
-    BankVO findById(UUID bankId);
+    Bank findById(UUID bankId);
 
-    Page<BankVO> findByFilter(FilterBank bankFilter);
+    Page<Bank> findByFilter(FilterBank bankFilter);
 
-    BankVO findByCode(String code);
+    Bank findByCode(String code);
 
-    Map<UUID, BankVO> findByIds(Iterable<UUID> ids);
+    Map<UUID, Bank> findByIds(Iterable<UUID> ids);
 
-    List<BankVO> findAll();
+    List<Bank> findAll();
 }

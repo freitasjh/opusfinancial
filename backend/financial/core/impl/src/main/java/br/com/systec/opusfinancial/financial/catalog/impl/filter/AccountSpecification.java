@@ -1,7 +1,7 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.filter;
 
-import br.com.systec.opusfinancial.commons.filter.PageParamSearch;
-import br.com.systec.opusfinancial.financial.catalog.impl.entity.Account;
+import br.com.systec.opusfinancial.commons.api.filter.PageParamSearch;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.AccountEntity;
 import org.springframework.data.jpa.domain.Specification;
 
 public class AccountSpecification {
@@ -12,7 +12,7 @@ public class AccountSpecification {
         return new AccountSpecification();
     }
 
-    public Specification<Account> filter(PageParamSearch filter) {
+    public Specification<AccountEntity> filter(PageParamSearch filter) {
         if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
             return Specification.allOf(filterByKeyword(filter));
         }
@@ -20,7 +20,7 @@ public class AccountSpecification {
         return Specification.unrestricted();
     }
 
-    private Specification<Account> filterByKeyword(PageParamSearch filter) {
+    private Specification<AccountEntity> filterByKeyword(PageParamSearch filter) {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.or(
                         criteriaBuilder.like(root.get("name"), "%"+filter.getKeyword()+"%")

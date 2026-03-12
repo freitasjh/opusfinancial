@@ -18,5 +18,6 @@
         <module>impl</module>
         <module>jms</module>
         <module>web</module>
+        <module>dbupdate</module>
     </modules>
 </project>

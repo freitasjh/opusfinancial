@@ -1,18 +1,18 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.service;
 
 import br.com.systec.opusfinancial.api.service.CategoryService;
-import br.com.systec.opusfinancial.api.vo.CategoryVO;
+import br.com.systec.opusfinancial.api.domain.Category;
 import br.com.systec.opusfinancial.financial.api.exceptions.ExpenseFinancialNotFoundException;
 import br.com.systec.opusfinancial.financial.api.filter.ExpenseTransactionFilter;
 import br.com.systec.opusfinancial.financial.api.service.AccountService;
 import br.com.systec.opusfinancial.financial.api.service.ExpenseTransactionService;
-import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
-import br.com.systec.opusfinancial.financial.api.vo.CategoryTransactionType;
-import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
-import br.com.systec.opusfinancial.financial.api.vo.TransactionType;
-import br.com.systec.opusfinancial.financial.catalog.impl.entity.FinancialTransaction;
+import br.com.systec.opusfinancial.financial.api.domain.Account;
+import br.com.systec.opusfinancial.financial.api.domain.CategoryTransactionType;
+import br.com.systec.opusfinancial.financial.api.domain.FinancialTransaction;
+import br.com.systec.opusfinancial.financial.api.domain.TransactionType;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.FinancialTransactionEntity;
 import br.com.systec.opusfinancial.financial.catalog.impl.filter.ExpenseTransactionSpecification;
-import br.com.systec.opusfinancial.financial.catalog.impl.mapper.FinancialTransactionMapper;
+import br.com.systec.opusfinancial.financial.catalog.impl.mapper.FinancialTransactionDomainMapper;
 import br.com.systec.opusfinancial.financial.catalog.impl.repository.TransactionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
@@ -29,36 +29,39 @@ public class ExpenseTransactionServiceImpl implements ExpenseTransactionService 
     private final TransactionRepository repository;
     private final AccountService accountService;
     private final CategoryService categoryService;
+    private final FinancialTransactionDomainMapper mapper;
 
-    public ExpenseTransactionServiceImpl(TransactionRepository repository, AccountService accountService, CategoryService categoryService) {
+    public ExpenseTransactionServiceImpl(TransactionRepository repository, AccountService accountService,
+                                         CategoryService categoryService, FinancialTransactionDomainMapper mapper) {
         this.repository = repository;
         this.accountService = accountService;
         this.categoryService = categoryService;
+        this.mapper = mapper;
     }
 
     @Override
     @Transactional
-    public FinancialTransactionVO create(FinancialTransactionVO financialTransaction) {
-        FinancialTransaction expenseTransaction = FinancialTransactionMapper.of().toEntity(
+    public FinancialTransaction create(FinancialTransaction financialTransaction) {
+        FinancialTransactionEntity expenseTransaction = mapper.toEntity(
                 financialTransaction,
                 TransactionType.EXPENSE,
                 CategoryTransactionType.PAYMENT
         );
 
-        FinancialTransaction expenseTransactionAfterSave = repository.save(expenseTransaction);
+        FinancialTransactionEntity expenseTransactionAfterSave = repository.save(expenseTransaction);
 
         if (expenseTransactionAfterSave.getProcessed() == true) {
             accountService.updateBalance(expenseTransactionAfterSave.getAccountId(), expenseTransactionAfterSave.getAmount(), TransactionType.EXPENSE);
         }
 
 
-        return FinancialTransactionMapper.of().toVO(expenseTransactionAfterSave);
+        return mapper.toVO(expenseTransactionAfterSave);
     }
 
     @Override
     @Transactional
     public void delete(UUID expenseTransactionId) {
-        FinancialTransaction expenseTransaction = repository.findById(expenseTransactionId).orElseThrow(ExpenseFinancialNotFoundException::new);
+        FinancialTransactionEntity expenseTransaction = repository.findById(expenseTransactionId).orElseThrow(ExpenseFinancialNotFoundException::new);
 
         repository.delete(expenseTransaction);
 
@@ -70,27 +73,27 @@ public class ExpenseTransactionServiceImpl implements ExpenseTransactionService 
 
     @Override
     @Transactional(readOnly = true)
-    public Page<FinancialTransactionVO> findByFilter(ExpenseTransactionFilter filter) {
-        Specification<FinancialTransaction> specification = ExpenseTransactionSpecification.of().filter(filter);
-        Page<FinancialTransaction> pageResult = repository.findAll(specification, filter.getPageable());
+    public Page<FinancialTransaction> findByFilter(ExpenseTransactionFilter filter) {
+        Specification<FinancialTransactionEntity> specification = ExpenseTransactionSpecification.of().filter(filter);
+        Page<FinancialTransactionEntity> pageResult = repository.findAll(specification, filter.getPageable());
 
-        List<UUID> listOfAccountId = pageResult.stream().map(FinancialTransaction::getAccountId)
+        List<UUID> listOfAccountId = pageResult.stream().map(FinancialTransactionEntity::getAccountId)
                 .filter(Objects::nonNull).distinct().toList();
-        List<UUID> listOfCategoryId = pageResult.stream().map(FinancialTransaction::getCategoryId)
+        List<UUID> listOfCategoryId = pageResult.stream().map(FinancialTransactionEntity::getCategoryId)
                 .filter(Objects::nonNull)
                 .distinct().toList();
 
-        List<AccountVO> listOfAccount = accountService.findByIds(listOfAccountId);
-        List<CategoryVO> listOfCategory = categoryService.findByIds(listOfCategoryId);
+        List<Account> listOfAccount = accountService.findByIds(listOfAccountId);
+        List<Category> listOfCategory = categoryService.findByIds(listOfCategoryId);
 
-        return FinancialTransactionMapper.of().toPage(pageResult, listOfAccount, listOfCategory);
+        return mapper.toPage(pageResult, listOfAccount, listOfCategory);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public FinancialTransactionVO findById(UUID expenseId) {
-        FinancialTransaction expenseTransaction = repository.findById(expenseId).orElseThrow(ExpenseFinancialNotFoundException::new);
+    public FinancialTransaction findById(UUID expenseId) {
+        FinancialTransactionEntity expenseTransaction = repository.findById(expenseId).orElseThrow(ExpenseFinancialNotFoundException::new);
 
-        return FinancialTransactionMapper.of().toVO(expenseTransaction);
+        return mapper.toVO(expenseTransaction);
     }
 }

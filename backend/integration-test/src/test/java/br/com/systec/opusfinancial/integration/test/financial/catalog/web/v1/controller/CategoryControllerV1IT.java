@@ -1,6 +1,5 @@
 package br.com.systec.opusfinancial.integration.test.financial.catalog.web.v1.controller;
 
-import br.com.systec.opusfinancial.OpusfinancialApplication;
 import br.com.systec.opusfinancial.core.web.v1.dto.CategoryInputDTO;
 import br.com.systec.opusfinancial.core.web.v1.dto.CategoryResponseDTO;
 import br.com.systec.opusfinancial.core.web.v1.dto.CategorySaveResponseDTO;
@@ -13,10 +12,8 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -26,9 +23,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static br.com.systec.opusfinancial.integration.test.util.IntegrationEndpoint.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Order(3)
-@SpringBootTest(classes = OpusfinancialApplication.class)
-@ActiveProfiles("integration")
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CategoryControllerV1IT extends AbstractIT {

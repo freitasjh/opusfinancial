@@ -1,0 +1,65 @@
+package br.com.systec.opusfinancial.commons.api.tools.exceptions;
+
+import br.com.systec.opusfinancial.commons.api.exceptions.BaseException;
+import br.com.systec.opusfinancial.commons.api.exceptions.ObjectNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class ControllerExceptionHandler {
+    private static final Logger log = LoggerFactory.getLogger(ControllerExceptionHandler.class);
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<StandardError> errorServerException(Exception e, HttpServletRequest request) {
+        log.error(e.getMessage(), e);
+        StandardError err = new StandardError(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), System.currentTimeMillis());
+        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        return ResponseEntity.status(httpStatus).body(err);
+    }
+
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<StandardError> baseException(BaseException e, HttpServletRequest request) {
+        log.error(e.getMessage(), e);
+        StandardError err = new StandardError(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), System.currentTimeMillis());
+        err.setDetailMessage(e.getDetailMessage());
+        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        if(e.getHttpStatus() != null){
+            httpStatus = e.getHttpStatus();
+        }
+        return ResponseEntity.status(httpStatus).body(err);
+    }
+
+    @ExceptionHandler(ObjectNotFoundException.class)
+    public ResponseEntity<StandardError> objectNotFoundException(ObjectNotFoundException e, HttpServletRequest request) {
+        log.error(e.getMessage(), e);
+        StandardError err = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(), System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<StandardError> validation(MethodArgumentNotValidException e, HttpServletRequest request) {
+        log.error(e.getMessage(), e);
+        ValidationError err = new ValidationError(HttpStatus.NOT_ACCEPTABLE.value(),"error.validation", System.currentTimeMillis());
+        for(FieldError x : e.getBindingResult().getFieldErrors()) {
+            err.addError(x.getField(), x.getDefaultMessage());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(err);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<StandardError> runtimeException(RuntimeException e, HttpServletRequest request) {
+        log.error(e.getMessage(), e);
+        StandardError err = new StandardError(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(err);
+    }
+
+}

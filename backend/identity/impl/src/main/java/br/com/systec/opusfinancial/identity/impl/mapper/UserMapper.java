@@ -1,8 +1,9 @@
 package br.com.systec.opusfinancial.identity.impl.mapper;
 
-import br.com.systec.opusfinancial.identity.api.vo.UserAccountVO;
-import br.com.systec.opusfinancial.identity.api.vo.UserVO;
-import br.com.systec.opusfinancial.identity.impl.entities.User;
+import br.com.systec.opusfinancial.identity.api.domain.UserAccount;
+import br.com.systec.opusfinancial.identity.api.domain.User;
+import br.com.systec.opusfinancial.identity.impl.entities.UserEntity;
+import br.com.systec.opusfinancial.tenant.api.domain.Tenant;
 
 public class UserMapper {
 
@@ -12,8 +13,8 @@ public class UserMapper {
         return new UserMapper();
     }
 
-    public User toEntity(UserVO userVO) {
-        User user = new User();
+    public UserEntity toEntity(User userVO) {
+        UserEntity user = new UserEntity();
         user.setId(userVO.getId());
         user.setName(userVO.getName());
         user.setDocument(userVO.getDocument());
@@ -29,8 +30,8 @@ public class UserMapper {
         return user;
     }
 
-    public UserVO toVO(User user) {
-        UserVO userVO = new UserVO();
+    public User toVO(UserEntity user) {
+        User userVO = new User();
         userVO.setId(user.getId());
         userVO.setName(user.getName());
         userVO.setLastName(user.getLastName());
@@ -45,8 +46,8 @@ public class UserMapper {
         return userVO;
     }
 
-    public UserVO accountToUserVO(UserAccountVO accountVO) {
-        UserVO userVO = new UserVO();
+    public User accountToUserVO(UserAccount accountVO) {
+        User userVO = new User();
         userVO.setUsername(accountVO.getUsername());
         userVO.setPassword(accountVO.getPassword());
         userVO.setName(accountVO.getName());
@@ -54,5 +55,12 @@ public class UserMapper {
         userVO.setEmail(accountVO.getEmail());
 
         return userVO;
+    }
+
+    public Tenant accountToTenant(UserAccount account) {
+        Tenant tenant = new Tenant();
+        tenant.setName(account.getName());
+
+        return tenant;
     }
 }

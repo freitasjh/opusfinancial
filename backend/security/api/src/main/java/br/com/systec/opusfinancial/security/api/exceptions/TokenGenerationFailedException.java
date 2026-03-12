@@ -1,6 +1,6 @@
 package br.com.systec.opusfinancial.security.api.exceptions;
 
-import br.com.systec.opusfinancial.commons.exceptions.BaseException;
+import br.com.systec.opusfinancial.commons.api.exceptions.BaseException;
 
 import java.io.Serial;
 

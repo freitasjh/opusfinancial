@@ -2,17 +2,17 @@ package br.com.systec.opusfinancial.integration.test.seed;
 
 import br.com.systec.opusfinancial.api.filter.FilterCategory;
 import br.com.systec.opusfinancial.api.service.CategoryService;
-import br.com.systec.opusfinancial.api.vo.CategoryType;
-import br.com.systec.opusfinancial.api.vo.CategoryVO;
-import br.com.systec.opusfinancial.commons.security.TenantContext;
+import br.com.systec.opusfinancial.api.domain.CategoryType;
+import br.com.systec.opusfinancial.api.domain.Category;
+import br.com.systec.opusfinancial.commons.impl.security.TenantContext;
 import br.com.systec.opusfinancial.financial.api.filter.FilterAccount;
 import br.com.systec.opusfinancial.financial.api.service.AccountService;
 import br.com.systec.opusfinancial.financial.api.service.ExpenseTransactionService;
 import br.com.systec.opusfinancial.financial.api.service.IncomingTransactionService;
-import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
-import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
-import br.com.systec.opusfinancial.identity.impl.entities.Tenant;
-import br.com.systec.opusfinancial.identity.impl.repository.TenantRepository;
+import br.com.systec.opusfinancial.financial.api.domain.Account;
+import br.com.systec.opusfinancial.financial.api.domain.FinancialTransaction;
+import br.com.systec.opusfinancial.tenant.impl.entity.TenantEntity;
+import br.com.systec.opusfinancial.tenant.impl.repository.TenantRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,9 +50,9 @@ public class FinancialDataSeedIT {
     @Commit
     public void seedDatabaseWithOneYearOfData() throws Exception {
         // 1. Garantir um Tenant (Ainda via repositório pois é infraestrutura base)
-        Iterable<Tenant> result = tenantRepository.findAll();
-        Tenant tenant = StreamSupport.stream(result.spliterator(), false).toList().stream().findFirst().orElseGet(() -> {
-            Tenant t = new Tenant();
+        Iterable<TenantEntity> result = tenantRepository.findAll();
+        TenantEntity tenant = StreamSupport.stream(result.spliterator(), false).toList().stream().findFirst().orElseGet(() -> {
+            TenantEntity t = new TenantEntity();
             t.setName("Test Tenant");
             return tenantRepository.save(t);
         });
@@ -65,22 +65,22 @@ public class FinancialDataSeedIT {
         });
     }
 
-    private void runSeed(Tenant tenant) {
+    private void runSeed(TenantEntity tenant) {
         // 2. Garantir uma Conta via VO
-        AccountVO accountVO = accountService.findByFilter(new FilterAccount("", 30, 0)).stream()
+        Account accountVO = accountService.findByFilter(new FilterAccount("", 30, 0)).stream()
                 .findFirst()
                 .orElseGet(() -> {
-                    AccountVO a = new AccountVO();
+                    Account a = new Account();
                     a.setAccountName("Conta Principal");
                     a.setBalance(BigDecimal.ZERO);
                     return accountService.create(a);
                 });
 
         // 3. Garantir Categorias via VO
-        CategoryVO catSalario = getOrCreateCategoryVO("Salário", CategoryType.REVENUE);
-        CategoryVO catMoradia = getOrCreateCategoryVO("Moradia", CategoryType.EXPENSE);
-        CategoryVO catAlimentacao = getOrCreateCategoryVO("Alimentação", CategoryType.EXPENSE);
-        CategoryVO catLazer = getOrCreateCategoryVO("Lazer", CategoryType.EXPENSE);
+        Category catSalario = getOrCreateCategoryVO("Salário", CategoryType.REVENUE);
+        Category catMoradia = getOrCreateCategoryVO("Moradia", CategoryType.EXPENSE);
+        Category catAlimentacao = getOrCreateCategoryVO("Alimentação", CategoryType.EXPENSE);
+        Category catLazer = getOrCreateCategoryVO("Lazer", CategoryType.EXPENSE);
 
         LocalDate startDate = LocalDate.now().minusMonths(14).withDayOfMonth(1);
 
@@ -115,8 +115,8 @@ public class FinancialDataSeedIT {
         System.out.println("Seed finalizado com sucesso!");
     }
 
-    private void saveIncoming(AccountVO account, CategoryVO category, String desc, BigDecimal amount, LocalDate date) {
-        FinancialTransactionVO vo = new FinancialTransactionVO();
+    private void saveIncoming(Account account, Category category, String desc, BigDecimal amount, LocalDate date) {
+        FinancialTransaction vo = new FinancialTransaction();
         vo.setAccount(account);
         vo.setCategory(category);
         vo.setDescription(desc);
@@ -127,8 +127,8 @@ public class FinancialDataSeedIT {
         incomingService.save(vo);
     }
 
-    private void saveExpense(AccountVO account, CategoryVO category, String desc, BigDecimal amount, LocalDate date) {
-        FinancialTransactionVO vo = new FinancialTransactionVO();
+    private void saveExpense(Account account, Category category, String desc, BigDecimal amount, LocalDate date) {
+        FinancialTransaction vo = new FinancialTransaction();
         vo.setAccount(account);
         vo.setCategory(category);
         vo.setDescription(desc);
@@ -140,12 +140,12 @@ public class FinancialDataSeedIT {
         expenseService.create(vo);
     }
 
-    private CategoryVO getOrCreateCategoryVO(String name, CategoryType type) {
+    private Category getOrCreateCategoryVO(String name, CategoryType type) {
         return categoryService.findByFilter(new FilterCategory("", 30, 0)).getContent().stream()
                 .filter(c -> c.getName().equalsIgnoreCase(name))
                 .findFirst()
                 .orElseGet(() -> {
-                    CategoryVO c = new CategoryVO();
+                    Category c = new Category();
                     c.setName(name);
                     c.setCategoryType(type);
                     c.setColorHex("4f46e5");

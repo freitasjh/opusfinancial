@@ -1,11 +1,11 @@
 package br.com.systec.opusfinancial.financial.core.web.v1.controller;
 
-import br.com.systec.opusfinancial.commons.controller.AbstractController;
-import br.com.systec.opusfinancial.commons.controller.RestPath;
-import br.com.systec.opusfinancial.commons.exceptions.StandardError;
+import br.com.systec.opusfinancial.commons.api.tools.controller.RestControllerTool;
+import br.com.systec.opusfinancial.commons.api.tools.controller.RestPath;
+import br.com.systec.opusfinancial.commons.api.tools.exceptions.StandardError;
 import br.com.systec.opusfinancial.financial.api.filter.ExpenseTransactionFilter;
 import br.com.systec.opusfinancial.financial.api.service.ExpenseTransactionService;
-import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
+import br.com.systec.opusfinancial.financial.api.domain.FinancialTransaction;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.ExpenseTransactionInfoDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.ExpenseTransactionInputDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.ExpenseTransactionSaveResponseDTO;
@@ -33,9 +33,9 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(RestPath.V1 + "/exepenses")
-@Tag(name = "Despesas", description = "Cadastro de despesas")
+@Tag(name = "Financeiro - Despesas", description = "Controle de saídas e gastos financeiros")
 @SecurityRequirement(name = "Authorization")
-public class ExpenseTransactionControllerV1 extends AbstractController {
+public class ExpenseTransactionControllerV1 {
 
     private final ExpenseTransactionService service;
 
@@ -57,11 +57,11 @@ public class ExpenseTransactionControllerV1 extends AbstractController {
             })
     })
     public ResponseEntity<ExpenseTransactionSaveResponseDTO> create(@RequestBody @Valid ExpenseTransactionInputDTO expenseTransaction) {
-        FinancialTransactionVO financialTransaction = ExpenseTransactionMapperV1.of().toVO(expenseTransaction);
+        FinancialTransaction financialTransaction = ExpenseTransactionMapperV1.of().toVO(expenseTransaction);
 
-        FinancialTransactionVO financialTransactionAfterSave = service.create(financialTransaction);
+        FinancialTransaction financialTransactionAfterSave = service.create(financialTransaction);
 
-        return buildSuccessResponse(ExpenseTransactionMapperV1.of().toSaveResponse(financialTransactionAfterSave));
+        return RestControllerTool.of().buildSuccessResponse(ExpenseTransactionMapperV1.of().toSaveResponse(financialTransactionAfterSave));
     }
 
     @DeleteMapping("/{expenseTransactionId}")
@@ -78,7 +78,7 @@ public class ExpenseTransactionControllerV1 extends AbstractController {
     public ResponseEntity<Void> delete(UUID expenseTransactionId) {
         service.delete(expenseTransactionId);
 
-        return buildSuccessResponseNoContent();
+        return RestControllerTool.of().buildSuccessResponseNoContent();
     }
 
     @GetMapping(value = "/{expenseId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -94,9 +94,9 @@ public class ExpenseTransactionControllerV1 extends AbstractController {
             })
     })
     public ResponseEntity<ExpenseTransactionInputDTO> findById(UUID expenseId) {
-        FinancialTransactionVO expenseTransaction = service.findById(expenseId);
+        FinancialTransaction expenseTransaction = service.findById(expenseId);
 
-        return buildSuccessResponse(ExpenseTransactionMapperV1.of().toDTO(expenseTransaction));
+        return RestControllerTool.of().buildSuccessResponse(ExpenseTransactionMapperV1.of().toDTO(expenseTransaction));
     }
 
     @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -117,8 +117,8 @@ public class ExpenseTransactionControllerV1 extends AbstractController {
                                                                         @RequestParam(value = "keyword", required = false) String keyword) {
         ExpenseTransactionFilter filter = new ExpenseTransactionFilter(keyword, limit, page);
 
-        Page<FinancialTransactionVO> pageResult = service.findByFilter(filter);
+        Page<FinancialTransaction> pageResult = service.findByFilter(filter);
 
-        return buildSuccessResponse(ExpenseTransactionMapperV1.of().toPageDTO(pageResult));
+        return RestControllerTool.of().buildSuccessResponse(ExpenseTransactionMapperV1.of().toPageDTO(pageResult));
     }
 }

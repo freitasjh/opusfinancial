@@ -1,9 +1,7 @@
 package br.com.systec.opusfinancial.integration.test.financial.catalog.web.v1.controller;
 
-import br.com.systec.opusfinancial.commons.controller.RestPath;
 import br.com.systec.opusfinancial.core.web.v1.dto.BankFindResponseDTO;
 import br.com.systec.opusfinancial.integration.test.AbstractIT;
-import br.com.systec.opusfinancial.integration.test.util.IntegrationEndpoint;
 import br.com.systec.opusfinancial.integration.test.util.IntegrationUtil;
 import br.com.systec.opusfinancial.integration.test.util.JsonUtil;
 import org.assertj.core.api.Assertions;
@@ -12,7 +10,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;

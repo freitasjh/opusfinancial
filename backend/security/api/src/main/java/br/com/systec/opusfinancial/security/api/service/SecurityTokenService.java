@@ -1,6 +1,6 @@
 package br.com.systec.opusfinancial.security.api.service;
 
-import br.com.systec.opusfinancial.commons.exceptions.BaseException;
+import br.com.systec.opusfinancial.commons.api.exceptions.BaseException;
 import br.com.systec.opusfinancial.security.api.vo.LoginAuthenticateVO;
 import org.springframework.security.core.Authentication;
 

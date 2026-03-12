@@ -1,18 +1,18 @@
 package br.com.systec.opusfinancial.financial.api.service;
 
 import br.com.systec.opusfinancial.financial.api.filter.ExpenseTransactionFilter;
-import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
+import br.com.systec.opusfinancial.financial.api.domain.FinancialTransaction;
 import org.springframework.data.domain.Page;
 
 import java.util.UUID;
 
 public interface ExpenseTransactionService {
 
-    FinancialTransactionVO create(FinancialTransactionVO financialTransaction);
+    FinancialTransaction create(FinancialTransaction financialTransaction);
 
     void delete(UUID expenseTransactionId);
 
-    Page<FinancialTransactionVO> findByFilter(ExpenseTransactionFilter filter);
+    Page<FinancialTransaction> findByFilter(ExpenseTransactionFilter filter);
 
-    FinancialTransactionVO findById(UUID expenseId);
+    FinancialTransaction findById(UUID expenseId);
 }

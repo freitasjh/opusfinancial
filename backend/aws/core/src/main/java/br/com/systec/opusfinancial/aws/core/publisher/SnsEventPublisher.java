@@ -1,9 +1,7 @@
 package br.com.systec.opusfinancial.aws.core.publisher;
 
-import br.com.systec.opusfinancial.commons.exceptions.MessagingException;
-import br.com.systec.opusfinancial.commons.messaging.EventPublisher;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import br.com.systec.opusfinancial.commons.api.exceptions.MessagingException;
+import br.com.systec.opusfinancial.commons.jms.vo.factory.EventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,9 +10,9 @@ import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.PublishRequest;
 import software.amazon.awssdk.services.sns.model.SnsException;
+import tools.jackson.databind.ObjectMapper;
 
 @Component
-@Profile("aws")
 public class SnsEventPublisher implements EventPublisher {
     private static final Logger log = LoggerFactory.getLogger(SnsEventPublisher.class);
 
@@ -46,9 +44,6 @@ public class SnsEventPublisher implements EventPublisher {
 
             log.debug("Evento publicado com sucesso.");
 
-        } catch (JsonProcessingException e) {
-            log.error("Erro ao serializar evento para JSON", e);
-            throw new MessagingException("Falha na serialização do evento", e);
         } catch (SnsException e) {
             log.error("Erro ao comunicar com AWS SNS", e);
             throw new MessagingException("Falha no envio para o SNS", e);

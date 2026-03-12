@@ -1,8 +1,8 @@
 package br.com.systec.opusfinancial.financial.core.web.v1.mapper;
 
-import br.com.systec.opusfinancial.api.vo.CategoryVO;
-import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
-import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
+import br.com.systec.opusfinancial.api.domain.Category;
+import br.com.systec.opusfinancial.financial.api.domain.Account;
+import br.com.systec.opusfinancial.financial.api.domain.FinancialTransaction;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingTransactionInputDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingInformationResponseDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.IncomingSaveResponseDTO;
@@ -17,8 +17,8 @@ public class IncomingTransactionMapperV1 {
         return new IncomingTransactionMapperV1();
     }
 
-    public FinancialTransactionVO toVO(IncomingTransactionInputDTO inputDTO) {
-        FinancialTransactionVO financialTransaction = new FinancialTransactionVO();
+    public FinancialTransaction toVO(IncomingTransactionInputDTO inputDTO) {
+        FinancialTransaction financialTransaction = new FinancialTransaction();
         financialTransaction.setId(inputDTO.getId());
         financialTransaction.setDescription(inputDTO.getDescription());
         financialTransaction.setAmount(inputDTO.getAmount());
@@ -26,22 +26,22 @@ public class IncomingTransactionMapperV1 {
         financialTransaction.setProcessedAt(inputDTO.getProcessedAt());
         financialTransaction.setProcessed(inputDTO.isProcessed());
 
-        financialTransaction.setAccount(new AccountVO());
+        financialTransaction.setAccount(new Account());
         financialTransaction.getAccount().setId(inputDTO.getAccountId());
-        financialTransaction.setCategory(new CategoryVO());
+        financialTransaction.setCategory(new Category());
         financialTransaction.getCategory().setId(inputDTO.getCategoryId());
 
         return financialTransaction;
     }
 
-    public IncomingSaveResponseDTO toSaveResponse(FinancialTransactionVO financialTransactionVO) {
+    public IncomingSaveResponseDTO toSaveResponse(FinancialTransaction financialTransactionVO) {
         IncomingSaveResponseDTO saveResponse = new IncomingSaveResponseDTO();
         saveResponse.setId(financialTransactionVO.getId());
 
         return saveResponse;
     }
 
-    public IncomingInformationResponseDTO toInformationDTO(FinancialTransactionVO transaction) {
+    public IncomingInformationResponseDTO toInformationDTO(FinancialTransaction transaction) {
 
         IncomingInformationResponseDTO incomingInformationResponseDTO = new IncomingInformationResponseDTO();
         incomingInformationResponseDTO.setId(transaction.getId());
@@ -59,7 +59,7 @@ public class IncomingTransactionMapperV1 {
         return incomingInformationResponseDTO;
     }
 
-    public Page<IncomingInformationResponseDTO> toPage(Page<FinancialTransactionVO> pageResult) {
+    public Page<IncomingInformationResponseDTO> toPage(Page<FinancialTransaction> pageResult) {
         return pageResult.map(this::toInformationDTO);
     }
 }

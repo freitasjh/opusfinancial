@@ -1,11 +1,11 @@
 package br.com.systec.opusfinancial.identity.impl.fake;
 
-import br.com.systec.opusfinancial.identity.api.vo.UserAccountVO;
+import br.com.systec.opusfinancial.identity.api.domain.UserAccount;
 
 public class AccountFake {
 
-    public static UserAccountVO toFakeVO() {
-        UserAccountVO accountVO = new UserAccountVO();
+    public static UserAccount toFakeVO() {
+        UserAccount accountVO = new UserAccount();
         accountVO.setName("Usuario Teste");
         accountVO.setEmail("teste@email.com.br");
         accountVO.setPassword("password123");

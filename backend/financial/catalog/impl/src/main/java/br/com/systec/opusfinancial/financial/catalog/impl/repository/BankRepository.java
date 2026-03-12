@@ -1,6 +1,6 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.repository;
 
-import br.com.systec.opusfinancial.financial.catalog.impl.entity.Bank;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.BankEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -9,8 +9,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface BankRepository extends JpaRepository<Bank, UUID>, JpaSpecificationExecutor<Bank> {
+public interface BankRepository extends JpaRepository<BankEntity, UUID>, JpaSpecificationExecutor<BankEntity> {
 
-    Optional<Bank> findByCode(String code);
+    Optional<BankEntity> findByCode(String code);
 
 }

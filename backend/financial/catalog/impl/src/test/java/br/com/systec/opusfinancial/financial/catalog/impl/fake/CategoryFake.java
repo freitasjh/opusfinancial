@@ -1,15 +1,15 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.fake;
 
-import br.com.systec.opusfinancial.api.vo.CategoryType;
-import br.com.systec.opusfinancial.api.vo.CategoryVO;
-import br.com.systec.opusfinancial.financial.catalog.impl.entity.Category;
+import br.com.systec.opusfinancial.api.domain.CategoryType;
+import br.com.systec.opusfinancial.api.domain.Category;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.CategoryEntity;
 
 import java.util.UUID;
 
 public class CategoryFake {
 
-    public static Category toFake() {
-        Category category = new Category();
+    public static CategoryEntity toFake() {
+        CategoryEntity category = new CategoryEntity();
         category.setId(UUID.randomUUID());
         category.setTenantId(UUID.randomUUID());
         category.setIconCode("icon");
@@ -21,8 +21,8 @@ public class CategoryFake {
         return category;
     }
 
-    public static CategoryVO toFakeVO() {
-        CategoryVO category = new CategoryVO();
+    public static Category toFakeVO() {
+        Category category = new Category();
         category.setId(UUID.randomUUID());
         category.setParentId(UUID.randomUUID());
         category.setTenantId(UUID.randomUUID());

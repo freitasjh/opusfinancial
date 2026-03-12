@@ -1,21 +1,19 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.service;
 
 import br.com.systec.opusfinancial.api.service.CategoryService;
-import br.com.systec.opusfinancial.api.vo.CategoryVO;
+import br.com.systec.opusfinancial.api.domain.Category;
 import br.com.systec.opusfinancial.financial.api.exceptions.ExpenseFinancialNotFoundException;
 import br.com.systec.opusfinancial.financial.api.filter.ExpenseTransactionFilter;
 import br.com.systec.opusfinancial.financial.api.service.AccountService;
-import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
-import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
-import br.com.systec.opusfinancial.financial.api.vo.TransactionType;
-import br.com.systec.opusfinancial.financial.catalog.impl.entity.FinancialTransaction;
+import br.com.systec.opusfinancial.financial.api.domain.Account;
+import br.com.systec.opusfinancial.financial.api.domain.FinancialTransaction;
+import br.com.systec.opusfinancial.financial.api.domain.TransactionType;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.FinancialTransactionEntity;
 import br.com.systec.opusfinancial.financial.catalog.impl.fake.FinancialTransactionFake;
 import br.com.systec.opusfinancial.financial.catalog.impl.filter.ExpenseTransactionSpecification;
-import br.com.systec.opusfinancial.financial.catalog.impl.mapper.FinancialTransactionMapper;
+import br.com.systec.opusfinancial.financial.catalog.impl.mapper.FinancialTransactionDomainMapper;
 import br.com.systec.opusfinancial.financial.catalog.impl.repository.TransactionRepository;
 import br.com.systec.opusfinancial.i18n.I18nTranslate;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,76 +49,69 @@ class ExpenseTransactionServiceImplTest {
     @Mock
     private CategoryService categoryService;
 
+    @Mock
+    private FinancialTransactionDomainMapper mapper; // Injecting mock directly
+
     @InjectMocks
     private ExpenseTransactionServiceImpl service;
-
-    private MockedStatic<FinancialTransactionMapper> mapperStatic;
-    private FinancialTransactionMapper mapperMock;
 
     @Mock
     private ResourceBundleMessageSource messageSource;
     @InjectMocks
     private I18nTranslate i18nTranslate;
 
-    @BeforeEach
-    void setUp() {
-        mapperStatic = mockStatic(FinancialTransactionMapper.class);
-        mapperMock = mock(FinancialTransactionMapper.class);
-        mapperStatic.when(FinancialTransactionMapper::of).thenReturn(mapperMock);
-    }
-
-    @AfterEach
-    void tearDown() {
-        mapperStatic.close();
-    }
-
     @Test
     @DisplayName("when_save_withValidData_then_shouldPersistTransactionAndUpdateBalance")
     void when_save_withValidData_then_shouldPersistTransactionAndUpdateBalance() {
         // Arrange
-        FinancialTransactionVO transactionToSave = FinancialTransactionFake.createExpenseTransactionVO();
-        FinancialTransaction transactionPersisted = FinancialTransactionFake.createExpenseTransaction();
+        FinancialTransaction transactionToSave = FinancialTransactionFake.createExpenseTransactionVO();
+        FinancialTransactionEntity transactionToPersist = FinancialTransactionFake.createExpenseTransaction();
+        FinancialTransactionEntity transactionPersisted = FinancialTransactionFake.createExpenseTransaction();
+        FinancialTransaction transactionResult = FinancialTransactionFake.createExpenseTransactionVO();
+
+        transactionToPersist.setProcessed(true);
         transactionPersisted.setProcessed(true);
 
-        // Use real mapper logic for toEntity to ensure correct mapping
-        when(mapperMock.toEntity(any(), any(), any())).thenCallRealMethod();
-        when(mapperMock.toVO(any())).thenCallRealMethod();
-
-        when(repository.save(any(FinancialTransaction.class))).thenReturn(transactionPersisted);
+        when(mapper.toEntity(any(), any(), any())).thenReturn(transactionToPersist);
+        when(mapper.toVO(any())).thenReturn(transactionResult);
+        when(repository.save(any(FinancialTransactionEntity.class))).thenReturn(transactionPersisted);
         doNothing().when(accountService).updateBalance(any(UUID.class), any(), any(TransactionType.class));
 
         // Act
-        FinancialTransactionVO result = service.create(transactionToSave);
+        FinancialTransaction result = service.create(transactionToSave);
 
         // Assert
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(transactionPersisted.getId());
-        verify(repository).save(any(FinancialTransaction.class));
+        // Since we are mocking the return of toVO, we check if the result is equal to what we mocked
+        assertThat(result).isEqualTo(transactionResult);
+        verify(repository).save(transactionToPersist);
         verify(accountService).updateBalance(transactionPersisted.getAccountId(), transactionPersisted.getAmount(), TransactionType.EXPENSE);
     }
 
     @Test
-    @DisplayName("when_save_withValidData_then_shouldPersistTransactionAndUpdateBalance")
+    @DisplayName("when_save_withValidData_then_shouldPersistTransactionAndNotUpdateBalance")
     void when_save_withValidData_then_shouldPersistTransactionAndNotUpdateBalance() {
         // Arrange
-        FinancialTransactionVO transactionToSave = FinancialTransactionFake.createExpenseTransactionVO();
-        FinancialTransaction transactionPersisted = FinancialTransactionFake.createExpenseTransaction();
+        FinancialTransaction transactionToSave = FinancialTransactionFake.createExpenseTransactionVO();
+        FinancialTransactionEntity transactionToPersist = FinancialTransactionFake.createExpenseTransaction();
+        FinancialTransactionEntity transactionPersisted = FinancialTransactionFake.createExpenseTransaction();
+        FinancialTransaction transactionResult = FinancialTransactionFake.createExpenseTransactionVO();
+
+        transactionToPersist.setProcessed(false);
         transactionPersisted.setProcessed(false);
 
-        // Use real mapper logic for toEntity to ensure correct mapping
-        when(mapperMock.toEntity(any(), any(), any())).thenCallRealMethod();
-        when(mapperMock.toVO(any())).thenCallRealMethod();
-
-        when(repository.save(any(FinancialTransaction.class))).thenReturn(transactionPersisted);
+        when(mapper.toEntity(any(), any(), any())).thenReturn(transactionToPersist);
+        when(mapper.toVO(any())).thenReturn(transactionResult);
+        when(repository.save(any(FinancialTransactionEntity.class))).thenReturn(transactionPersisted);
 
         // Act
-        FinancialTransactionVO result = service.create(transactionToSave);
+        FinancialTransaction result = service.create(transactionToSave);
 
         // Assert
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(transactionPersisted.getId());
-        verify(repository).save(any(FinancialTransaction.class));
-        verify(accountService, never()).updateBalance(transactionPersisted.getAccountId(), transactionPersisted.getAmount(), TransactionType.EXPENSE);
+        assertThat(result).isEqualTo(transactionResult);
+        verify(repository).save(transactionToPersist);
+        verify(accountService, never()).updateBalance(any(), any(), any());
     }
 
     @Test
@@ -128,8 +119,8 @@ class ExpenseTransactionServiceImplTest {
     void when_delete_withExistingId_then_shouldDeleteTransactionAndRevertBalance() {
         // Arrange
         UUID transactionId = UUID.randomUUID();
-        FinancialTransaction transactionToDelete = FinancialTransactionFake.createExpenseTransaction();
-        transactionToDelete.setProcessed(true); // Ensure it's processed to trigger balance update
+        FinancialTransactionEntity transactionToDelete = FinancialTransactionFake.createExpenseTransaction();
+        transactionToDelete.setProcessed(true); 
         
         when(repository.findById(transactionId)).thenReturn(Optional.of(transactionToDelete));
         doNothing().when(repository).delete(transactionToDelete);
@@ -156,7 +147,7 @@ class ExpenseTransactionServiceImplTest {
                 .isInstanceOf(ExpenseFinancialNotFoundException.class);
 
         verify(repository).findById(transactionId);
-        verify(repository, never()).delete(any(FinancialTransaction.class));
+        verify(repository, never()).delete(any(FinancialTransactionEntity.class));
         verify(accountService, never()).updateBalance(any(), any(), any());
     }
 
@@ -165,15 +156,14 @@ class ExpenseTransactionServiceImplTest {
     void when_findById_withExistingId_then_shouldReturnTransaction() {
         // Arrange
         UUID transactionId = UUID.randomUUID();
-        FinancialTransaction transactionFound = FinancialTransactionFake.createExpenseTransaction();
-        
-        // Mock only for search/retrieval as requested
-        FinancialTransactionVO transactionResult = FinancialTransactionFake.createExpenseTransactionVO();
+        FinancialTransactionEntity transactionFound = FinancialTransactionFake.createExpenseTransaction();
+        FinancialTransaction transactionResult = FinancialTransactionFake.createExpenseTransactionVO();
+
         when(repository.findById(transactionId)).thenReturn(Optional.of(transactionFound));
-        when(mapperMock.toVO(transactionFound)).thenReturn(transactionResult);
+        when(mapper.toVO(transactionFound)).thenReturn(transactionResult);
 
         // Act
-        FinancialTransactionVO result = service.findById(transactionId);
+        FinancialTransaction result = service.findById(transactionId);
 
         // Assert
         assertThat(result).isNotNull().isEqualTo(transactionResult);
@@ -202,19 +192,19 @@ class ExpenseTransactionServiceImplTest {
         Pageable pageable = mock(Pageable.class);
         when(filter.getPageable()).thenReturn(pageable);
 
-        FinancialTransaction transaction = FinancialTransactionFake.createExpenseTransaction();
-        Page<FinancialTransaction> pageResult = new PageImpl<>(List.of(transaction));
+        FinancialTransactionEntity transaction = FinancialTransactionFake.createExpenseTransaction();
+        Page<FinancialTransactionEntity> pageResult = new PageImpl<>(List.of(transaction));
 
-        AccountVO accountVO = new AccountVO();
+        Account accountVO = new Account();
         accountVO.setId(transaction.getAccountId());
-        CategoryVO categoryVO = new CategoryVO();
+        Category categoryVO = new Category();
         categoryVO.setId(transaction.getCategoryId());
 
-        Page<FinancialTransactionVO> finalPage = new PageImpl<>(List.of(FinancialTransactionFake.createExpenseTransactionVO()));
+        Page<FinancialTransaction> finalPage = new PageImpl<>(List.of(FinancialTransactionFake.createExpenseTransactionVO()));
 
         try (MockedStatic<ExpenseTransactionSpecification> specStatic = mockStatic(ExpenseTransactionSpecification.class)) {
             ExpenseTransactionSpecification specMock = mock(ExpenseTransactionSpecification.class);
-            Specification<FinancialTransaction> specification = mock(Specification.class);
+            Specification<FinancialTransactionEntity> specification = mock(Specification.class);
             specStatic.when(ExpenseTransactionSpecification::of).thenReturn(specMock);
             when(specMock.filter(filter)).thenReturn(specification);
 
@@ -222,11 +212,11 @@ class ExpenseTransactionServiceImplTest {
             when(accountService.findByIds(List.of(transaction.getAccountId()))).thenReturn(List.of(accountVO));
             when(categoryService.findByIds(List.of(transaction.getCategoryId()))).thenReturn(List.of(categoryVO));
             
-            // Mock mapper for search/retrieval
-            when(mapperMock.toPage(pageResult, List.of(accountVO), List.of(categoryVO))).thenReturn(finalPage);
+            // Mock mapper
+            when(mapper.toPage(pageResult, List.of(accountVO), List.of(categoryVO))).thenReturn(finalPage);
 
             // Act
-            Page<FinancialTransactionVO> result = service.findByFilter(filter);
+            Page<FinancialTransaction> result = service.findByFilter(filter);
 
             // Assert
             assertThat(result).isNotNull().isEqualTo(finalPage);
@@ -244,22 +234,22 @@ class ExpenseTransactionServiceImplTest {
         Pageable pageable = mock(Pageable.class);
         when(filter.getPageable()).thenReturn(pageable);
 
-        Page<FinancialTransaction> emptyPageResult = Page.empty();
-        Page<FinancialTransactionVO> emptyFinalPage = Page.empty();
+        Page<FinancialTransactionEntity> emptyPageResult = Page.empty();
+        Page<FinancialTransaction> emptyFinalPage = Page.empty();
 
         try (MockedStatic<ExpenseTransactionSpecification> specStatic = mockStatic(ExpenseTransactionSpecification.class)) {
             ExpenseTransactionSpecification specMock = mock(ExpenseTransactionSpecification.class);
-            Specification<FinancialTransaction> specification = mock(Specification.class);
+            Specification<FinancialTransactionEntity> specification = mock(Specification.class);
             specStatic.when(ExpenseTransactionSpecification::of).thenReturn(specMock);
             when(specMock.filter(filter)).thenReturn(specification);
 
             when(repository.findAll(specification, pageable)).thenReturn(emptyPageResult);
             
-            // Mock mapper for search/retrieval
-            when(mapperMock.toPage(emptyPageResult, Collections.emptyList(), Collections.emptyList())).thenReturn(emptyFinalPage);
+            // Mock mapper
+            when(mapper.toPage(emptyPageResult, Collections.emptyList(), Collections.emptyList())).thenReturn(emptyFinalPage);
 
             // Act
-            Page<FinancialTransactionVO> result = service.findByFilter(filter);
+            Page<FinancialTransaction> result = service.findByFilter(filter);
 
             // Assert
             assertThat(result).isNotNull().isEmpty();

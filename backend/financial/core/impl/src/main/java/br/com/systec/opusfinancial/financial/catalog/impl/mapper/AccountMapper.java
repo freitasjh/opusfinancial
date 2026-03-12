@@ -1,8 +1,8 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.mapper;
 
-import br.com.systec.opusfinancial.api.vo.BankVO;
-import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
-import br.com.systec.opusfinancial.financial.catalog.impl.entity.Account;
+import br.com.systec.opusfinancial.api.domain.Bank;
+import br.com.systec.opusfinancial.financial.api.domain.Account;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.AccountEntity;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -15,8 +15,8 @@ public class AccountMapper {
         return new AccountMapper();
     }
 
-    public Account toEntity(AccountVO accountVO) {
-        Account account = new Account();
+    public AccountEntity toEntity(Account accountVO) {
+        AccountEntity account = new AccountEntity();
         account.setId(accountVO.getId());
         account.setTenantId(accountVO.getTenantId());
         account.setAccountName(accountVO.getAccountName());
@@ -32,8 +32,8 @@ public class AccountMapper {
         return account;
     }
 
-    public AccountVO toVO(Account account) {
-        AccountVO accountVO = new AccountVO();
+    public Account toVO(AccountEntity account) {
+        Account accountVO = new Account();
         accountVO.setId(account.getId());
         accountVO.setAccountName(account.getAccountName());
         accountVO.setAccountType(account.getAccountType());
@@ -42,19 +42,19 @@ public class AccountMapper {
         return accountVO;
     }
 
-    public Page<AccountVO> toPageVO(Page<Account> result, List<BankVO> listBank) {
+    public Page<Account> toPageVO(Page<AccountEntity> result, List<Bank> listBank) {
         return result.map(item -> {
-            BankVO bankVO = listBank.stream()
+            Bank bankVO = listBank.stream()
                     .filter(bank -> bank.getId().equals(item.getBankId()))
                     .findFirst()
                     .orElse(null);
-            AccountVO accountVO = toVO(item);
+            Account accountVO = toVO(item);
             accountVO.setBank(bankVO);
             return accountVO;
         });
     }
 
-    public List<AccountVO> toList(List<Account> listOfAccount) {
+    public List<Account> toList(List<AccountEntity> listOfAccount) {
         return listOfAccount.stream().map(this::toVO).toList();
     }
 }

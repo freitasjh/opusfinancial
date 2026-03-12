@@ -1,17 +1,16 @@
 package br.com.systec.opusfinancial.identity.impl.service;
 
-import br.com.systec.opusfinancial.commons.exceptions.BaseException;
-import br.com.systec.opusfinancial.commons.messaging.EventPublisher;
-import br.com.systec.opusfinancial.commons.messaging.MessagingConstants;
-import br.com.systec.opusfinancial.commons.messaging.vo.EventPublisherVO;
-import br.com.systec.opusfinancial.identity.api.services.TenantService;
+import br.com.systec.opusfinancial.commons.api.exceptions.BaseException;
+import br.com.systec.opusfinancial.commons.jms.vo.EventPublisherVO;
+import br.com.systec.opusfinancial.commons.jms.vo.factory.EventPublisher;
+import br.com.systec.opusfinancial.commons.jms.vo.factory.MessagingConstants;
 import br.com.systec.opusfinancial.identity.api.services.UserAccountService;
 import br.com.systec.opusfinancial.identity.api.services.UserService;
-import br.com.systec.opusfinancial.identity.api.vo.TenantVO;
-import br.com.systec.opusfinancial.identity.api.vo.UserAccountVO;
-import br.com.systec.opusfinancial.identity.api.vo.UserVO;
-import br.com.systec.opusfinancial.identity.impl.mapper.TenantMapper;
+import br.com.systec.opusfinancial.identity.api.domain.UserAccount;
+import br.com.systec.opusfinancial.identity.api.domain.User;
 import br.com.systec.opusfinancial.identity.impl.mapper.UserMapper;
+import br.com.systec.opusfinancial.tenant.api.domain.Tenant;
+import br.com.systec.opusfinancial.tenant.api.service.TenantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -35,15 +34,15 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public void create(UserAccountVO accountVO) throws BaseException {
+    public void create(UserAccount accountVO) throws BaseException {
         try {
-            UserVO userBeforeCreate = UserMapper.of().accountToUserVO(accountVO);
-            UserVO userAfterCreate = userService.create(userBeforeCreate);
+            User userBeforeCreate = UserMapper.of().accountToUserVO(accountVO);
+            User userAfterCreate = userService.create(userBeforeCreate);
 
-            TenantVO tenantToCreate = TenantMapper.of().accountToTenant(accountVO);
+            Tenant tenantToCreate = UserMapper.of().accountToTenant(accountVO);
             tenantToCreate.setOwnerId(userAfterCreate.getId());
             tenantToCreate.setName(accountVO.getName());
-            TenantVO tenantAfterCreate = tenantService.create(tenantToCreate);
+            Tenant tenantAfterCreate = tenantService.create(tenantToCreate);
 
             userAfterCreate.setTenantId(tenantAfterCreate.getId());
 

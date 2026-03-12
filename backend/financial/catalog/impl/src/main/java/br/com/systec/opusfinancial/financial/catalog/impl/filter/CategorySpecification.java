@@ -1,7 +1,7 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.filter;
 
 import br.com.systec.opusfinancial.api.filter.FilterCategory;
-import br.com.systec.opusfinancial.financial.catalog.impl.entity.Category;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.CategoryEntity;
 import org.springframework.data.jpa.domain.Specification;
 
 public class CategorySpecification {
@@ -13,8 +13,8 @@ public class CategorySpecification {
         return new CategorySpecification();
     }
 
-    public Specification<Category> filter(FilterCategory filter) {
-        Specification<Category> spec = filterByNotParent();
+    public Specification<CategoryEntity> filter(FilterCategory filter) {
+        Specification<CategoryEntity> spec = filterByNotParent();
 
         if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
             return spec.and(filterByKeyword(filter));
@@ -27,18 +27,18 @@ public class CategorySpecification {
         return spec;
     }
 
-    private Specification<Category> filterByKeyword(FilterCategory filter) {
+    private Specification<CategoryEntity> filterByKeyword(FilterCategory filter) {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.or(
                         criteriaBuilder.like(root.get("categoryName"), "%" + filter.getKeyword() + "%")
                 );
     }
 
-    private Specification<Category> filterByNotParent() {
+    private Specification<CategoryEntity> filterByNotParent() {
         return (root, query, criteriaBuilder) -> criteriaBuilder.isNull(root.get("parentId"));
     }
 
-    private Specification<Category> filterByCategoryType(FilterCategory filter) {
+    private Specification<CategoryEntity> filterByCategoryType(FilterCategory filter) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("categoryType"), filter.getCategoryType());
     }
 }

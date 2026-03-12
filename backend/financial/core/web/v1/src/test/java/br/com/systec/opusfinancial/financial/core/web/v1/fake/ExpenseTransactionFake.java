@@ -1,10 +1,10 @@
 package br.com.systec.opusfinancial.financial.core.web.v1.fake;
 
-import br.com.systec.opusfinancial.api.vo.CategoryVO;
-import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
-import br.com.systec.opusfinancial.financial.api.vo.CategoryTransactionType;
-import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
-import br.com.systec.opusfinancial.financial.api.vo.TransactionType;
+import br.com.systec.opusfinancial.api.domain.Category;
+import br.com.systec.opusfinancial.financial.api.domain.Account;
+import br.com.systec.opusfinancial.financial.api.domain.CategoryTransactionType;
+import br.com.systec.opusfinancial.financial.api.domain.FinancialTransaction;
+import br.com.systec.opusfinancial.financial.api.domain.TransactionType;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.ExpenseTransactionInputDTO;
 
 import java.math.BigDecimal;
@@ -28,8 +28,8 @@ public class ExpenseTransactionFake {
         return dto;
     }
 
-    public static FinancialTransactionVO toVO() {
-        FinancialTransactionVO vo = new FinancialTransactionVO();
+    public static FinancialTransaction toVO() {
+        FinancialTransaction vo = new FinancialTransaction();
         vo.setId(UUID.randomUUID());
         vo.setDescription("Expense Description VO");
         vo.setCreateAt(LocalDateTime.now());
@@ -40,12 +40,12 @@ public class ExpenseTransactionFake {
         vo.setCategoryTransactionType(CategoryTransactionType.PAYMENT);
         vo.setDueDate(LocalDate.now().plusDays(10));
 
-        AccountVO account = new AccountVO();
+        Account account = new Account();
         account.setId(UUID.randomUUID());
         account.setAccountName("Test Account");
         vo.setAccount(account);
 
-        CategoryVO category = new CategoryVO();
+        Category category = new Category();
         category.setId(UUID.randomUUID());
         category.setName("Test Category");
         vo.setCategory(category);

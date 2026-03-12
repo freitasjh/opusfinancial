@@ -1,6 +1,6 @@
 package br.com.systec.opusfinancial.financial.creditcard.impl.entity;
 
-import br.com.systec.opusfinancial.commons.entities.AbstractEntity;
+import br.com.systec.opusfinancial.commons.impl.entity.AbstractEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

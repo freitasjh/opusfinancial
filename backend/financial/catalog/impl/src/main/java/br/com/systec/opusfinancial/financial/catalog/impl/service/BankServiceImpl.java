@@ -4,8 +4,8 @@ package br.com.systec.opusfinancial.financial.catalog.impl.service;
 import br.com.systec.opusfinancial.api.exceptions.BankNotFoundException;
 import br.com.systec.opusfinancial.api.filter.FilterBank;
 import br.com.systec.opusfinancial.api.service.BankService;
-import br.com.systec.opusfinancial.api.vo.BankVO;
-import br.com.systec.opusfinancial.financial.catalog.impl.entity.Bank;
+import br.com.systec.opusfinancial.api.domain.Bank;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.BankEntity;
 import br.com.systec.opusfinancial.financial.catalog.impl.filter.BankSpecification;
 import br.com.systec.opusfinancial.financial.catalog.impl.mapper.BankMapper;
 import br.com.systec.opusfinancial.financial.catalog.impl.repository.BankRepository;
@@ -30,38 +30,38 @@ public class BankServiceImpl implements BankService {
 
     @Override
     @Transactional(readOnly = true)
-    public BankVO findById(UUID bankId) {
-        Bank bankResultFind = repository.findById(bankId).orElseThrow(BankNotFoundException::new);
+    public Bank findById(UUID bankId) {
+        BankEntity bankResultFind = repository.findById(bankId).orElseThrow(BankNotFoundException::new);
 
         return BankMapper.of().toVO(bankResultFind);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<BankVO> findByFilter(FilterBank bankFilter) {
-        Specification<Bank> specification = BankSpecification.of().filter(bankFilter);
-        Page<Bank> result = repository.findAll(specification, bankFilter.getPageable());
+    public Page<Bank> findByFilter(FilterBank bankFilter) {
+        Specification<BankEntity> specification = BankSpecification.of().filter(bankFilter);
+        Page<BankEntity> result = repository.findAll(specification, bankFilter.getPageable());
 
         return BankMapper.of().toPageVO(result);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public BankVO findByCode(String code) {
-        Bank bankReturn = repository.findByCode(code).orElseThrow(BankNotFoundException::new);
+    public Bank findByCode(String code) {
+        BankEntity bankReturn = repository.findByCode(code).orElseThrow(BankNotFoundException::new);
 
         return BankMapper.of().toVO(bankReturn);
     }
 
     @Transactional(readOnly = true)
-    public Map<UUID, BankVO> findByIds(Iterable<UUID> ids) {
-        List<Bank> banksReturn = repository.findAllById(ids);
-        Map<UUID, BankVO> banksMap = new HashMap<>();
+    public Map<UUID, Bank> findByIds(Iterable<UUID> ids) {
+        List<BankEntity> banksReturn = repository.findAllById(ids);
+        Map<UUID, Bank> banksMap = new HashMap<>();
         if (banksReturn.isEmpty()) {
             return banksMap;
         }
 
-        for (Bank bank : banksReturn) {
+        for (BankEntity bank : banksReturn) {
             banksMap.putIfAbsent(bank.getId(), BankMapper.of().toVO(bank));
         }
 
@@ -69,8 +69,8 @@ public class BankServiceImpl implements BankService {
     }
 
     @Transactional(readOnly = true)
-    public List<BankVO> findAll() {
-        List<Bank> results = repository.findAll();
+    public List<Bank> findAll() {
+        List<BankEntity> results = repository.findAll();
         return BankMapper.of().toList(results);
     }
 

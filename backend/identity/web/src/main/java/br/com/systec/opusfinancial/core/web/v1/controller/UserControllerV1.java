@@ -1,13 +1,13 @@
 package br.com.systec.opusfinancial.core.web.v1.controller;
 
-import br.com.systec.opusfinancial.commons.controller.AbstractController;
-import br.com.systec.opusfinancial.commons.controller.RestPath;
-import br.com.systec.opusfinancial.commons.exceptions.StandardError;
-import br.com.systec.opusfinancial.commons.exceptions.ValidationError;
+import br.com.systec.opusfinancial.commons.api.tools.controller.RestControllerTool;
+import br.com.systec.opusfinancial.commons.api.tools.controller.RestPath;
+import br.com.systec.opusfinancial.commons.api.tools.exceptions.StandardError;
+import br.com.systec.opusfinancial.commons.api.tools.exceptions.ValidationError;
 import br.com.systec.opusfinancial.core.web.v1.dto.UserProfileDTO;
 import br.com.systec.opusfinancial.core.web.v1.mapper.UserMapperV1;
+import br.com.systec.opusfinancial.identity.api.domain.User;
 import br.com.systec.opusfinancial.identity.api.services.UserService;
-import br.com.systec.opusfinancial.identity.api.vo.UserVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,9 +26,9 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(RestPath.V1 + "/users")
-@Tag(name = "Users", description = "Cadastro de usuarios")
+@Tag(name = "Identidade - Usuários", description = "Gestão de perfis e dados do usuário")
 @SecurityRequirement(name = "Authorization")
-public class UserControllerV1 extends AbstractController {
+public class UserControllerV1 {
 
     private final UserService userService;
 
@@ -53,8 +53,8 @@ public class UserControllerV1 extends AbstractController {
             })
     })
     public ResponseEntity<UserProfileDTO> findUserProfileById(@PathVariable("id") UUID id) {
-        UserVO userVO = userService.findById(id);
+        User userVO = userService.findById(id);
 
-        return buildSuccessResponse(UserMapperV1.of().toUserProfile(userVO));
+        return RestControllerTool.of().buildSuccessResponse(UserMapperV1.of().toUserProfile(userVO));
     }
 }

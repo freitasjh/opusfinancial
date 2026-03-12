@@ -1,6 +1,6 @@
 package br.com.systec.opusfinancial.financial.creditcard.impl.entity;
 
-import br.com.systec.opusfinancial.commons.entities.AbstractEntity;
+import br.com.systec.opusfinancial.commons.impl.entity.AbstractEntity;
 import br.com.systec.opusfinancial.financial.creditcard.api.domain.InvoiceStatusType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -31,7 +31,6 @@ public class CreditCardInvoiceEntity extends AbstractEntity {
     private LocalDate dueDate;
     @Column(name = "date_paid")
     private LocalDate datePaid;
-
 
     public CreditCardEntity getCreditCard() {
         return creditCard;

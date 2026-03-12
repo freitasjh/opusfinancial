@@ -1,7 +1,7 @@
 package br.com.systec.opusfinancial.api.service;
 
 import br.com.systec.opusfinancial.api.filter.FilterCategory;
-import br.com.systec.opusfinancial.api.vo.CategoryVO;
+import br.com.systec.opusfinancial.api.domain.Category;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -9,17 +9,17 @@ import java.util.UUID;
 
 public interface CategoryService {
 
-    CategoryVO create(CategoryVO category);
+    Category create(Category category);
 
-    CategoryVO update(CategoryVO category);
+    Category update(Category category);
 
-    CategoryVO findById(UUID id);
+    Category findById(UUID id);
 
-    Page<CategoryVO> findByFilter(FilterCategory filter);
+    Page<Category> findByFilter(FilterCategory filter);
 
-    List<CategoryVO> findByParentId(UUID parentId);
+    List<Category> findByParentId(UUID parentId);
 
     void createDefaultCategory(UUID tenantId);
 
-    List<CategoryVO> findByIds(List<UUID> ids);
+    List<Category> findByIds(List<UUID> ids);
 }

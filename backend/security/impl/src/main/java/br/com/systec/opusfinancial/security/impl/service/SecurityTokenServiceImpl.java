@@ -1,8 +1,8 @@
 package br.com.systec.opusfinancial.security.impl.service;
 
-import br.com.systec.opusfinancial.commons.exceptions.BaseException;
+import br.com.systec.opusfinancial.commons.api.exceptions.BaseException;
+import br.com.systec.opusfinancial.identity.api.domain.User;
 import br.com.systec.opusfinancial.identity.api.services.UserService;
-import br.com.systec.opusfinancial.identity.api.vo.UserVO;
 import br.com.systec.opusfinancial.security.api.exceptions.RefreshTokenExpiredException;
 import br.com.systec.opusfinancial.security.api.exceptions.RefreshTokenRevokeException;
 import br.com.systec.opusfinancial.security.api.exceptions.RefreshTokenUsedException;
@@ -75,9 +75,9 @@ public class SecurityTokenServiceImpl implements SecurityTokenService {
             }
 
             olSecurityToken.setLastUsedAt(Instant.now());
-            repository.update(olSecurityToken);
+            repository.save(olSecurityToken);
 
-            UserVO user = userService.findById(olSecurityToken.getUserId());
+            User user = userService.findById(olSecurityToken.getUserId());
 
             return generaTokenAndRefreshTokenBUser(user);
         } catch (BaseException e) {
@@ -93,7 +93,7 @@ public class SecurityTokenServiceImpl implements SecurityTokenService {
     @Transactional(propagation = Propagation.REQUIRED)
     public LoginAuthenticateVO generateTokenAndRefreshToken(Authentication authentication) throws SecurityException {
         try {
-            UserVO user = (UserVO) authentication.getPrincipal();
+            User user = (User) authentication.getPrincipal();
             return generaTokenAndRefreshTokenBUser(user);
         } catch (BaseException e) {
             log.error(e.getMessage(), e);
@@ -122,7 +122,7 @@ public class SecurityTokenServiceImpl implements SecurityTokenService {
         }
     }
 
-    private String generateToken(UserVO user, String jti) {
+    private String generateToken(User user, String jti) {
 
         return JWT.create()
                 .withIssuer(ISSUE)
@@ -187,7 +187,7 @@ public class SecurityTokenServiceImpl implements SecurityTokenService {
         return LocalDateTime.now().plusMinutes(15).toInstant(ZoneOffset.of("-03:00"));
     }
 
-    private LoginAuthenticateVO generaTokenAndRefreshTokenBUser(UserVO user) throws BaseException {
+    private LoginAuthenticateVO generaTokenAndRefreshTokenBUser(User user) throws BaseException {
         try {
             String jti = UUID.randomUUID().toString();
             String accessToken = generateToken(user, jti);

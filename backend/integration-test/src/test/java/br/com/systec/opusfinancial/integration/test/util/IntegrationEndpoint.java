@@ -1,15 +1,13 @@
 package br.com.systec.opusfinancial.integration.test.util;
 
-import br.com.systec.opusfinancial.commons.controller.RestPath;
-
-import static br.com.systec.opusfinancial.commons.controller.RestPath.*;
+import static br.com.systec.opusfinancial.commons.api.tools.controller.RestPath.V1;
 
 public class IntegrationEndpoint {
     public static final String ENDPOINT_USER_ACCOUNT = "%s/user-accounts".formatted(V1);
     public static final String ENDPOINT_AUTH = "%s/auth".formatted(V1);
 
     //Bancos endpoint
-    public static final String ENDPOINT_BANK = "%s/banks".formatted(RestPath.V1);
+    public static final String ENDPOINT_BANK = "%s/banks".formatted(V1);
     public static final String ENDPOINT_BANK_FILTER = "%s/banks/filter".formatted(V1);
     public static final String ENDPOINT_BANK_CREATE = "%s/banks/create".formatted(V1);
     public static final String ENDPOINT_BANK_UPDATE = "%s/banks/update".formatted(V1);

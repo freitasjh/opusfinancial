@@ -1,7 +1,7 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.mapper;
 
-import br.com.systec.opusfinancial.api.vo.CategoryVO;
-import br.com.systec.opusfinancial.financial.catalog.impl.entity.Category;
+import br.com.systec.opusfinancial.api.domain.Category;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.CategoryEntity;
 
 import java.util.List;
 
@@ -13,8 +13,8 @@ public class CategoryMapper {
         return new CategoryMapper();
     }
 
-    public Category toEntity(CategoryVO categoryVO) {
-        Category category = new Category();
+    public CategoryEntity toEntity(Category categoryVO) {
+        CategoryEntity category = new CategoryEntity();
         category.setId(categoryVO.getId());
         category.setCategoryName(categoryVO.getName());
         category.setColorHex(categoryVO.getColorHex());
@@ -27,8 +27,8 @@ public class CategoryMapper {
         return category;
     }
 
-    public CategoryVO toVO(Category category) {
-        CategoryVO categoryVO = new CategoryVO();
+    public Category toVO(CategoryEntity category) {
+        Category categoryVO = new Category();
         categoryVO.setId(category.getId());
         categoryVO.setName(category.getCategoryName());
         categoryVO.setColorHex(category.getColorHex());
@@ -41,7 +41,7 @@ public class CategoryMapper {
         return categoryVO;
     }
 
-    public List<CategoryVO> toList(List<Category> listOfCategory) {
+    public List<Category> toList(List<CategoryEntity> listOfCategory) {
         return listOfCategory.stream().map(this::toVO).toList();
     }
 }

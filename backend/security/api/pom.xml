@@ -21,7 +21,7 @@
         </dependency>
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>
-            <artifactId>financial-commons</artifactId>
+            <artifactId>commons-api</artifactId>
         </dependency>
     </dependencies>
 </project>
