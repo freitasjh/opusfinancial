@@ -45,4 +45,13 @@ public class Bank implements Serializable {
         this.logoUrl = logoUrl;
     }
 
+    @Override
+    public String toString() {
+        return "Bank{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", logoUrl='" + logoUrl + '\'' +
+                '}';
+    }
 }

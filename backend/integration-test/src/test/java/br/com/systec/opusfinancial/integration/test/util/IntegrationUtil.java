@@ -9,5 +9,6 @@ public class IntegrationUtil {
     public static UUID bankId;
     public static UUID accountId;
     public static UUID categoryId;
+    public static UUID creditCardId;
 
 }

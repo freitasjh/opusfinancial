@@ -13,8 +13,8 @@ public class CreditDbUpdateConfig {
     public Flyway flywayCreditCard(DataSource dataSource) {
         return Flyway.configure()
                 .dataSource(dataSource)
-                .locations("classpath:db/migration/core")
-                .table("flyway_schema_history_core")
+                .locations("classpath:db/migration/creditcard")
+                .table("flyway_schema_history_creditcard")
                 .baselineOnMigrate(true)
                 .load();
     }

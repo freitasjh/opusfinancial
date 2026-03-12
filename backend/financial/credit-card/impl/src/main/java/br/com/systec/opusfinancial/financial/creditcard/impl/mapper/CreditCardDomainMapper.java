@@ -22,6 +22,9 @@ public interface CreditCardDomainMapper {
     CreditCardDomainMapper INSTANCE = Mappers.getMapper(CreditCardDomainMapper.class);
 
     @Mapping(source = "account.id", target = "accountId")
+    @Mapping(target = "createAt", ignore = true)
+    @Mapping(target = "updateAt", ignore = true)
+    @Mapping(target = "tenantId", ignore = true)
     CreditCardEntity toEntity(CreditCard creditCard);
 
     @Mapping(target = "account", expression = "java(mapAccount(entity, account))")
@@ -29,11 +32,14 @@ public interface CreditCardDomainMapper {
 
     @Mapping(target = "accountId", source = "creditCard.account.id")
     @Mapping(target = "name", source = "creditCard.name")
-    @Mapping(target = "number", source = "creditCard.number")
-    @Mapping(target = "cvv", source = "creditCard.cvv")
+    @Mapping(target = "number", source = "creditCard.number", conditionExpression = "java(br.com.systec.opusfinancial.commons.api.utils.MaskUtil.isNotMasked(creditCard.getNumber()))")
+    @Mapping(target = "cvv", source = "creditCard.cvv", conditionExpression = "java(br.com.systec.opusfinancial.commons.api.utils.MaskUtil.isNotMasked(creditCard.getCvv()))")
     @Mapping(target = "limit", source = "creditCard.limit")
     @Mapping(target = "availableLimit", source = "creditCard.availableLimit")
     @Mapping(target = "status", source = "creditCard.status")
+    @Mapping(target = "createAt", ignore = true)
+    @Mapping(target = "updateAt", ignore = true)
+    @Mapping(target = "tenantId", ignore = true)
     void updateEntityFormDomain(@MappingTarget CreditCardEntity entity, CreditCard creditCard);
 
     default Account mapAccount(CreditCardEntity entity, Account account) {

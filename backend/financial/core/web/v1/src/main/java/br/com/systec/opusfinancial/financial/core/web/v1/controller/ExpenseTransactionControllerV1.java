@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(RestPath.V1 + "/exepenses")
+@RequestMapping(RestPath.V1 + "/expenses")
 @Tag(name = "Financeiro - Despesas", description = "Controle de saídas e gastos financeiros")
 @SecurityRequirement(name = "Authorization")
 public class ExpenseTransactionControllerV1 {

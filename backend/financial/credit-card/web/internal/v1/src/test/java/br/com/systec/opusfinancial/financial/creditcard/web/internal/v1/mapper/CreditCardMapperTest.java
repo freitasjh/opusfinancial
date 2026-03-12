@@ -23,7 +23,7 @@ class CreditCardMapperTest {
         Assertions.assertEquals(inputDTO.number(), result.getNumber());
         Assertions.assertEquals(inputDTO.cvc(), result.getCvv());
         Assertions.assertEquals(inputDTO.nameCreditCard(), result.getNameCreditCard());
-        Assertions.assertEquals(inputDTO.totalLimit(), result.getLimit());
+        Assertions.assertEquals(inputDTO.limit(), result.getLimit());
         Assertions.assertEquals(inputDTO.availableLimit(), result.getAvailableLimit());
         Assertions.assertEquals(inputDTO.dueDay(), result.getDueDay());
         Assertions.assertEquals(inputDTO.closingDate(), result.getClosingDate());
@@ -31,7 +31,7 @@ class CreditCardMapperTest {
         Assertions.assertEquals(inputDTO.status(), result.getStatus());
         
         Assertions.assertNotNull(result.getAccount());
-        Assertions.assertEquals(inputDTO.accountID(), result.getAccount().getId());
+        Assertions.assertEquals(inputDTO.accountId(), result.getAccount().getId());
     }
 
     @Test
@@ -43,7 +43,7 @@ class CreditCardMapperTest {
                 baseDTO.number(),
                 baseDTO.cvc(),
                 baseDTO.nameCreditCard(),
-                baseDTO.totalLimit(),
+                baseDTO.limit(),
                 baseDTO.availableLimit(),
                 baseDTO.dueDay(),
                 baseDTO.closingDate(),

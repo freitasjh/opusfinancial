@@ -24,10 +24,13 @@ public class IntegrationEndpoint {
     public static final String ENDPOINT_INCOMING_FILTER = "%s/incomings/filter".formatted(V1);
     public static final String ENDPOINT_INCOMING_CREATE = "%s/incomings/create".formatted(V1);
 
-    public static final String ENDPOINT_EXPENSE_CREATE = "%s/exepenses/create".formatted(V1);
+    public static final String ENDPOINT_EXPENSE_CREATE = "%s/expenses/create".formatted(V1);
 
     public static final String ENDPOINT_DASHBOARD_V1 = "%s/dashboards".formatted(V1);
     public static final String ENDPOINT_DASHBOARD_ACCOUNT_SUMMARY = "%s/dashboards/account-summary-balance".formatted(V1);
+
+    public static final String ENDPOINT_CREATE_CREDIT_CARD_V1 = "%s/credit-cards/create".formatted(V1);
+    public static final String ENDPOINT_CREDIT_CARD_V1 = "%s/credit-cards".formatted(V1);
 
     public static String getAuthorizationBearer() {
         return "Bearer %s".formatted(IntegrationUtil.accessToken);
