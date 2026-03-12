@@ -120,4 +120,22 @@ public class CreditCard implements Serializable {
     public void setAccount(Account account) {
         this.account = account;
     }
+
+    @Override
+    public String toString() {
+        return "CreditCard{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", number='" + number + '\'' +
+                ", cvv='" + cvv + '\'' +
+                ", nameCreditCard='" + nameCreditCard + '\'' +
+                ", limit=" + limit +
+                ", availableLimit=" + availableLimit +
+                ", dueDay='" + dueDay + '\'' +
+                ", closingDate='" + closingDate + '\'' +
+                ", brand=" + brand +
+                ", status=" + status +
+                ", account=" + account +
+                '}';
+    }
 }

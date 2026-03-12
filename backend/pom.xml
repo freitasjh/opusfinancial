@@ -19,7 +19,6 @@
         <module>identity</module>
         <module>commons</module>
         <module>security</module>
-        <module>old-dbupdate</module>
         <module>integration-test</module>
         <module>i18n</module>
         <module>financial</module>

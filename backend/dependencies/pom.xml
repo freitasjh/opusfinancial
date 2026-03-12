@@ -184,12 +184,6 @@
             </dependency>
             <dependency>
                 <groupId>br.com.systec.opusfinancial</groupId>
-                <artifactId>old-dbupdate</artifactId>
-                <version>${project.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>br.com.systec.opusfinancial</groupId>
                 <artifactId>i18n</artifactId>
                 <version>${project.version}</version>
                 <scope>provided</scope>
@@ -353,6 +347,12 @@
             <dependency>
                 <groupId>br.com.systec.opusfinancial</groupId>
                 <artifactId>financial-credit-card-dbupdate</artifactId>
+                <version>${revision}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>br.com.systec.opusfinancial</groupId>
+                <artifactId>financial-credit-card-web-internal-v1</artifactId>
                 <version>${revision}</version>
                 <scope>provided</scope>
             </dependency>

@@ -16,7 +16,7 @@ CREATE TABLE credit_card
     status           VARCHAR(255),
     account_id       UUID,
 
-    CONSTRAINT pk_account PRIMARY KEY (id)
+    CONSTRAINT pk_credit_card PRIMARY KEY (id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_credit_card_tenant ON credit_card (tenant_id);

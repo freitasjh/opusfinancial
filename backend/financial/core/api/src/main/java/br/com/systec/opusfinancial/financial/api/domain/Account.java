@@ -91,4 +91,18 @@ public class Account implements Serializable {
     public void setAgency(String agency) {
         this.agency = agency;
     }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", tenantId=" + tenantId +
+                ", accountName='" + accountName + '\'' +
+                ", balance=" + balance +
+                ", accountType=" + accountType +
+                ", bank=" + bank +
+                ", accountNumber='" + accountNumber + '\'' +
+                ", agency='" + agency + '\'' +
+                '}';
+    }
 }

@@ -14,9 +14,11 @@ import br.com.systec.opusfinancial.i18n.I18nTranslate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.Page;
@@ -44,8 +46,8 @@ class CreditCardServiceImplTest {
     @Mock
     private AccountService accountService;
 
-    @Mock
-    private CreditCardDomainMapper mapper;
+    @Spy
+    private CreditCardDomainMapper mapper = Mappers.getMapper(CreditCardDomainMapper.class);
 
     @InjectMocks
     private CreditCardServiceImpl service;
@@ -98,6 +100,35 @@ class CreditCardServiceImplTest {
         // Assert
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(expectedResult);
+        verify(repository).findById(id);
+        verify(mapper).updateEntityFormDomain(existingEntity, creditCardToUpdate);
+        verify(repository).save(existingEntity);
+    }
+
+    @Test
+    @DisplayName("Should update and not update mask sensitive date and return CreditCard when update is called with existing ID")
+    void update_ShouldUpdateAndNotSaveMaskSensitiveDateAndReturnCreditCard() {
+        // Arrange
+        CreditCard creditCardToUpdate = CreditCardFake.createCreditCard();
+        creditCardToUpdate.setNumber("1*****************6");
+
+        UUID id = creditCardToUpdate.getId();
+        CreditCardEntity existingEntity = CreditCardFake.createCreditCardEntity();
+        CreditCardEntity updatedEntity = CreditCardFake.createCreditCardEntity();
+        CreditCard expectedResult = CreditCardFake.createCreditCard();
+
+        when(repository.findById(id)).thenReturn(Optional.of(existingEntity));
+        
+        when(repository.save(existingEntity)).thenReturn(updatedEntity);
+
+        // Act
+        CreditCard result = service.update(creditCardToUpdate);
+
+        // Assert
+        assertThat(result).isNotNull();
+        assertThat(result.getNumber()).isNotEqualTo(creditCardToUpdate.getNumber());
+        assertThat(result.getNumber()).isEqualTo(expectedResult.getNumber());
+
         verify(repository).findById(id);
         verify(mapper).updateEntityFormDomain(existingEntity, creditCardToUpdate);
         verify(repository).save(existingEntity);

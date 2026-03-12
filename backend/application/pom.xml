@@ -135,11 +135,6 @@
             <artifactId>tenant-dbupdate</artifactId>
             <scope>compile</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>br.com.systec.opusfinancial</groupId>-->
-<!--            <artifactId>old-dbupdate</artifactId>-->
-<!--            <scope>compile</scope>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>
             <artifactId>aws-core</artifactId>
@@ -253,6 +248,21 @@
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>
             <artifactId>financial-credit-card-dbupdate</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>financial-credit-card-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>financial-credit-card-impl</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>financial-credit-card-web-internal-v1</artifactId>
             <scope>compile</scope>
         </dependency>
     </dependencies>

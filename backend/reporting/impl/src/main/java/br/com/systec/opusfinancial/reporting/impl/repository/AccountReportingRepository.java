@@ -20,7 +20,8 @@ public class AccountReportingRepository  {
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public List<AccountBalanceVO> getSummaryAccountsBalance() {
         String sql = """
-                SELECT new br.com.systec.opusfinancial.reporting.vo.AccountBalanceVO(SUM(a.balance), STR(a.accountType)) FROM Account a
+                SELECT new br.com.systec.opusfinancial.reporting.vo.AccountBalanceVO(SUM(a.balance),
+                STR(a.accountType)) FROM AccountEntity a
                  WHERE a.tenantId = :tenantId
                  GROUP BY a.accountType
                 """;
