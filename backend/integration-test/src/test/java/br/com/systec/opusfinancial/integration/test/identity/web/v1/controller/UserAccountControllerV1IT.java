@@ -1,9 +1,8 @@
 package br.com.systec.opusfinancial.integration.test.identity.web.v1.controller;
 
-import br.com.systec.opusfinancial.commons.controller.RestPath;
+import br.com.systec.opusfinancial.commons.api.tools.controller.RestPath;
 import br.com.systec.opusfinancial.core.web.v1.dto.UserAccountCreateDTO;
 import br.com.systec.opusfinancial.integration.test.AbstractIT;
-import br.com.systec.opusfinancial.integration.test.fake.AccountFake;
 import br.com.systec.opusfinancial.integration.test.fake.UserAccountFake;
 import br.com.systec.opusfinancial.integration.test.util.JsonUtil;
 import org.junit.jupiter.api.MethodOrderer;
@@ -11,7 +10,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;

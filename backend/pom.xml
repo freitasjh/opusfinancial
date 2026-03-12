@@ -19,12 +19,13 @@
         <module>identity</module>
         <module>commons</module>
         <module>security</module>
-        <module>dbupdate</module>
+        <module>old-dbupdate</module>
         <module>integration-test</module>
         <module>i18n</module>
         <module>financial</module>
         <module>aws</module>
         <module>reporting</module>
+        <module>tenant</module>
     </modules>
 
     <build>

@@ -1,7 +1,7 @@
 package br.com.systec.opusfinancial.integration.test;
 
 import br.com.systec.opusfinancial.OpusfinancialApplication;
-import br.com.systec.opusfinancial.commons.messaging.MessagingConstants;
+import br.com.systec.opusfinancial.commons.jms.vo.factory.MessagingConstants;
 import org.junit.jupiter.api.BeforeAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

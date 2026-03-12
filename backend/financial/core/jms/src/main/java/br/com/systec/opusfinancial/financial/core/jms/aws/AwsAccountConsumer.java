@@ -1,16 +1,18 @@
 package br.com.systec.opusfinancial.financial.core.jms.aws;
 
-import br.com.systec.opusfinancial.commons.exceptions.MessagingException;
-import br.com.systec.opusfinancial.commons.messaging.ConsumerAbstract;
-import br.com.systec.opusfinancial.commons.messaging.MessagingConstants;
-import br.com.systec.opusfinancial.commons.messaging.vo.EventPublisherVO;
+
+import br.com.systec.opusfinancial.commons.api.exceptions.BaseException;
+import br.com.systec.opusfinancial.commons.jms.vo.EventPublisherVO;
+import br.com.systec.opusfinancial.commons.jms.vo.factory.ConsumerAbstract;
+import br.com.systec.opusfinancial.commons.jms.vo.factory.MessagingConstants;
 import br.com.systec.opusfinancial.financial.api.service.AccountService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.awspring.cloud.sqs.annotation.SqsListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
+import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.ObjectMapper;
 
 @Component
 @Profile("aws")
@@ -40,7 +42,7 @@ public class AwsAccountConsumer implements ConsumerAbstract {
             accountService.createDefaultAccount(eventPublisher.tenantId());
         } catch (Exception e) {
             log.error("[AWS] Erro ao tentar salvar as contas ", e);
-            throw new MessagingException(e);
+            throw new BaseException(e);
         }
     }
 }

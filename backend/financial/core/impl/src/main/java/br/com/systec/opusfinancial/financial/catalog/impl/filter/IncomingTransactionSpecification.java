@@ -1,7 +1,7 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.filter;
 
 import br.com.systec.opusfinancial.financial.api.filter.IncomingTransactionFilter;
-import br.com.systec.opusfinancial.financial.catalog.impl.entity.FinancialTransaction;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.FinancialTransactionEntity;
 import org.springframework.data.jpa.domain.Specification;
 
 public class IncomingTransactionSpecification {
@@ -12,8 +12,8 @@ public class IncomingTransactionSpecification {
         return new IncomingTransactionSpecification();
     }
 
-    public Specification<FinancialTransaction> filter(IncomingTransactionFilter filter) {
-        Specification<FinancialTransaction> specification = filterByType(filter);
+    public Specification<FinancialTransactionEntity> filter(IncomingTransactionFilter filter) {
+        Specification<FinancialTransactionEntity> specification = filterByType(filter);
 
         if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
             specification = specification.and(filterByKeyword(filter));
@@ -21,14 +21,14 @@ public class IncomingTransactionSpecification {
         return specification;
     }
 
-    private Specification<FinancialTransaction> filterByKeyword(IncomingTransactionFilter filter) {
+    private Specification<FinancialTransactionEntity> filterByKeyword(IncomingTransactionFilter filter) {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.or(
                   criteriaBuilder.like(root.get("description"), "%" + filter.getKeyword() + "%")
                 );
     }
 
-    private Specification<FinancialTransaction> filterByType(IncomingTransactionFilter filter) {
+    private Specification<FinancialTransactionEntity> filterByType(IncomingTransactionFilter filter) {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("transactionType"), filter.getTransactionType());
     }

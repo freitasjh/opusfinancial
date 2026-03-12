@@ -1,7 +1,7 @@
 package br.com.systec.opusfinancial.api.filter;
 
-import br.com.systec.opusfinancial.api.vo.CategoryType;
-import br.com.systec.opusfinancial.commons.filter.PageParamSearch;
+import br.com.systec.opusfinancial.api.domain.CategoryType;
+import br.com.systec.opusfinancial.commons.api.filter.PageParamSearch;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

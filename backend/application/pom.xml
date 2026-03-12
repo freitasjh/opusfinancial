@@ -45,11 +45,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-undertow</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>io.awspring.cloud</groupId>
             <artifactId>spring-cloud-aws-starter-sqs</artifactId>
             <scope>compile</scope>
@@ -61,7 +56,7 @@
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <artifactId>springdoc-openapi-starter-webmvc-scalar</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -75,13 +70,18 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -95,21 +95,51 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>
-            <artifactId>financial-commons</artifactId>
+            <artifactId>commons-api</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>
-            <artifactId>dbupdate</artifactId>
+            <artifactId>commons-impl</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>commons-api-tools</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>commons-jms</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>tenant-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>tenant-impl</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>tenant-dbupdate</artifactId>
+            <scope>compile</scope>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>br.com.systec.opusfinancial</groupId>-->
+<!--            <artifactId>old-dbupdate</artifactId>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>
             <artifactId>aws-core</artifactId>
@@ -147,6 +177,11 @@
         </dependency>
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>identity-dbupdate</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
             <artifactId>financial-core-api</artifactId>
             <scope>compile</scope>
         </dependency>
@@ -163,6 +198,11 @@
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>
             <artifactId>financial-core-jms</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>financial-core-dbupdate</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -187,6 +227,11 @@
         </dependency>
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>financial-catalog-dbupdate</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
             <artifactId>i18n</artifactId>
             <scope>compile</scope>
         </dependency>
@@ -203,6 +248,11 @@
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>
             <artifactId>reporting-web-v1</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>financial-credit-card-dbupdate</artifactId>
             <scope>compile</scope>
         </dependency>
     </dependencies>

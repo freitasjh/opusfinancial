@@ -1,6 +1,6 @@
 package br.com.systec.opusfinancial.integration.test.jms;
 
-import br.com.systec.opusfinancial.commons.messaging.MessagingConstants;
+import br.com.systec.opusfinancial.commons.jms.vo.factory.MessagingConstants;
 import br.com.systec.opusfinancial.integration.test.AbstractIT;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import org.assertj.core.api.Assertions;

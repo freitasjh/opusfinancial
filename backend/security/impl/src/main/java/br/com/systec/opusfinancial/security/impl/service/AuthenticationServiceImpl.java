@@ -1,6 +1,6 @@
 package br.com.systec.opusfinancial.security.impl.service;
 
-import br.com.systec.opusfinancial.commons.exceptions.BaseException;
+import br.com.systec.opusfinancial.commons.api.exceptions.BaseException;
 import br.com.systec.opusfinancial.identity.api.services.UserService;
 import br.com.systec.opusfinancial.security.api.service.AuthenticationService;
 import org.slf4j.Logger;

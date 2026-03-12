@@ -11,7 +11,6 @@ import software.amazon.awssdk.services.sns.SnsClient;
 import java.net.URI;
 
 @Configuration
-@Profile("aws")
 public class SnsConfig {
     private final AwsProperties awsProperties;
 

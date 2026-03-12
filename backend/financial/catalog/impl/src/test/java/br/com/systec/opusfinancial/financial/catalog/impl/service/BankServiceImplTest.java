@@ -2,8 +2,8 @@ package br.com.systec.opusfinancial.financial.catalog.impl.service;
 
 import br.com.systec.opusfinancial.api.exceptions.BankNotFoundException;
 import br.com.systec.opusfinancial.api.filter.FilterBank;
-import br.com.systec.opusfinancial.api.vo.BankVO;
-import br.com.systec.opusfinancial.financial.catalog.impl.entity.Bank;
+import br.com.systec.opusfinancial.api.domain.Bank;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.BankEntity;
 import br.com.systec.opusfinancial.financial.catalog.impl.fake.BankFake;
 import br.com.systec.opusfinancial.financial.catalog.impl.repository.BankRepository;
 import br.com.systec.opusfinancial.i18n.I18nTranslate;
@@ -40,11 +40,11 @@ class BankServiceImplTest {
 
     @Test
     void whenFindById_thenReturnBankVOSuccess() {
-        Bank bankToReturn = BankFake.bankFake();
+        BankEntity bankToReturn = BankFake.bankFake();
 
         Mockito.doReturn(Optional.of(bankToReturn)).when(repository).findById(Mockito.any(UUID.class));
 
-        BankVO bankReturnFind = service.findById(UUID.randomUUID());
+        Bank bankReturnFind = service.findById(UUID.randomUUID());
 
         Assertions.assertThat(bankReturnFind).isNotNull();
         Assertions.assertThat(bankReturnFind.getId()).isEqualTo(bankToReturn.getId());
@@ -67,12 +67,12 @@ class BankServiceImplTest {
     void whenFindByFilter_thenReturnPageBankVO() {
         FilterBank filterBank = new FilterBank("", 30, 0);
 
-        Bank bankToReturn = BankFake.bankFake();
-        Page<Bank> pageToReturn = new PageImpl<>(List.of(bankToReturn));
+        BankEntity bankToReturn = BankFake.bankFake();
+        Page<BankEntity> pageToReturn = new PageImpl<>(List.of(bankToReturn));
 
         Mockito.doReturn(pageToReturn).when(repository).findAll(Mockito.any(Specification.class), Mockito.any(Pageable.class));
 
-        Page<BankVO> pageReturnFind = service.findByFilter(filterBank);
+        Page<Bank> pageReturnFind = service.findByFilter(filterBank);
 
         Assertions.assertThat(pageReturnFind).isNotNull();
         Assertions.assertThat(pageReturnFind.getTotalElements()).isEqualTo(1);
@@ -82,11 +82,11 @@ class BankServiceImplTest {
 
     @Test
     void whenFindByCode_thenReturnBankVO() {
-        Bank bankToReturn = BankFake.bankFake();
+        BankEntity bankToReturn = BankFake.bankFake();
 
         Mockito.doReturn(Optional.of(bankToReturn)).when(repository).findByCode(Mockito.anyString());
 
-        BankVO bankReturnFind = service.findByCode("123");
+        Bank bankReturnFind = service.findByCode("123");
 
         Assertions.assertThat(bankReturnFind).isNotNull();
         Assertions.assertThat(bankReturnFind.getId()).isEqualTo(bankToReturn.getId());

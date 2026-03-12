@@ -1,10 +1,10 @@
 package br.com.systec.opusfinancial.financial.core.web.v1.mapper;
 
-import br.com.systec.opusfinancial.api.vo.CategoryVO;
-import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
-import br.com.systec.opusfinancial.financial.api.vo.CategoryTransactionType;
-import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
-import br.com.systec.opusfinancial.financial.api.vo.TransactionType;
+import br.com.systec.opusfinancial.api.domain.Category;
+import br.com.systec.opusfinancial.financial.api.domain.Account;
+import br.com.systec.opusfinancial.financial.api.domain.CategoryTransactionType;
+import br.com.systec.opusfinancial.financial.api.domain.FinancialTransaction;
+import br.com.systec.opusfinancial.financial.api.domain.TransactionType;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.ExpenseTransactionInfoDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.ExpenseTransactionInputDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.ExpenseTransactionSaveResponseDTO;
@@ -18,8 +18,8 @@ public class ExpenseTransactionMapperV1 {
         return new ExpenseTransactionMapperV1();
     }
 
-    public FinancialTransactionVO toVO(ExpenseTransactionInputDTO inputDTO) {
-        FinancialTransactionVO expenseTransaction = new FinancialTransactionVO();
+    public FinancialTransaction toVO(ExpenseTransactionInputDTO inputDTO) {
+        FinancialTransaction expenseTransaction = new FinancialTransaction();
         expenseTransaction.setId(inputDTO.getId());
         expenseTransaction.setDescription(inputDTO.getDescription());
         expenseTransaction.setCreateAt(inputDTO.getCreateAt());
@@ -31,25 +31,25 @@ public class ExpenseTransactionMapperV1 {
         expenseTransaction.setDueDate(inputDTO.getDueDate());
 
         if (inputDTO.getAccountId() != null) {
-            expenseTransaction.setAccount(new AccountVO());
+            expenseTransaction.setAccount(new Account());
             expenseTransaction.getAccount().setId(inputDTO.getAccountId());
         }
         if (inputDTO.getCategoryId() != null) {
-            expenseTransaction.setCategory(new CategoryVO());
+            expenseTransaction.setCategory(new Category());
             expenseTransaction.getCategory().setId(inputDTO.getCategoryId());
         }
 
         return expenseTransaction;
     }
 
-    public ExpenseTransactionSaveResponseDTO toSaveResponse(FinancialTransactionVO financialTransaction) {
+    public ExpenseTransactionSaveResponseDTO toSaveResponse(FinancialTransaction financialTransaction) {
         ExpenseTransactionSaveResponseDTO saveResponse = new ExpenseTransactionSaveResponseDTO();
         saveResponse.setId(financialTransaction.getId());
 
         return saveResponse;
     }
 
-    public ExpenseTransactionInfoDTO toInfoDTO(FinancialTransactionVO transactionVO) {
+    public ExpenseTransactionInfoDTO toInfoDTO(FinancialTransaction transactionVO) {
         ExpenseTransactionInfoDTO dto = new ExpenseTransactionInfoDTO();
         dto.setId(transactionVO.getId());
         dto.setDescription(transactionVO.getDescription());
@@ -64,7 +64,7 @@ public class ExpenseTransactionMapperV1 {
         return dto;
     }
 
-    public ExpenseTransactionInputDTO toDTO(FinancialTransactionVO financialTransactionVO) {
+    public ExpenseTransactionInputDTO toDTO(FinancialTransaction financialTransactionVO) {
         ExpenseTransactionInputDTO dto = new ExpenseTransactionInputDTO();
         dto.setId(financialTransactionVO.getId());
         dto.setDescription(financialTransactionVO.getDescription());
@@ -79,7 +79,7 @@ public class ExpenseTransactionMapperV1 {
         return dto;
     }
 
-    public Page<ExpenseTransactionInfoDTO> toPageDTO(Page<FinancialTransactionVO> pageResult) {
+    public Page<ExpenseTransactionInfoDTO> toPageDTO(Page<FinancialTransaction> pageResult) {
         return pageResult.map(this::toInfoDTO);
     }
 }

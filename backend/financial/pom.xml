@@ -17,5 +17,6 @@
         <module>core</module>
         <module>catalog</module>
         <module>credit-card</module>
+        <module>credit-card/web/internal/v1</module>
     </modules>
 </project>

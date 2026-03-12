@@ -1,6 +1,7 @@
 package br.com.systec.opusfinancial.financial.creditcard.impl.entity;
 
-import br.com.systec.opusfinancial.commons.entities.AbstractEntity;
+
+import br.com.systec.opusfinancial.commons.impl.entity.AbstractEntity;
 import br.com.systec.opusfinancial.financial.creditcard.api.domain.BrandType;
 import br.com.systec.opusfinancial.financial.creditcard.api.domain.CreditCardStatusType;
 import jakarta.persistence.Column;
@@ -10,6 +11,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 
 import java.io.Serial;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -22,14 +24,14 @@ public class CreditCardEntity extends AbstractEntity {
     private String name;
     @Column(name = "number")
     private String number;
-    @Column(name = "cvc")
-    private String cvc;
+    @Column(name = "cvv")
+    private String cvv;
     @Column(name = "name_credit_card")
     private String nameCreditCard;
     @Column(name = "total_limit")
-    private double totalLimit;
+    private BigDecimal limit;
     @Column(name = "available_limit")
-    private double availableLimit;
+    private BigDecimal availableLimit;
     @Column(name = "due_date")
     private String dueDay;
     @Column(name = "closing_date")
@@ -59,12 +61,12 @@ public class CreditCardEntity extends AbstractEntity {
         this.number = number;
     }
 
-    public String getCvc() {
-        return cvc;
+    public String getCvv() {
+        return cvv;
     }
 
-    public void setCvc(String cvc) {
-        this.cvc = cvc;
+    public void setCvv(String cvv) {
+        this.cvv = cvv;
     }
 
     public String getNameCreditCard() {
@@ -75,19 +77,19 @@ public class CreditCardEntity extends AbstractEntity {
         this.nameCreditCard = nameCreditCard;
     }
 
-    public double getTotalLimit() {
-        return totalLimit;
+    public BigDecimal getLimit() {
+        return limit;
     }
 
-    public void setTotalLimit(double totalLimit) {
-        this.totalLimit = totalLimit;
+    public void setLimit(BigDecimal limit) {
+        this.limit = limit;
     }
 
-    public double getAvailableLimit() {
+    public BigDecimal getAvailableLimit() {
         return availableLimit;
     }
 
-    public void setAvailableLimit(double availableLimit) {
+    public void setAvailableLimit(BigDecimal availableLimit) {
         this.availableLimit = availableLimit;
     }
 

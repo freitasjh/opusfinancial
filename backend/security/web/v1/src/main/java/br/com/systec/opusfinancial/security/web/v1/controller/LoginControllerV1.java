@@ -1,8 +1,8 @@
 package br.com.systec.opusfinancial.security.web.v1.controller;
 
-import br.com.systec.opusfinancial.commons.controller.AbstractController;
-import br.com.systec.opusfinancial.commons.controller.RestPath;
-import br.com.systec.opusfinancial.commons.exceptions.StandardError;
+import br.com.systec.opusfinancial.commons.api.tools.controller.RestControllerTool;
+import br.com.systec.opusfinancial.commons.api.tools.controller.RestPath;
+import br.com.systec.opusfinancial.commons.api.tools.exceptions.StandardError;
 import br.com.systec.opusfinancial.security.api.exceptions.RefreshTokenNotFoundException;
 import br.com.systec.opusfinancial.security.api.service.LoginService;
 import br.com.systec.opusfinancial.security.api.vo.LoginAuthenticateVO;
@@ -29,8 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(RestPath.V1 + "/auth")
-@Tag(name = "Authentication", description = "Realiza a authenticação do usuario")
-public class LoginControllerV1 extends AbstractController {
+@Tag(name = "Identidade - Autenticação", description = "Fluxos de login e renovação de token (JWT)")
+public class LoginControllerV1 {
     private final LoginService loginService;
 
     public LoginControllerV1(LoginService loginService) {
@@ -52,7 +52,7 @@ public class LoginControllerV1 extends AbstractController {
 
         response.addHeader(HttpHeaders.SET_COOKIE, CookieUtil.of().createRefreshToken(loginAuthenticateVO).toString());
 
-        return buildSuccessResponse(LoginMapper.of().toLoginResponse(loginAuthenticateVO));
+        return RestControllerTool.of().buildSuccessResponse(LoginMapper.of().toLoginResponse(loginAuthenticateVO));
     }
 
     @PostMapping(value = "/refresh-token", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -75,7 +75,7 @@ public class LoginControllerV1 extends AbstractController {
 
         response.addHeader(HttpHeaders.SET_COOKIE, CookieUtil.of().createRefreshToken(loginAuthenticateVO).toString());
 
-        return buildSuccessResponse(new RefreshTokenResponseDTO(loginAuthenticateVO.getAccessToken()));
+        return RestControllerTool.of().buildSuccessResponse(new RefreshTokenResponseDTO(loginAuthenticateVO.getAccessToken()));
     }
 
     private String getRefreshToken(HttpServletRequest request) {

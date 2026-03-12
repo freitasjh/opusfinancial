@@ -1,9 +1,10 @@
 package br.com.systec.opusfinancial.financial.creditcard.api.domain;
 
-import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
+import br.com.systec.opusfinancial.financial.api.domain.Account;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public class CreditCard implements Serializable {
@@ -12,15 +13,15 @@ public class CreditCard implements Serializable {
     private UUID id;
     private String name;
     private String number;
-    private String cvc;
+    private String cvv;
     private String nameCreditCard;
-    private double totalLimit;
-    private double availableLimit;
+    private BigDecimal limit;
+    private BigDecimal availableLimit;
     private String dueDay;
     private String closingDate;
     private BrandType brand;
     private CreditCardStatusType status;
-    private AccountVO account;
+    private Account account;
 
     public UUID getId() {
         return id;
@@ -46,12 +47,12 @@ public class CreditCard implements Serializable {
         this.number = number;
     }
 
-    public String getCvc() {
-        return cvc;
+    public String getCvv() {
+        return cvv;
     }
 
-    public void setCvc(String cvc) {
-        this.cvc = cvc;
+    public void setCvv(String cvv) {
+        this.cvv = cvv;
     }
 
     public String getNameCreditCard() {
@@ -62,20 +63,22 @@ public class CreditCard implements Serializable {
         this.nameCreditCard = nameCreditCard;
     }
 
-    public double getTotalLimit() {
-        return totalLimit;
+    public BigDecimal getLimit() {
+        return limit;
     }
 
-    public void setTotalLimit(double totalLimit) {
-        this.totalLimit = totalLimit;
+    public CreditCard setLimit(BigDecimal limit) {
+        this.limit = limit;
+        return this;
     }
 
-    public double getAvailableLimit() {
+    public BigDecimal getAvailableLimit() {
         return availableLimit;
     }
 
-    public void setAvailableLimit(double availableLimit) {
+    public CreditCard setAvailableLimit(BigDecimal availableLimit) {
         this.availableLimit = availableLimit;
+        return this;
     }
 
     public String getDueDay() {
@@ -110,11 +113,11 @@ public class CreditCard implements Serializable {
         this.status = status;
     }
 
-    public AccountVO getAccount() {
+    public Account getAccount() {
         return account;
     }
 
-    public void setAccount(AccountVO account) {
+    public void setAccount(Account account) {
         this.account = account;
     }
 }

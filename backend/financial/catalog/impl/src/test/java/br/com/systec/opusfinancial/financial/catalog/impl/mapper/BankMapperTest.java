@@ -1,8 +1,8 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.mapper;
 
 
-import br.com.systec.opusfinancial.api.vo.BankVO;
-import br.com.systec.opusfinancial.financial.catalog.impl.entity.Bank;
+import br.com.systec.opusfinancial.api.domain.Bank;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.BankEntity;
 import br.com.systec.opusfinancial.financial.catalog.impl.fake.BankFake;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,9 +11,9 @@ class BankMapperTest {
 
     @Test
     void whenConvertBankToBankVO() {
-        Bank bankToConvert = BankFake.bankFake();
+        BankEntity bankToConvert = BankFake.bankFake();
 
-        BankVO bankConverted = BankMapper.of().toVO(bankToConvert);
+        Bank bankConverted = BankMapper.of().toVO(bankToConvert);
 
         Assertions.assertThat(bankConverted).isNotNull();
         Assertions.assertThat(bankConverted.getId()).isEqualTo(bankToConvert.getId());

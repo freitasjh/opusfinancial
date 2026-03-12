@@ -1,10 +1,10 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.fake;
 
-import br.com.systec.opusfinancial.api.vo.CategoryVO;
-import br.com.systec.opusfinancial.financial.api.vo.CategoryTransactionType;
-import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
-import br.com.systec.opusfinancial.financial.api.vo.TransactionType;
-import br.com.systec.opusfinancial.financial.catalog.impl.entity.FinancialTransaction;
+import br.com.systec.opusfinancial.api.domain.Category;
+import br.com.systec.opusfinancial.financial.api.domain.CategoryTransactionType;
+import br.com.systec.opusfinancial.financial.api.domain.FinancialTransaction;
+import br.com.systec.opusfinancial.financial.api.domain.TransactionType;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.FinancialTransactionEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,8 +13,8 @@ import java.util.UUID;
 
 public class FinancialTransactionFake {
 
-    public static FinancialTransaction createIncomingTransaction() {
-        FinancialTransaction financialTransaction = new FinancialTransaction();
+    public static FinancialTransactionEntity createIncomingTransaction() {
+        FinancialTransactionEntity financialTransaction = new FinancialTransactionEntity();
         financialTransaction.setId(UUID.randomUUID());
         financialTransaction.setCreateAt(LocalDateTime.now());
         financialTransaction.setAccountId(UUID.randomUUID());
@@ -31,8 +31,8 @@ public class FinancialTransactionFake {
         return financialTransaction;
     }
 
-    public static FinancialTransaction createExpenseTransaction() {
-        FinancialTransaction financialTransaction = new FinancialTransaction();
+    public static FinancialTransactionEntity createExpenseTransaction() {
+        FinancialTransactionEntity financialTransaction = new FinancialTransactionEntity();
         financialTransaction.setId(UUID.randomUUID());
         financialTransaction.setCreateAt(LocalDateTime.now());
         financialTransaction.setAccountId(UUID.randomUUID());
@@ -49,12 +49,12 @@ public class FinancialTransactionFake {
         return financialTransaction;
     }
 
-    public static FinancialTransactionVO createIncomingTransactionVO() {
-        FinancialTransactionVO financialTransaction = new FinancialTransactionVO();
+    public static FinancialTransaction createIncomingTransactionVO() {
+        FinancialTransaction financialTransaction = new FinancialTransaction();
         financialTransaction.setId(UUID.randomUUID());
         financialTransaction.setCreateAt(LocalDateTime.now());
         financialTransaction.setAccount(AccountFake.toFakeVO());
-        CategoryVO categoryVO = CategoryFake.toFakeVO();
+        Category categoryVO = CategoryFake.toFakeVO();
         financialTransaction.setCategory(categoryVO);
         financialTransaction.setTransactionType(TransactionType.INCOMING);
         financialTransaction.setProcessedAt(LocalDateTime.now());
@@ -68,12 +68,12 @@ public class FinancialTransactionFake {
         return financialTransaction;
     }
 
-    public static FinancialTransactionVO createExpenseTransactionVO() {
-        FinancialTransactionVO financialTransaction = new FinancialTransactionVO();
+    public static FinancialTransaction createExpenseTransactionVO() {
+        FinancialTransaction financialTransaction = new FinancialTransaction();
         financialTransaction.setId(UUID.randomUUID());
         financialTransaction.setCreateAt(LocalDateTime.now());
         financialTransaction.setAccount(AccountFake.toFakeVO());
-        CategoryVO categoryVO = CategoryFake.toFakeVO();
+        Category categoryVO = CategoryFake.toFakeVO();
         financialTransaction.setCategory(categoryVO);
         financialTransaction.setTransactionType(TransactionType.EXPENSE);
         financialTransaction.setProcessedAt(LocalDateTime.now());

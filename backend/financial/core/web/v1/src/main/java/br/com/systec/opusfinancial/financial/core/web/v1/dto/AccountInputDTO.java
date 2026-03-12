@@ -1,6 +1,6 @@
 package br.com.systec.opusfinancial.financial.core.web.v1.dto;
 
-import br.com.systec.opusfinancial.financial.api.vo.AccountType;
+import br.com.systec.opusfinancial.financial.api.domain.AccountType;
 import jakarta.validation.constraints.NotNull;
 
 import java.io.Serial;

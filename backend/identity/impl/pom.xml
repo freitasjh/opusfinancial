@@ -29,7 +29,15 @@
         </dependency>
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>
-            <artifactId>financial-commons</artifactId>
+            <artifactId>commons-impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>commons-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>commons-jms</artifactId>
         </dependency>
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>
@@ -38,6 +46,10 @@
         <dependency>
             <groupId>br.com.systec.opusfinancial</groupId>
             <artifactId>identity-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>br.com.systec.opusfinancial</groupId>
+            <artifactId>tenant-api</artifactId>
         </dependency>
 
         <!-- Teste -->

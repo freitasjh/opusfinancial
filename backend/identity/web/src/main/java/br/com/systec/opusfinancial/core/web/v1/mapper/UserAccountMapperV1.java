@@ -1,7 +1,7 @@
 package br.com.systec.opusfinancial.core.web.v1.mapper;
 
 import br.com.systec.opusfinancial.core.web.v1.dto.UserAccountCreateDTO;
-import br.com.systec.opusfinancial.identity.api.vo.UserAccountVO;
+import br.com.systec.opusfinancial.identity.api.domain.UserAccount;
 
 public class UserAccountMapperV1 {
 
@@ -11,8 +11,8 @@ public class UserAccountMapperV1 {
         return new UserAccountMapperV1();
     }
 
-    public UserAccountVO toVO(UserAccountCreateDTO accountCreateDTO) {
-        UserAccountVO accountVO = new UserAccountVO();
+    public UserAccount toVO(UserAccountCreateDTO accountCreateDTO) {
+        UserAccount accountVO = new UserAccount();
         accountVO.setAccountName(accountCreateDTO.getAccountName());
         accountVO.setDocument(accountCreateDTO.getDocument());
         accountVO.setEmail(accountCreateDTO.getEmail());

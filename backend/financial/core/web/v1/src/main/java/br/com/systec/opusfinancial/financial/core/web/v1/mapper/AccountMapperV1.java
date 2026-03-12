@@ -1,6 +1,6 @@
 package br.com.systec.opusfinancial.financial.core.web.v1.mapper;
 
-import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
+import br.com.systec.opusfinancial.financial.api.domain.Account;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountInfoResponseDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountInputDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountResponseDTO;
@@ -15,8 +15,8 @@ public class AccountMapperV1 {
         return new AccountMapperV1();
     }
 
-    public AccountVO toVO(AccountInputDTO inputDTO) {
-        AccountVO accountVO = new AccountVO();
+    public Account toVO(AccountInputDTO inputDTO) {
+        Account accountVO = new Account();
         accountVO.setAccountName(inputDTO.getAccountName());
         accountVO.setAccountType(inputDTO.getAccountType());
         accountVO.setBalance(inputDTO.getBalance());
@@ -27,7 +27,7 @@ public class AccountMapperV1 {
         return accountVO;
     }
 
-    public AccountResponseSaveDTO toSaveResponse(AccountVO accountVO) {
+    public AccountResponseSaveDTO toSaveResponse(Account accountVO) {
         AccountResponseSaveDTO accountResponseSaveDTO = new AccountResponseSaveDTO();
         accountResponseSaveDTO.setId(accountVO.getId());
         accountResponseSaveDTO.setAccountName(accountVO.getAccountName());
@@ -35,7 +35,7 @@ public class AccountMapperV1 {
         return accountResponseSaveDTO;
     }
 
-    public AccountInfoResponseDTO toInfoDTO(AccountVO accountVO) {
+    public AccountInfoResponseDTO toInfoDTO(Account accountVO) {
         AccountInfoResponseDTO accountInfoResponseDTO = new AccountInfoResponseDTO();
         accountInfoResponseDTO.setId(accountVO.getId());
         accountInfoResponseDTO.setAccountName(accountVO.getAccountName());
@@ -52,7 +52,7 @@ public class AccountMapperV1 {
         return accountInfoResponseDTO;
     }
 
-    public AccountResponseDTO toResponseDTO(AccountVO accountVO) {
+    public AccountResponseDTO toResponseDTO(Account accountVO) {
         AccountResponseDTO accountResponse = new AccountResponseDTO();
         accountResponse.setId(accountVO.getId());
         accountResponse.setAccountName(accountVO.getAccountName());
@@ -65,7 +65,7 @@ public class AccountMapperV1 {
         return accountResponse;
     }
 
-    public Page<AccountResponseDTO> toPageResonse(Page<AccountVO> resultPage) {
+    public Page<AccountResponseDTO> toPageResonse(Page<Account> resultPage) {
         return resultPage.map(this::toResponseDTO);
     }
 

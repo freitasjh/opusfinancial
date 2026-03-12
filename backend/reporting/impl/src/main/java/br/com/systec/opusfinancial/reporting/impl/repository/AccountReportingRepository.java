@@ -1,6 +1,6 @@
 package br.com.systec.opusfinancial.reporting.impl.repository;
 
-import br.com.systec.opusfinancial.commons.security.TenantContext;
+import br.com.systec.opusfinancial.commons.impl.security.TenantContext;
 import br.com.systec.opusfinancial.reporting.vo.AccountBalanceVO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

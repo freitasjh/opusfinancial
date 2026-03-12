@@ -3,15 +3,13 @@ package br.com.systec.opusfinancial.financial.catalog.impl.service;
 import br.com.systec.opusfinancial.api.exceptions.CategoryNotFoundException;
 import br.com.systec.opusfinancial.api.filter.FilterCategory;
 import br.com.systec.opusfinancial.api.service.CategoryService;
-import br.com.systec.opusfinancial.api.vo.CategoryVO;
-import br.com.systec.opusfinancial.api.vo.ListCategoryVO;
-import br.com.systec.opusfinancial.commons.exceptions.BaseException;
-import br.com.systec.opusfinancial.financial.catalog.impl.entity.Category;
+import br.com.systec.opusfinancial.api.domain.Category;
+import br.com.systec.opusfinancial.api.domain.ListCategory;
+import br.com.systec.opusfinancial.commons.api.exceptions.BaseException;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.CategoryEntity;
 import br.com.systec.opusfinancial.financial.catalog.impl.filter.CategorySpecification;
 import br.com.systec.opusfinancial.financial.catalog.impl.mapper.CategoryMapper;
 import br.com.systec.opusfinancial.financial.catalog.impl.repository.CategoryRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -19,6 +17,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,39 +38,39 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public CategoryVO create(CategoryVO category) {
-        Category categoryBeforeSave = CategoryMapper.of().toEntity(category);
-        Category categoryAfterSave = repository.save(categoryBeforeSave);
+    public Category create(Category category) {
+        CategoryEntity categoryBeforeSave = CategoryMapper.of().toEntity(category);
+        CategoryEntity categoryAfterSave = repository.save(categoryBeforeSave);
 
         return CategoryMapper.of().toVO(categoryAfterSave);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public CategoryVO update(CategoryVO category) {
-        Category categorySaved = repository.findById(category.getId()).orElseThrow(CategoryNotFoundException::new);
+    public Category update(Category category) {
+        CategoryEntity categorySaved = repository.findById(category.getId()).orElseThrow(CategoryNotFoundException::new);
 
-        Category categoryToUpdate = CategoryMapper.of().toEntity(category);
+        CategoryEntity categoryToUpdate = CategoryMapper.of().toEntity(category);
         categoryToUpdate.setCreateAt(categorySaved.getCreateAt());
 
-        Category categoryAfterUpdate = repository.save(categoryToUpdate);
+        CategoryEntity categoryAfterUpdate = repository.save(categoryToUpdate);
 
         return CategoryMapper.of().toVO(categoryAfterUpdate);
     }
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
-    public CategoryVO findById(UUID id) {
-        Category categoryReturn = repository.findById(id).orElseThrow(CategoryNotFoundException::new);
+    public Category findById(UUID id) {
+        CategoryEntity categoryReturn = repository.findById(id).orElseThrow(CategoryNotFoundException::new);
 
         return CategoryMapper.of().toVO(categoryReturn);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<CategoryVO> findByFilter(FilterCategory filter) {
-        Specification<Category> specification = CategorySpecification.of().filter(filter);
-        Page<Category> result = repository.findAll(specification, filter.getPageable());
+    public Page<Category> findByFilter(FilterCategory filter) {
+        Specification<CategoryEntity> specification = CategorySpecification.of().filter(filter);
+        Page<CategoryEntity> result = repository.findAll(specification, filter.getPageable());
 
         return result.map(CategoryMapper.of()::toVO);
     }
@@ -77,15 +78,14 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public void createDefaultCategory(UUID tenantId) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        ObjectMapper objectMapper = JsonMapper.builder().enable(SerializationFeature.INDENT_OUTPUT).build();
 
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         try (InputStream inputStream = classLoader.getResourceAsStream("json/category-insert.json")) {
-            ListCategoryVO listOfCategories = objectMapper.readValue(inputStream, ListCategoryVO.class);
-            for (CategoryVO category : listOfCategories.getCategories()) {
+            ListCategory listOfCategories = objectMapper.readValue(inputStream, ListCategory.class);
+            for (Category category : listOfCategories.getCategories()) {
                 category.setTenantId(tenantId);
-                Category categoryToSave = CategoryMapper.of().toEntity(category);
+                CategoryEntity categoryToSave = CategoryMapper.of().toEntity(category);
                 repository.save(categoryToSave);
             }
         } catch (IOException e) {
@@ -96,20 +96,20 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CategoryVO> findByParentId(UUID parentId) {
-        List<Category> listOfCategory = repository.findByParentId(parentId);
+    public List<Category> findByParentId(UUID parentId) {
+        List<CategoryEntity> listOfCategory = repository.findByParentId(parentId);
 
         return CategoryMapper.of().toList(listOfCategory);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<CategoryVO> findByIds(List<UUID> ids) {
+    public List<Category> findByIds(List<UUID> ids) {
         if (ids == null || ids.isEmpty()) {
             return new ArrayList<>();
         }
 
-        List<Category> listOfCategory = repository.findAllById(ids);
+        List<CategoryEntity> listOfCategory = repository.findAllById(ids);
 
         return CategoryMapper.of().toList(listOfCategory);
     }

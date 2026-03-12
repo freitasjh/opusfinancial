@@ -1,20 +1,19 @@
 package br.com.systec.opusfinancial.identity.api.services;
 
-import br.com.systec.opusfinancial.commons.exceptions.BaseException;
 import br.com.systec.opusfinancial.identity.api.exceptions.UserException;
-import br.com.systec.opusfinancial.identity.api.vo.UserVO;
+import br.com.systec.opusfinancial.identity.api.domain.User;
 
 import java.util.UUID;
 
 public interface UserService {
 
-    UserVO create(UserVO userVO) throws UserException;
+    User create(User userVO);
 
-    UserVO update(UserVO userVO) throws UserException;
+    User update(User userVO);
 
-    UserVO findById(UUID id) throws UserException;
+    User findById(UUID id);
 
-    UserVO findByUsername(String username) throws BaseException;
+    User findByUsername(String username);
 
-    void saveTenantId(UUID userId, UUID tenantId) throws UserException;
+    void saveTenantId(UUID userId, UUID tenantId);
 }

@@ -42,7 +42,7 @@ public class SecurityConfig {
                                 "/webjars/**",
                                 "/configuration/**",
                                 "/swagger-resources/**",
-                                "/swagger-ui/**",
+                                "/scalar/**",
                                 "/actuator/**",
                                 "/manager/**",
                                 "/notification/**"

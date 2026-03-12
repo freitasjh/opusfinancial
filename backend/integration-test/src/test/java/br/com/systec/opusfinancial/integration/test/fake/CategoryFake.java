@@ -1,6 +1,6 @@
 package br.com.systec.opusfinancial.integration.test.fake;
 
-import br.com.systec.opusfinancial.api.vo.CategoryType;
+import br.com.systec.opusfinancial.api.domain.CategoryType;
 import br.com.systec.opusfinancial.core.web.v1.dto.CategoryInputDTO;
 
 public class CategoryFake {

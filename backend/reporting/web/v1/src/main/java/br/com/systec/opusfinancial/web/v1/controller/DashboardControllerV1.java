@@ -1,7 +1,8 @@
 package br.com.systec.opusfinancial.web.v1.controller;
 
-import br.com.systec.opusfinancial.commons.controller.AbstractController;
-import br.com.systec.opusfinancial.commons.controller.RestPath;
+import br.com.systec.opusfinancial.commons.api.tools.controller.RestControllerTool;
+import br.com.systec.opusfinancial.commons.api.tools.controller.RestPath;
+
 import br.com.systec.opusfinancial.reporting.api.service.AccountReportingService;
 import br.com.systec.opusfinancial.reporting.api.service.ExpenseReportingService;
 import br.com.systec.opusfinancial.reporting.api.service.IncomingReportingService;
@@ -20,9 +21,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping(RestPath.V1 + "/dashboards")
-@Tag(name = "Dashboard", description = "Dashboards")
+@Tag(name = "Relatórios - Dashboards", description = "Visões consolidadas, saldos e histórico recente")
 @SecurityRequirement(name = "Authorization")
-public class DashboardControllerV1 extends AbstractController {
+public class DashboardControllerV1 {
 
     private final AccountReportingService accountReportingService;
     private final ExpenseReportingService expenseReportingService;
@@ -36,16 +37,22 @@ public class DashboardControllerV1 extends AbstractController {
 
     @GetMapping(value = "/account-summary-balance", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<AccountBalanceVO>> getSummaryAccountBalance() {
-        return buildSuccessResponse(accountReportingService.getSummaryAccountBalance());
+        return RestControllerTool.of().buildSuccessResponse(
+                accountReportingService.getSummaryAccountBalance()
+        );
     }
 
     @GetMapping(value = "/last-expenses", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ExpenseReportingVO>> findLastTenExpense() {
-        return buildSuccessResponse(expenseReportingService.findLastTenExpense());
+        return RestControllerTool.of().buildSuccessResponse(
+                expenseReportingService.findLastTenExpense()
+        );
     }
 
     @GetMapping(value = "/last-incoming", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<IncomingReportingVO>> findLastTenIncoming() {
-        return buildSuccessResponse(incomingReportingService.findLastTenIncoming());
+        return RestControllerTool.of().buildSuccessResponse(
+                incomingReportingService.findLastTenIncoming()
+        );
     }
 }

@@ -1,11 +1,11 @@
 package br.com.systec.opusfinancial.financial.core.web.v1.controller;
 
-import br.com.systec.opusfinancial.commons.controller.AbstractController;
-import br.com.systec.opusfinancial.commons.controller.RestPath;
-import br.com.systec.opusfinancial.commons.exceptions.StandardError;
+import br.com.systec.opusfinancial.commons.api.tools.controller.RestControllerTool;
+import br.com.systec.opusfinancial.commons.api.tools.controller.RestPath;
+import br.com.systec.opusfinancial.commons.api.tools.exceptions.StandardError;
 import br.com.systec.opusfinancial.financial.api.filter.FilterAccount;
 import br.com.systec.opusfinancial.financial.api.service.AccountService;
-import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
+import br.com.systec.opusfinancial.financial.api.domain.Account;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountInfoResponseDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountInputDTO;
 import br.com.systec.opusfinancial.financial.core.web.v1.dto.AccountResponseDTO;
@@ -33,9 +33,9 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(RestPath.V1 + "/accounts")
-@Tag(name = "Contas", description = "Cadastro de Contas")
+@Tag(name = "Financeiro - Contas", description = "Gestão de contas bancárias e carteiras do usuário")
 @SecurityRequirement(name = "Authorization")
-public class AccountControllerV1 extends AbstractController {
+public class AccountControllerV1 {
 
     private final AccountService service;
 
@@ -56,10 +56,10 @@ public class AccountControllerV1 extends AbstractController {
             })
     })
     public ResponseEntity<AccountResponseSaveDTO> create(@RequestBody @Valid AccountInputDTO account) {
-        AccountVO accountToSave = AccountMapperV1.of().toVO(account);
-        AccountVO accountAfterSave = service.create(accountToSave);
+        Account accountToSave = AccountMapperV1.of().toVO(account);
+        Account accountAfterSave = service.create(accountToSave);
 
-        return buildSuccessResponse(AccountMapperV1.of().toSaveResponse(accountAfterSave));
+        return RestControllerTool.of().buildSuccessResponse(AccountMapperV1.of().toSaveResponse(accountAfterSave));
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -75,9 +75,9 @@ public class AccountControllerV1 extends AbstractController {
             })
     })
     public ResponseEntity<AccountInfoResponseDTO> findById(@PathVariable("id") UUID id) {
-        AccountVO account = service.findById(id);
+        Account account = service.findById(id);
 
-        return buildSuccessResponse(AccountMapperV1.of().toInfoDTO(account));
+        return RestControllerTool.of().buildSuccessResponse(AccountMapperV1.of().toInfoDTO(account));
     }
 
     @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -96,9 +96,9 @@ public class AccountControllerV1 extends AbstractController {
                                                                  @RequestParam(value = "page", defaultValue = "0") int page,
                                                                  @RequestParam(value = "keyword", required = false) String keyword) {
         FilterAccount filter = new FilterAccount(keyword, limit, page);
-        Page<AccountVO> result = service.findByFilter(filter);
+        Page<Account> result = service.findByFilter(filter);
 
-        return buildSuccessResponse(AccountMapperV1.of().toPageResonse(result));
+        return RestControllerTool.of().buildSuccessResponse(AccountMapperV1.of().toPageResonse(result));
     }
 
 }

@@ -1,13 +1,13 @@
 package br.com.systec.opusfinancial.financial.catalog.impl.service;
 
 import br.com.systec.opusfinancial.api.service.CategoryService;
-import br.com.systec.opusfinancial.api.vo.CategoryVO;
+import br.com.systec.opusfinancial.api.domain.Category;
 import br.com.systec.opusfinancial.financial.api.exceptions.IncomingFinancialNotFoundException;
 import br.com.systec.opusfinancial.financial.api.filter.IncomingTransactionFilter;
 import br.com.systec.opusfinancial.financial.api.service.AccountService;
-import br.com.systec.opusfinancial.financial.api.vo.AccountVO;
-import br.com.systec.opusfinancial.financial.api.vo.FinancialTransactionVO;
-import br.com.systec.opusfinancial.financial.catalog.impl.entity.FinancialTransaction;
+import br.com.systec.opusfinancial.financial.api.domain.Account;
+import br.com.systec.opusfinancial.financial.api.domain.FinancialTransaction;
+import br.com.systec.opusfinancial.financial.catalog.impl.entity.FinancialTransactionEntity;
 import br.com.systec.opusfinancial.financial.catalog.impl.fake.AccountFake;
 import br.com.systec.opusfinancial.financial.catalog.impl.fake.CategoryFake;
 import br.com.systec.opusfinancial.financial.catalog.impl.fake.FinancialTransactionFake;
@@ -56,12 +56,12 @@ class IncomingTransactionServiceImplTest {
 
     @Test
     void shouldSaveIncomingTransaction() {
-        FinancialTransactionVO financialTransactionToSave = FinancialTransactionFake.createIncomingTransactionVO();
-        FinancialTransaction financialTransactionSaved = FinancialTransactionFake.createIncomingTransaction();
+        FinancialTransaction financialTransactionToSave = FinancialTransactionFake.createIncomingTransactionVO();
+        FinancialTransactionEntity financialTransactionSaved = FinancialTransactionFake.createIncomingTransaction();
 
         doReturn(financialTransactionSaved).when(repository).save(any());
 
-        FinancialTransactionVO incomingTransactionSaved = service.save(financialTransactionToSave);
+        FinancialTransaction incomingTransactionSaved = service.save(financialTransactionToSave);
 
         assertThat(incomingTransactionSaved).isNotNull();
         assertThat(incomingTransactionSaved.getId()).isNotNull();
@@ -71,15 +71,15 @@ class IncomingTransactionServiceImplTest {
 
     @Test
     void shouldUpdateIncomingTransaction() {
-        FinancialTransaction financialTransactionToFindReturn = FinancialTransactionFake.createIncomingTransaction();
-        FinancialTransactionVO financialTransactionToUpdate = FinancialTransactionFake.createExpenseTransactionVO();
+        FinancialTransactionEntity financialTransactionToFindReturn = FinancialTransactionFake.createIncomingTransaction();
+        FinancialTransaction financialTransactionToUpdate = FinancialTransactionFake.createExpenseTransactionVO();
 
-        FinancialTransaction financialTransactionUpdated = FinancialTransactionFake.createIncomingTransaction();
+        FinancialTransactionEntity financialTransactionUpdated = FinancialTransactionFake.createIncomingTransaction();
 
         doReturn(Optional.of(financialTransactionToFindReturn)).when(repository).findById(any());
         doReturn(financialTransactionUpdated).when(repository).save(any());
 
-        FinancialTransactionVO incomingTransactionUpdate = service.update(financialTransactionToUpdate);
+        FinancialTransaction incomingTransactionUpdate = service.update(financialTransactionToUpdate);
 
         assertThat(incomingTransactionUpdate).isNotNull();
 
@@ -89,7 +89,7 @@ class IncomingTransactionServiceImplTest {
 
     @Test
     void whenUpdateIncomingTransaction_thenFindObjectNotFound() {
-        FinancialTransactionVO financialTransactionToSave = FinancialTransactionFake.createIncomingTransactionVO();
+        FinancialTransaction financialTransactionToSave = FinancialTransactionFake.createIncomingTransactionVO();
 
         doReturn(Optional.empty()).when(repository).findById(any());
 
@@ -98,11 +98,11 @@ class IncomingTransactionServiceImplTest {
 
     @Test
     void whenFindById_thenReturnIncomingTransaction() {
-        FinancialTransaction financialTransactionToReturn = FinancialTransactionFake.createIncomingTransaction();
+        FinancialTransactionEntity financialTransactionToReturn = FinancialTransactionFake.createIncomingTransaction();
 
         doReturn(Optional.of(financialTransactionToReturn)).when(repository).findById(any());
 
-        FinancialTransactionVO financialTransaction = service.findById(UUID.randomUUID());
+        FinancialTransaction financialTransaction = service.findById(UUID.randomUUID());
 
         assertThat(financialTransaction).isNotNull();
     }
@@ -116,16 +116,16 @@ class IncomingTransactionServiceImplTest {
 
     @Test
     void whenFindByFilter() {
-        List<FinancialTransaction> listTransactionToReturn = List.of(FinancialTransactionFake.createIncomingTransaction());
-        Page<FinancialTransaction> pageResultToReturn = new PageImpl<>(listTransactionToReturn);
-        List<AccountVO> listOfAccountTOReturn = List.of(AccountFake.toFakeVO());
-        List<CategoryVO> listOfCategoryToReturn = List.of(CategoryFake.toFakeVO());
+        List<FinancialTransactionEntity> listTransactionToReturn = List.of(FinancialTransactionFake.createIncomingTransaction());
+        Page<FinancialTransactionEntity> pageResultToReturn = new PageImpl<>(listTransactionToReturn);
+        List<Account> listOfAccountTOReturn = List.of(AccountFake.toFakeVO());
+        List<Category> listOfCategoryToReturn = List.of(CategoryFake.toFakeVO());
 
         doReturn(listOfAccountTOReturn).when(accountService).findByIds(any());
         doReturn(listOfCategoryToReturn).when(categoryService).findByIds(any());
         doReturn(pageResultToReturn).when(repository).findAll(any(Specification.class), any(Pageable.class));
 
-        Page<FinancialTransactionVO> pageReturn = service.findByFilter(new IncomingTransactionFilter(null, 30, 0));
+        Page<FinancialTransaction> pageReturn = service.findByFilter(new IncomingTransactionFilter(null, 30, 0));
 
         assertThat(pageReturn).isNotNull();
 

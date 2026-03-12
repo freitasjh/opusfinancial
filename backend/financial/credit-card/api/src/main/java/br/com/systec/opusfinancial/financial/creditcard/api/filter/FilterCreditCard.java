@@ -1,6 +1,6 @@
 package br.com.systec.opusfinancial.financial.creditcard.api.filter;
 
-import br.com.systec.opusfinancial.commons.filter.PageParamSearch;
+import br.com.systec.opusfinancial.commons.api.filter.PageParamSearch;
 
 import java.util.UUID;
 

@@ -16,7 +16,6 @@ import java.net.URI;
 import java.time.Duration;
 
 @Configuration
-@Profile("aws")
 public class SqsConfig {
 
     private final AwsProperties awsProperties;
